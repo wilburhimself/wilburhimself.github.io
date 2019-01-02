@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 02 Jan 2019 03:06:58 GMT</lastBuildDate><item><title><![CDATA[New Beginnings]]></title><description><![CDATA[Far far away, behind the word mountains, far from the countries Vokalia and
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 02 Jan 2019 03:37:14 GMT</lastBuildDate><item><title><![CDATA[New Beginnings]]></title><description><![CDATA[Far far away, behind the word mountains, far from the countries Vokalia and
 Consonantia, there live the blind texts. Separated they live in…]]></description><link>https://wilburhimself.github.io//hi-folks/</link><guid isPermaLink="false">https://wilburhimself.github.io//hi-folks/</guid><pubDate>Thu, 28 May 2015 22:40:32 GMT</pubDate><content:encoded>&lt;p&gt;Far far away, behind the word mountains, far from the countries Vokalia and
 Consonantia, there live the blind texts. Separated they live in Bookmarksgrove
 right at the coast of the Semantics, a large language ocean. A small river named
@@ -101,6 +101,7 @@ egg yolk will be less rich.”?
 &lt;p&gt;I’m sure I’ll write a lot more interesting things in the future.&lt;/p&gt;
 &lt;p&gt;Oh, and here’s a great quote from this Wikipedia on
 &lt;a href=&quot;http://en.wikipedia.org/wiki/Salted_duck_egg&quot;&gt;salted duck eggs&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;rspec spec&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;controllers&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;home_controller_spec&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;A salted duck egg is a Chinese preserved food product made by soaking duck
 eggs in brine, or packing each egg in damp, salted charcoal. In Asian
