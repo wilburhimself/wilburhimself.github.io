@@ -28,7 +28,7 @@ function Bio() {
               }}
             />
             <p>
-              Written by <strong>{author}</strong> who lives and works in Dominican Republic building useful things.
+              Written by <strong><a href="/about">{author}</a></strong> who lives and works in Dominican Republic building useful things.
               {` `}
               <a href={`https://twitter.com/${social.twitter}`}>
                 You should follow him on Twitter

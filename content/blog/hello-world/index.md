@@ -1,25 +1,17 @@
 ---
 title: Hello World
-date: '2015-05-01T22:12:03.284Z'
+date: '2019-01-04T22:12:03.284Z'
 ---
 
-This is my first post on my new fake blog! How exciting!
+![New Stuff](./new.jpg)
 
-I'm sure I'll write a lot more interesting things in the future.
+This is my first post on this blog, again.
 
-Oh, and here's a great quote from this Wikipedia on
-[salted duck eggs](http://en.wikipedia.org/wiki/Salted_duck_egg).
+I have been working for about a year now in a [great company](http://pipelinedeals.com/) and part of
+the effect of working with a great team is that you evolve into their strengths. Some time ago I used to blog
+frequently, and it was a part of my daily routine to write more. I want to pick it up again, and I set a goal for myself
+to improve my communication skills and I feel part of it is to start writing more again.
 
-```ruby
-rspec spec/controllers/home_controller_spec.rb
-```
+The intention is to make this a technical blog, but bare in mind that this is mine and I will post what I feel.
 
-> A salted duck egg is a Chinese preserved food product made by soaking duck
-> eggs in brine, or packing each egg in damp, salted charcoal. In Asian
-> supermarkets, these eggs are sometimes sold covered in a thick layer of salted
-> charcoal paste. The eggs may also be sold with the salted paste removed,
-> wrapped in plastic, and vacuum packed. From the salt curing process, the
-> salted duck eggs have a briny aroma, a gelatin-like egg white and a
-> firm-textured, round yolk that is bright orange-red in color.
-
-![Chinese Salty Egg](./salty_egg.jpg)
+Thanks and welcome.
