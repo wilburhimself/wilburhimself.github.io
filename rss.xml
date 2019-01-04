@@ -1,4 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Wed, 02 Jan 2019 03:59:39 GMT</lastBuildDate><item><title><![CDATA[New Beginnings]]></title><description><![CDATA[Far far away, behind the word mountains, far from the countries Vokalia and
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Fri, 04 Jan 2019 09:26:47 GMT</lastBuildDate><item><title><![CDATA[Hello World]]></title><description><![CDATA[This is my first post on this blog, again … I used to have the habit of blogging, and all of a sudden lost it in time and maybe
+got tangled…]]></description><link>https://wilburhimself.github.io//hello-world/</link><guid isPermaLink="false">https://wilburhimself.github.io//hello-world/</guid><pubDate>Fri, 04 Jan 2019 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/19d0a1dd297d346bf839219f3d793783/5979c/new.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 480px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAQABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQBAgMF/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//aAAwDAQACEAMQAAAB7C+tAVskcv/EABsQAAICAwEAAAAAAAAAAAAAAAECAAMEERIU/9oACAEBAAEFAntVJ6RFPS2UByMcQDQ//8QAGBEAAgMAAAAAAAAAAAAAAAAAARAREyH/2gAIAQMBAT8BFcav/8QAFxEAAwEAAAAAAAAAAAAAAAAAAhASIf/aAAgBAgEBPwEqrF//xAAZEAADAAMAAAAAAAAAAAAAAAAAARFBUWH/2gAIAQEABj8CjMieyi4RH//EABoQAQADAQEBAAAAAAAAAAAAAAEAESExkfH/2gAIAQEAAT8hds3sPilYiUvY3a3Ctj1CPgYT/9oADAMBAAIAAwAAABBMH//EABgRAQEAAwAAAAAAAAAAAAAAABEAASEx/9oACAEDAQE/EC7NkdX/xAAXEQEAAwAAAAAAAAAAAAAAAAAAAVHB/9oACAECAQE/ELzEP//EAB0QAQEAAgIDAQAAAAAAAAAAAAERADEhYUFxwdH/2gAIAQEAAT8QaQkIC8OVm10cV9YJoQGxlm2BBCS/uPCvgvZfuDtDA6z/2Q==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;New Stuff&quot;
+        title=&quot;&quot;
+        src=&quot;/static/19d0a1dd297d346bf839219f3d793783/5979c/new.jpg&quot;
+        srcset=&quot;/static/19d0a1dd297d346bf839219f3d793783/c0f52/new.jpg 148w,
+/static/19d0a1dd297d346bf839219f3d793783/da7c2/new.jpg 295w,
+/static/19d0a1dd297d346bf839219f3d793783/5979c/new.jpg 480w&quot;
+        sizes=&quot;(max-width: 480px) 100vw, 480px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;This is my first post on this blog, again …&lt;/p&gt;
+&lt;p&gt;I used to have the habit of blogging, and all of a sudden lost it in time and maybe
+got tangled up in learning more stuff about programming, parenting, etc …&lt;/p&gt;
+&lt;p&gt;The thing is, now I’m starting all over again. As the year starts and we all know th first days
+of the year have the power to makes us want to start new things … I decided to start blogging again.&lt;/p&gt;
+&lt;p&gt;The intention is to make this a technical blog, but bare in mind that this is mine and I will post what I feel.&lt;/p&gt;
+&lt;p&gt;Thanks and welcome.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[New Beginnings]]></title><description><![CDATA[Far far away, behind the word mountains, far from the countries Vokalia and
 Consonantia, there live the blind texts. Separated they live in…]]></description><link>https://wilburhimself.github.io//hi-folks/</link><guid isPermaLink="false">https://wilburhimself.github.io//hi-folks/</guid><pubDate>Thu, 28 May 2015 22:40:32 GMT</pubDate><content:encoded>&lt;p&gt;Far far away, behind the word mountains, far from the countries Vokalia and
 Consonantia, there live the blind texts. Separated they live in Bookmarksgrove
 right at the coast of the Semantics, a large language ocean. A small river named
@@ -97,54 +137,4 @@ chicken eggs, though the…]]></description><link>https://wilburhimself.github.i
 chicken eggs, though the taste and texture will be somewhat different, and the
 egg yolk will be less rich.”?
 (&lt;a href=&quot;http://en.wikipedia.org/wiki/Salted_duck_egg&quot;&gt;Wikipedia Link&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;Yeah, I didn’t either.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World]]></title><description><![CDATA[This is my first post on my new fake blog! How exciting! I’m sure I’ll write a lot more interesting things in the future. Oh, and here’s a…]]></description><link>https://wilburhimself.github.io//hello-world/</link><guid isPermaLink="false">https://wilburhimself.github.io//hello-world/</guid><pubDate>Fri, 01 May 2015 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;This is my first post on my new fake blog! How exciting!&lt;/p&gt;
-&lt;p&gt;I’m sure I’ll write a lot more interesting things in the future.&lt;/p&gt;
-&lt;p&gt;Oh, and here’s a great quote from this Wikipedia on
-&lt;a href=&quot;http://en.wikipedia.org/wiki/Salted_duck_egg&quot;&gt;salted duck eggs&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;rspec spec&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;controllers&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;home_controller_spec&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;A salted duck egg is a Chinese preserved food product made by soaking duck
-eggs in brine, or packing each egg in damp, salted charcoal. In Asian
-supermarkets, these eggs are sometimes sold covered in a thick layer of salted
-charcoal paste. The eggs may also be sold with the salted paste removed,
-wrapped in plastic, and vacuum packed. From the salt curing process, the
-salted duck eggs have a briny aroma, a gelatin-like egg white and a
-firm-textured, round yolk that is bright orange-red in color.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;
-  &lt;a
-    class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/8058f3f26913fea3b6a89a73344fe94a/3f5a1/salty_egg.jpg&quot;
-    style=&quot;display: block&quot;
-    target=&quot;_blank&quot;
-    rel=&quot;noopener&quot;
-  &gt;
-  
-  &lt;span
-    class=&quot;gatsby-resp-image-wrapper&quot;
-    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
-  &gt;
-    &lt;span
-      class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 75%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAPABQDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAMB/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAEEBf/aAAwDAQACEAMQAAABgik0dXC//8QAGRABAAMBAQAAAAAAAAAAAAAAAQACEhEy/9oACAEBAAEFAkqW2DlnRj73yf/EABcRAQADAAAAAAAAAAAAAAAAAAAREkH/2gAIAQMBAT8B1WX/xAAWEQEBAQAAAAAAAAAAAAAAAAAAEQL/2gAIAQIBAT8Bi6f/xAAbEAABBAMAAAAAAAAAAAAAAAAAAQIRISIxMv/aAAgBAQAGPwK9GNocyS8hCj//xAAcEAADAQACAwAAAAAAAAAAAAABESEAMUGBobH/2gAIAQEAAT8hsTTH2wx5gg2ZgM8d5JIfmMRAIe//2gAMAwEAAgADAAAAEMgv/8QAFxEBAQEBAAAAAAAAAAAAAAAAAQARIf/aAAgBAwEBPxARwyusv//EABgRAAIDAAAAAAAAAAAAAAAAAAABESFR/9oACAECAQE/EFoktI//xAAcEAEBAAIDAQEAAAAAAAAAAAABEQAxIWGBQeH/2gAIAQEAAT8QRswtDR5g4a7R5C/RHFM3BKk6zThoVp3lEYcnjGIYES7/ACZ//9k=&apos;); background-size: cover; display: block;&quot;
-    &gt;
-      &lt;img
-        class=&quot;gatsby-resp-image-image&quot;
-        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
-        alt=&quot;Chinese Salty Egg&quot;
-        title=&quot;&quot;
-        src=&quot;/static/8058f3f26913fea3b6a89a73344fe94a/f8fb9/salty_egg.jpg&quot;
-        srcset=&quot;/static/8058f3f26913fea3b6a89a73344fe94a/e8976/salty_egg.jpg 148w,
-/static/8058f3f26913fea3b6a89a73344fe94a/63df2/salty_egg.jpg 295w,
-/static/8058f3f26913fea3b6a89a73344fe94a/f8fb9/salty_egg.jpg 590w,
-/static/8058f3f26913fea3b6a89a73344fe94a/85e3d/salty_egg.jpg 885w,
-/static/8058f3f26913fea3b6a89a73344fe94a/d1924/salty_egg.jpg 1180w,
-/static/8058f3f26913fea3b6a89a73344fe94a/9452e/salty_egg.jpg 1770w,
-/static/8058f3f26913fea3b6a89a73344fe94a/3f5a1/salty_egg.jpg 2048w&quot;
-        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
-      /&gt;
-    &lt;/span&gt;
-  &lt;/span&gt;
-  
-  &lt;/a&gt;
-    &lt;/p&gt;</content:encoded></item></channel></rss>
+&lt;p&gt;Yeah, I didn’t either.&lt;/p&gt;</content:encoded></item></channel></rss>
