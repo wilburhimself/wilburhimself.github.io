@@ -1,6 +1,6 @@
 ---
 title: Using Service Objects in Ruby on Rails
-date: '2019-03-16T23:46:37.121Z'
+date: '2019-03-15T23:46:37.121Z'
 ---
 
 Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and rules exists for clean code:

@@ -1,6 +1,6 @@
 ---
 title: Updating redux-form fields using bindActionCreators
-date: '2019-03-19T23:46:37.121Z'
+date: '2019-03-16T23:46:37.121Z'
 ---
 
 I have a `redux-form` that contains a dropdown dependent on the selected value of another dropdown.
