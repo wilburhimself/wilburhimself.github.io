@@ -1,5 +1,5 @@
 ---
-title: Updating redux-form fields programmatically using bindActionCreators
+title: Updating redux-form fields using bindActionCreators
 date: '2019-03-19T23:46:37.121Z'
 ---
 
