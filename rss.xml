@@ -1,4 +1,120 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 18 Mar 2019 01:13:12 GMT</lastBuildDate><item><title><![CDATA[Updating redux-form fields using bindActionCreators]]></title><description><![CDATA[I have a   that contains a dropdown dependent on the selected value of another dropdown. I have a filter method to slim down the options…]]></description><link>https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</link><guid isPermaLink="false">https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</guid><pubDate>Sat, 16 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;I have a &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; that contains a dropdown dependent on the selected value of another dropdown.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Mon, 18 Mar 2019 07:07:58 GMT</lastBuildDate><item><title><![CDATA[Automating explicit commit story with Conventional Commits]]></title><description><![CDATA[I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One…]]></description><link>https://wilburhimself.github.io//automating-conventional-commit-messages-globally/</link><guid isPermaLink="false">https://wilburhimself.github.io//automating-conventional-commit-messages-globally/</guid><pubDate>Sun, 17 Mar 2019 01:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One area I have been improving is my writing of commit messages.&lt;/p&gt;
+&lt;p&gt;One bad habit one use to take under time constraints is to ignore documentation. Missing documentation is not important until it is, then, it is important.&lt;/p&gt;
+&lt;p&gt;That’s one area I’m trying to improve in. Good commit messages are a most often ignored form of documentation, so how do we improve them?&lt;/p&gt;
+&lt;p&gt;I became aware of &lt;a href=&quot;https://www.conventionalcommits.org/en/v1.0.0-beta.3/&quot;&gt;Conventional Commits&lt;/a&gt; thanks to &lt;a href=&quot;https://dev.to/maxpou/enhance-your-git-log-with-conventional-commits-3ea4&quot;&gt;Enhance your git log with conventional commits&lt;/a&gt;. I liked the article and started writing conventional commits by hand for the last couple of days.&lt;/p&gt;
+&lt;p&gt;I wanted to automate enforcing conventional commit messages in all my projects. I googled and found the tools I needed to set it up globally for all commit messages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/commitizen/cz-cli&quot;&gt;Commitizen&lt;/a&gt; helps writing the conventional commit message&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/conventional-changelog/commitlint&quot;&gt;Commitlint&lt;/a&gt; check each commit for proper format&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://til.hashrocket.com/posts/c89a35a66c-global-git-hooks&quot;&gt;Git global hooks&lt;/a&gt; fail if the commit message does not follow the standard&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Commitizen&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/commitizen/cz-cli&quot;&gt;Commitizen&lt;/a&gt; is a handy script that prompts and builds the parts of a conventional commit message.&lt;/p&gt;
+&lt;p&gt;The first step is to install it: (taken from their README)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install -g commitizen&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Install your prefered commitizen adapter globally, for example &lt;code class=&quot;language-text&quot;&gt;cz-conventional-changelog&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install -g cz-commitizen-changelog&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create a &lt;code class=&quot;language-text&quot;&gt;.czrc&lt;/code&gt; file with the path of the commitizen adapter&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;echo &amp;#39;{ &amp;quot;path&amp;quot;: &amp;quot;cz-conventional-changelog&amp;quot; }&amp;#39; &amp;gt; ~/.czrc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After Commitizen installs instead of using &lt;code class=&quot;language-text&quot;&gt;git commit&lt;/code&gt;, you create a commit using &lt;code class=&quot;language-text&quot;&gt;git cz&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First it will ask for the type of commit:&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/66acbea655c13856fa359ab8a9129ac5/b60cb/1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 23.197219808861856%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAzklEQVQY032Q2Q6CQAxF590VFAWE4IZxBwElKighbv//Q9d2EBON8eGk5JbpnI6w/Qy99QnmOoUT5LC8M4xlAnOVoh/m8ltxd1AnBfVh+BfRmR9g8OHoAp2qOonRIpTxVtIYRagNgjfV/gbVsn5DudAXCRme4cZ32F5GhhmZ0XDK+TLJ7PC27s6P0KZ72ddmRZ+zMhe8ork6YbS7SYbRVTIgYzd+yMp9HqbL9QvrJtk3x2Ut4Fy0aSr/bL3s2JYH8LuyWXkzH6g4/sf6v3gCLrWSGvDDFqcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;Commit Type&quot;
+        title=&quot;&quot;
+        src=&quot;/static/66acbea655c13856fa359ab8a9129ac5/6255c/1.png&quot;
+        srcset=&quot;/static/66acbea655c13856fa359ab8a9129ac5/375dc/1.png 148w,
+/static/66acbea655c13856fa359ab8a9129ac5/6b157/1.png 295w,
+/static/66acbea655c13856fa359ab8a9129ac5/6255c/1.png 590w,
+/static/66acbea655c13856fa359ab8a9129ac5/dcf9c/1.png 885w,
+/static/66acbea655c13856fa359ab8a9129ac5/43c8a/1.png 1180w,
+/static/66acbea655c13856fa359ab8a9129ac5/dc8c4/1.png 1770w,
+/static/66acbea655c13856fa359ab8a9129ac5/b60cb/1.png 2302w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;Then it will ask for a commit subject, description, breaking changes and open issues:&lt;/p&gt;
+&lt;p&gt;
+  &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/4485a972c37e25995cb12b5709956b91/9921b/2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+  
+  &lt;span
+    class=&quot;gatsby-resp-image-wrapper&quot;
+    style=&quot;position: relative; display: block;  max-width: 590px; margin-left: auto; margin-right: auto;&quot;
+  &gt;
+    &lt;span
+      class=&quot;gatsby-resp-image-background-image&quot;
+      style=&quot;padding-bottom: 34.53551912568306%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABS0lEQVQoz2VR23KCUAzkrQ+9TG2tVVQuFgUUFEERtYiopbZT6/T/P2abRJzp5SGzSeac3WSjaOMM3biAPs5hxS/QgjW6swJP0x06ky3aowx2socz36NJedVdoGonqPspVKofvWdUujHu7RlurSkUKyngZQf00w/4+ZHyT9iLNyFwCM1oK9hfvktuTk5hhBsS3EmvOVxJXesvoDSGKdo0nV42NMpVUm+Qcose8mPVS2WC+mApm/AkFy0fl3pwCmMseEWoNOizlbxCizai3A4ywp2QqkTKFnTKvkFv9DAXEe7ddKJ/oWhRDn99hEMrubR2sP3CYHWQFQ1ap+rMKRLyaYq7XixYsTifCcG1Gf4mNEnVJY/YeCZh7/goNmGvPAbbwcaL+SURr3cm+UmqqP4KrRFfdi/+cc6TMQnbUaOrPlDwRHxdrpn4TPJ3wm9UQ9TTCDIWxQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+    &gt;
+      &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
+        alt=&quot;Commit details&quot;
+        title=&quot;&quot;
+        src=&quot;/static/4485a972c37e25995cb12b5709956b91/6255c/2.png&quot;
+        srcset=&quot;/static/4485a972c37e25995cb12b5709956b91/375dc/2.png 148w,
+/static/4485a972c37e25995cb12b5709956b91/6b157/2.png 295w,
+/static/4485a972c37e25995cb12b5709956b91/6255c/2.png 590w,
+/static/4485a972c37e25995cb12b5709956b91/dcf9c/2.png 885w,
+/static/4485a972c37e25995cb12b5709956b91/43c8a/2.png 1180w,
+/static/4485a972c37e25995cb12b5709956b91/dc8c4/2.png 1770w,
+/static/4485a972c37e25995cb12b5709956b91/9921b/2.png 1830w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+      /&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+  
+  &lt;/a&gt;
+    &lt;/p&gt;
+&lt;p&gt;Now that the commit is ready we can continue to the next step.&lt;/p&gt;
+&lt;h3&gt;Commitlint&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/conventional-changelog/commitlint&quot;&gt;Commitlint&lt;/a&gt; is a tool that will lint your commit message and notify you if it adheres to a standard you’ve chosen.&lt;/p&gt;
+&lt;p&gt;Global installation is as easy as Commitizen’s. We need to configure some stuff that’s not in the README.&lt;/p&gt;
+&lt;p&gt;Install the CLI and the configuration you want:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install -g @commitlint/cli @commitlint/config-conventional&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create a global config file:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;echo &amp;quot;module.exports = {extends: [&amp;#39;@commitlint/config-conventional&amp;#39;]}&amp;quot; &amp;gt; ~/commitlint.config.js&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That’s all. You can test it to make sure the install is correct:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;echo &amp;#39;must fail&amp;#39; | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you want to see a passing message try:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;echo &amp;#39;fix(broken links) fix broken links in homepage&amp;#39;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;now we are ready to tie all together …&lt;/p&gt;
+&lt;h3&gt;Git Hook&lt;/h3&gt;
+&lt;p&gt;Commitlint doesn’t do much by it’s own, until it’s placed in a git hook. From inside this hook we will fail the commit message if it does not follow the standard.&lt;/p&gt;
+&lt;p&gt;Like with the earlier packages, I wanted to set this up for all my projects without having to go and configure each. so I added a global git hook. (Topic for a later post)&lt;/p&gt;
+&lt;p&gt;I had global git hooks set up, so I added a &lt;code class=&quot;language-text&quot;&gt;commit-msg&lt;/code&gt; file with a simple script. This script compares it with commitlint, and fails if the message is not following the rules:&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;#!/bin/bash
+
+cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;This three easy steps will enable Conventional Commit in your workflow. You will gain the most from them if you have the habit of creating &lt;strong&gt;atomical commits&lt;/strong&gt;. The beauty of this workflow will be more clear when you have been using it for a while. Do a &lt;code class=&quot;language-text&quot;&gt;git log --one-line&lt;/code&gt; and see the beautiful list of commit full of context.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Updating redux-form fields using bindActionCreators]]></title><description><![CDATA[I have a   that contains a dropdown dependent on the selected value of another dropdown. I have a filter method to slim down the options…]]></description><link>https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</link><guid isPermaLink="false">https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</guid><pubDate>Sat, 16 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;I have a &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; that contains a dropdown dependent on the selected value of another dropdown.&lt;/p&gt;
 &lt;p&gt;I have a filter method to slim down the options from the state and fill my dependent dropdown, and it looks great.&lt;/p&gt;
 &lt;p&gt;I noticed that I had to select a dropdown item from the dependent dropdown to have the value updated in the store.&lt;/p&gt;
 &lt;p&gt;That’s how I found out about &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; &lt;a href=&quot;https://redux-form.com/6.0.0-alpha.4/docs/api/actioncreators.md/&quot;&gt;Action Creators&lt;/a&gt;. They are the internal actions from &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt;  to dispatch them as we need.&lt;/p&gt;
