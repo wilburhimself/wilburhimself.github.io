@@ -26,7 +26,7 @@ The first step is to install it: (taken from their README)
 npm install -g commitizen
 ```
 
-Install your prefered commitizen adapter globally, for example `cz-conventional-changelog`
+Install your prefered commitizen adapter globally, for example `cz-conventional-changelog`:
 
 ```
 npm install -g cz-commitizen-changelog
