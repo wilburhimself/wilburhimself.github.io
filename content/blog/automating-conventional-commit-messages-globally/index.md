@@ -1,5 +1,5 @@
 ---
-title: Automating conventional commit messages globally
+title: Automating explicit commit story with Conventional Commits
 date: '2019-03-17T01:00:00.121Z'
 ---
 
