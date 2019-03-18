@@ -3,7 +3,7 @@ title: Using Service Objects in Ruby on Rails
 date: '2019-03-15T23:46:37.121Z'
 ---
 
-Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and rules exists for clean code:
+Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and basic rules exist for clean code:
 
 * No **Fat Models** - don't allow them to get bloated
 * Keep **views** dumb - don't put any logic in there
@@ -13,8 +13,7 @@ And it raises the first question: Where do I put all that code?
 
 ### Introducing service objects
 
-Service objects can be a class or a module in Ruby that perform an action and can help take out logic
-from other areas of the MVC structure. For a simple example, let's say we have a controller like this:
+Service objects can be a class or a module in Ruby that perform an action and can help take out logic from other areas of the MVC structure. For a simple example, let's say we have a controller like this:
 
 ```ruby
 class PostsController < ApplicationController
@@ -42,7 +41,7 @@ Extracting some of this into a service object is easy once you understand the de
 
 ### Service objects as modules
 
-Using a module approach I created a service that looks very much like a factory design pattern.
+Using a module approach I created a service that looks very much like a factory design pattern:
 
 ```ruby
 module CreatePost
@@ -56,7 +55,7 @@ module CreatePost
 end
 ```
 
-Which in turn made the controller a lot more manageable.
+Which in turn made the controller a lot more manageable:
 
 ```ruby
 class PostsController < ApplicationController
@@ -90,7 +89,7 @@ class CreatePost
 end
 ```
 
-The code of the controller would be
+The code of the controller would be:
 
 ```ruby
 class PostsController < ApplicationController
