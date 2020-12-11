@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Sun, 12 May 2019 03:49:08 GMT</lastBuildDate><item><title><![CDATA[Automating explicit commit story with Conventional Commits]]></title><description><![CDATA[I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One…]]></description><link>https://wilburhimself.github.io//automating-conventional-commit-messages-globally/</link><guid isPermaLink="false">https://wilburhimself.github.io//automating-conventional-commit-messages-globally/</guid><pubDate>Sun, 17 Mar 2019 01:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One area I have been improving is my writing of commit messages.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Rants & Ramblings]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 11 Dec 2020 17:32:07 GMT</lastBuildDate><item><title><![CDATA[Automating explicit commit story with Conventional Commits]]></title><description><![CDATA[I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One…]]></description><link>https://wilburhimself.github.io/automating-conventional-commit-messages-globally/</link><guid isPermaLink="false">https://wilburhimself.github.io/automating-conventional-commit-messages-globally/</guid><pubDate>Sun, 17 Mar 2019 01:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I am always looking for ways to make me a better developer. This includes improving  the coding process and automation of coding tasks. One area I have been improving is my writing of commit messages.&lt;/p&gt;
 &lt;p&gt;One bad habit one use to take under time constraints is to ignore documentation. Missing documentation is not important until it is, then, it is important.&lt;/p&gt;
 &lt;p&gt;That’s one area I’m trying to improve in. Good commit messages are a most often ignored form of documentation, so how do we improve them?&lt;/p&gt;
 &lt;p&gt;I became aware of &lt;a href=&quot;https://www.conventionalcommits.org/en/v1.0.0-beta.3/&quot;&gt;Conventional Commits&lt;/a&gt; thanks to &lt;a href=&quot;https://dev.to/maxpou/enhance-your-git-log-with-conventional-commits-3ea4&quot;&gt;Enhance your git log with conventional commits&lt;/a&gt;. I liked the article and started writing conventional commits by hand for the last couple of days.&lt;/p&gt;
@@ -21,7 +21,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/66acbea655c13856fa359ab8a9129ac5/b60cb/1.png&quot;
+    href=&quot;/static/66acbea655c13856fa359ab8a9129ac5/25e83/1.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -33,21 +33,20 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 23.197219808861856%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAzklEQVQY032Q2Q6CQAxF590VFAWE4IZxBwElKighbv//Q9d2EBON8eGk5JbpnI6w/Qy99QnmOoUT5LC8M4xlAnOVoh/m8ltxd1AnBfVh+BfRmR9g8OHoAp2qOonRIpTxVtIYRagNgjfV/gbVsn5DudAXCRme4cZ32F5GhhmZ0XDK+TLJ7PC27s6P0KZ72ddmRZ+zMhe8ork6YbS7SYbRVTIgYzd+yMp9HqbL9QvrJtk3x2Ut4Fy0aSr/bL3s2JYH8LuyWXkzH6g4/sf6v3gCLrWSGvDDFqcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 22.972972972972975%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAzklEQVQY032Q2Q6CQAxF590VFAWE4IZxBwElKighbv//Q9d2EBON8eGk5JbpnI6w/Qy99QnmOoUT5LC8M4xlAnOVoh/m8ltxd1AnBfVh+BfRmR9g8OHoAp2qOonRIpTxVtIYRagNgjfV/gbVsn5DudAXCRme4cZ32F5GhhmZ0XDK+TLJ7PC27s6P0KZ72ddmRZ+zMhe8ork6YbS7SYbRVTIgYzd+yMp9HqbL9QvrJtk3x2Ut4Fy0aSr/bL3s2JYH8LuyWXkzH6g4/sf6v3gCLrWSGvDDFqcAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Commit Type&quot;
         title=&quot;&quot;
-        src=&quot;/static/66acbea655c13856fa359ab8a9129ac5/6255c/1.png&quot;
-        srcset=&quot;/static/66acbea655c13856fa359ab8a9129ac5/375dc/1.png 148w,
-/static/66acbea655c13856fa359ab8a9129ac5/6b157/1.png 295w,
-/static/66acbea655c13856fa359ab8a9129ac5/6255c/1.png 590w,
-/static/66acbea655c13856fa359ab8a9129ac5/dcf9c/1.png 885w,
-/static/66acbea655c13856fa359ab8a9129ac5/43c8a/1.png 1180w,
-/static/66acbea655c13856fa359ab8a9129ac5/dc8c4/1.png 1770w,
-/static/66acbea655c13856fa359ab8a9129ac5/b60cb/1.png 2302w&quot;
+        src=&quot;/static/66acbea655c13856fa359ab8a9129ac5/fcda8/1.png&quot;
+        srcset=&quot;/static/66acbea655c13856fa359ab8a9129ac5/12f09/1.png 148w,
+/static/66acbea655c13856fa359ab8a9129ac5/e4a3f/1.png 295w,
+/static/66acbea655c13856fa359ab8a9129ac5/fcda8/1.png 590w,
+/static/66acbea655c13856fa359ab8a9129ac5/efc66/1.png 885w,
+/static/66acbea655c13856fa359ab8a9129ac5/c83ae/1.png 1180w,
+/static/66acbea655c13856fa359ab8a9129ac5/25e83/1.png 2302w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -59,7 +58,7 @@
 &lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/4485a972c37e25995cb12b5709956b91/9921b/2.png&quot;
+    href=&quot;/static/4485a972c37e25995cb12b5709956b91/29beb/2.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -71,21 +70,20 @@
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 34.53551912568306%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABS0lEQVQoz2VR23KCUAzkrQ+9TG2tVVQuFgUUFEERtYiopbZT6/T/P2abRJzp5SGzSeac3WSjaOMM3biAPs5hxS/QgjW6swJP0x06ky3aowx2socz36NJedVdoGonqPspVKofvWdUujHu7RlurSkUKyngZQf00w/4+ZHyT9iLNyFwCM1oK9hfvktuTk5hhBsS3EmvOVxJXesvoDSGKdo0nV42NMpVUm+Qcose8mPVS2WC+mApm/AkFy0fl3pwCmMseEWoNOizlbxCizai3A4ywp2QqkTKFnTKvkFv9DAXEe7ddKJ/oWhRDn99hEMrubR2sP3CYHWQFQ1ap+rMKRLyaYq7XixYsTifCcG1Gf4mNEnVJY/YeCZh7/goNmGvPAbbwcaL+SURr3cm+UmqqP4KrRFfdi/+cc6TMQnbUaOrPlDwRHxdrpn4TPJ3wm9UQ9TTCDIWxQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 34.45945945945946%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABS0lEQVQoz2VR23KCUAzkrQ+9TG2tVVQuFgUUFEERtYiopbZT6/T/P2abRJzp5SGzSeac3WSjaOMM3biAPs5hxS/QgjW6swJP0x06ky3aowx2socz36NJedVdoGonqPspVKofvWdUujHu7RlurSkUKyngZQf00w/4+ZHyT9iLNyFwCM1oK9hfvktuTk5hhBsS3EmvOVxJXesvoDSGKdo0nV42NMpVUm+Qcose8mPVS2WC+mApm/AkFy0fl3pwCmMseEWoNOizlbxCizai3A4ywp2QqkTKFnTKvkFv9DAXEe7ddKJ/oWhRDn99hEMrubR2sP3CYHWQFQ1ap+rMKRLyaYq7XixYsTifCcG1Gf4mNEnVJY/YeCZh7/goNmGvPAbbwcaL+SURr3cm+UmqqP4KrRFfdi/+cc6TMQnbUaOrPlDwRHxdrpn4TPJ3wm9UQ9TTCDIWxQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;Commit details&quot;
         title=&quot;&quot;
-        src=&quot;/static/4485a972c37e25995cb12b5709956b91/6255c/2.png&quot;
-        srcset=&quot;/static/4485a972c37e25995cb12b5709956b91/375dc/2.png 148w,
-/static/4485a972c37e25995cb12b5709956b91/6b157/2.png 295w,
-/static/4485a972c37e25995cb12b5709956b91/6255c/2.png 590w,
-/static/4485a972c37e25995cb12b5709956b91/dcf9c/2.png 885w,
-/static/4485a972c37e25995cb12b5709956b91/43c8a/2.png 1180w,
-/static/4485a972c37e25995cb12b5709956b91/dc8c4/2.png 1770w,
-/static/4485a972c37e25995cb12b5709956b91/9921b/2.png 1830w&quot;
+        src=&quot;/static/4485a972c37e25995cb12b5709956b91/fcda8/2.png&quot;
+        srcset=&quot;/static/4485a972c37e25995cb12b5709956b91/12f09/2.png 148w,
+/static/4485a972c37e25995cb12b5709956b91/e4a3f/2.png 295w,
+/static/4485a972c37e25995cb12b5709956b91/fcda8/2.png 590w,
+/static/4485a972c37e25995cb12b5709956b91/efc66/2.png 885w,
+/static/4485a972c37e25995cb12b5709956b91/c83ae/2.png 1180w,
+/static/4485a972c37e25995cb12b5709956b91/29beb/2.png 1830w&quot;
         sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
       /&gt;
     &lt;/span&gt;
@@ -114,7 +112,7 @@
 
 cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;This three easy steps will enable Conventional Commit in your workflow. You will gain the most from them if you have the habit of creating &lt;strong&gt;atomical commits&lt;/strong&gt;. The beauty of this workflow will be more clear when you have been using it for a while. Do a &lt;code class=&quot;language-text&quot;&gt;git log --one-line&lt;/code&gt; and see the beautiful list of commit full of context.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Updating redux-form fields using bindActionCreators]]></title><description><![CDATA[I have a   that contains a dropdown dependent on the selected value of another dropdown. I have a filter method to slim down the options…]]></description><link>https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</link><guid isPermaLink="false">https://wilburhimself.github.io//update-redux-form-fields-using-bindactioncreators/</guid><pubDate>Sat, 16 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;I have a &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; that contains a dropdown dependent on the selected value of another dropdown.&lt;/p&gt;
+&lt;p&gt;This three easy steps will enable Conventional Commit in your workflow. You will gain the most from them if you have the habit of creating &lt;strong&gt;atomical commits&lt;/strong&gt;. The beauty of this workflow will be more clear when you have been using it for a while. Do a &lt;code class=&quot;language-text&quot;&gt;git log --one-line&lt;/code&gt; and see the beautiful list of commit full of context.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Updating redux-form fields using bindActionCreators]]></title><description><![CDATA[I have a  that contains a dropdown dependent on the selected value of another dropdown. I have a filter method to slim down the options from…]]></description><link>https://wilburhimself.github.io/update-redux-form-fields-using-bindactioncreators/</link><guid isPermaLink="false">https://wilburhimself.github.io/update-redux-form-fields-using-bindactioncreators/</guid><pubDate>Sat, 16 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;I have a &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; that contains a dropdown dependent on the selected value of another dropdown.&lt;/p&gt;
 &lt;p&gt;I have a filter method to slim down the options from the state and fill my dependent dropdown, and it looks great.&lt;/p&gt;
 &lt;p&gt;I noticed that I had to select a dropdown item from the dependent dropdown to have the value updated in the store.&lt;/p&gt;
 &lt;p&gt;That’s how I found out about &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt; &lt;a href=&quot;https://redux-form.com/6.0.0-alpha.4/docs/api/actioncreators.md/&quot;&gt;Action Creators&lt;/a&gt;. They are the internal actions from &lt;code class=&quot;language-text&quot;&gt;redux-form&lt;/code&gt;  to dispatch them as we need.&lt;/p&gt;
@@ -124,8 +122,8 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; Field&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; change &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;redux-form&apos;&lt;/span&gt;
 
 &lt;span class=&quot;token comment&quot;&gt;// other imports ...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;mapDispatchToProps&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;dispatch&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  updateField&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;bindActionCreators&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;field&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;javascript&quot;&gt;&lt;pre class=&quot;language-javascript&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token function-variable function&quot;&gt;mapDispatchToProps&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;dispatch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  updateField&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;bindActionCreators&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;field&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;token function&quot;&gt;change&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;FORM_NAME&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; field&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; dispatch&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -134,7 +132,7 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Something important to note and quoting redux’s &lt;a href=&quot;https://redux.js.org/api/bindactioncreators#bindactioncreatorsactioncreators-dispatch&quot;&gt;documentation&lt;/a&gt; on &lt;code class=&quot;language-text&quot;&gt;bindActionCreators&lt;/code&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The only use case for bindActionCreators is when you want to pass some action creators down to a component that isn’t aware of Redux, and you don’t want to pass dispatch or the Redux store to it.&lt;/p&gt;
-&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Using Service Objects in Ruby on Rails]]></title><description><![CDATA[Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization…]]></description><link>https://wilburhimself.github.io//using-service-objects-in-ruby-on-rails/</link><guid isPermaLink="false">https://wilburhimself.github.io//using-service-objects-in-ruby-on-rails/</guid><pubDate>Fri, 15 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and basic rules exist for clean code:&lt;/p&gt;
+&lt;/blockquote&gt;</content:encoded></item><item><title><![CDATA[Using Service Objects in Ruby on Rails]]></title><description><![CDATA[Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization…]]></description><link>https://wilburhimself.github.io/using-service-objects-in-ruby-on-rails/</link><guid isPermaLink="false">https://wilburhimself.github.io/using-service-objects-in-ruby-on-rails/</guid><pubDate>Fri, 15 Mar 2019 23:46:37 GMT</pubDate><content:encoded>&lt;p&gt;Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and basic rules exist for clean code:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;No &lt;strong&gt;Fat Models&lt;/strong&gt; - don’t allow them to get bloated&lt;/li&gt;
 &lt;li&gt;Keep &lt;strong&gt;views&lt;/strong&gt; dumb - don’t put any logic in there&lt;/li&gt;
@@ -144,7 +142,7 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3&gt;Introducing service objects&lt;/h3&gt;
 &lt;p&gt;Service objects can be a class or a module in Ruby that perform an action and can help take out logic from other areas of the MVC structure. For a simple example, let’s say we have a controller like this:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PostsController&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;ApplicationController&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; create
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@title&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@content&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
@@ -152,9 +150,9 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;notice &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;Post saved&apos;&lt;/span&gt;
       render &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt;
-      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;flash_error_message&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; flash_error_message&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       redirect_to &lt;span class=&quot;token symbol&quot;&gt;:new&lt;/span&gt;
-    &lt;span class=&quot;token class-name&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Extracting some of this into a service object is easy once you understand the design pattern.&lt;/p&gt;
@@ -168,7 +166,7 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Using a module approach I created a service that looks very much like a factory design pattern:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;CreatePost&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       title &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
       content &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
       post &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; title&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
@@ -177,40 +175,40 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Which in turn made the controller a lot more manageable:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PostsController&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;ApplicationController&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; create
-    &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;CreatePost&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;CreatePost&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;save
       flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;notice &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;Post saved&apos;&lt;/span&gt;
       render &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt;
-      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;flash_error_message&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; flash_error_message&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       redirect_to &lt;span class=&quot;token symbol&quot;&gt;:new&lt;/span&gt;
-    &lt;span class=&quot;token class-name&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3&gt;Service objects as classes&lt;/h3&gt;
 &lt;p&gt;In some cases we need to store instance variables and other methods, if so, we use classes. Using a class, our code could be rewritten as:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CreatePost&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;initialize&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@title&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@content&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
 
-  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; call
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token constant&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The code of the controller would be:&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PostsController&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;ApplicationController&lt;/span&gt;
-  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; create
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;create&lt;/span&gt;&lt;/span&gt;
     &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;CreatePost&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;call
     &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;save
       flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;notice &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;Post saved&apos;&lt;/span&gt;
       render &lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;
     &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt;
-      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;flash_error_message&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+      flash&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;alert &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; flash_error_message&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       redirect_to &lt;span class=&quot;token symbol&quot;&gt;:new&lt;/span&gt;
-    &lt;span class=&quot;token class-name&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3&gt;Organizing service objects with modules&lt;/h3&gt;
@@ -218,7 +216,7 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code class=&quot;language-text&quot;&gt;services&lt;/code&gt; folder can reflect the variety of service objects and it’s different uses in our app. We group them in namespaces using Ruby modules.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;Post&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;token constant&quot;&gt;Build&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;params&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
       title &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:title&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
       content &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; params&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:content&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
       &lt;span class=&quot;token constant&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;title&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; title&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; content&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
@@ -230,11 +228,11 @@ cat $1 | commitlint&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 services/post/update.rb
 services/comments/build.rb
 ...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This way our use of service objects can scale with the growth of our app.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World]]></title><description><![CDATA[This is my first post on this blog, again. I have been working for about a year now in a  great company  and part of
-the effect of working…]]></description><link>https://wilburhimself.github.io//hello-world/</link><guid isPermaLink="false">https://wilburhimself.github.io//hello-world/</guid><pubDate>Fri, 04 Jan 2019 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;
+&lt;p&gt;This way our use of service objects can scale with the growth of our app.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World]]></title><description><![CDATA[This is my first post on this blog, again. I have been working for about a year now in a great company and part of
+the effect of working…]]></description><link>https://wilburhimself.github.io/hello-world/</link><guid isPermaLink="false">https://wilburhimself.github.io/hello-world/</guid><pubDate>Fri, 04 Jan 2019 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;
   &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/static/19d0a1dd297d346bf839219f3d793783/526f1/new.jpg&quot;
+    href=&quot;/static/19d0a1dd297d346bf839219f3d793783/7cc5e/new.jpg&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -246,17 +244,17 @@ the effect of working…]]></description><link>https://wilburhimself.github.io//
   &gt;
     &lt;span
       class=&quot;gatsby-resp-image-background-image&quot;
-      style=&quot;padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAQABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQBAgMF/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//aAAwDAQACEAMQAAAB7C+tAVskcv/EABsQAAICAwEAAAAAAAAAAAAAAAECAAMEERIU/9oACAEBAAEFAntVJ6RFPS2UByMcQDQ//8QAGBEAAgMAAAAAAAAAAAAAAAAAARAREyH/2gAIAQMBAT8BFcav/8QAFxEAAwEAAAAAAAAAAAAAAAAAAhASIf/aAAgBAgEBPwEqrF//xAAZEAADAAMAAAAAAAAAAAAAAAAAARFBUWH/2gAIAQEABj8CjMieyi4RH//EABoQAQADAQEBAAAAAAAAAAAAAAEAESExkfH/2gAIAQEAAT8hds3sPilYiUvY3a3Ctj1CPgYT/9oADAMBAAIAAwAAABBMH//EABgRAQEAAwAAAAAAAAAAAAAAABEAASEx/9oACAEDAQE/EC7NkdX/xAAXEQEAAwAAAAAAAAAAAAAAAAAAAVHB/9oACAECAQE/ELzEP//EAB0QAQEAAgIDAQAAAAAAAAAAAAERADEhYUFxwdH/2gAIAQEAAT8QaQkIC8OVm10cV9YJoQGxlm2BBCS/uPCvgvZfuDtDA6z/2Q==&apos;); background-size: cover; display: block;&quot;
+      style=&quot;padding-bottom: 79.72972972972973%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAQABQDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQBAgMF/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//aAAwDAQACEAMQAAAB7C+tAVskcv/EABsQAAICAwEAAAAAAAAAAAAAAAECAAMEERIU/9oACAEBAAEFAntVJ6RFPS2UByMdYBof/8QAFxEAAwEAAAAAAAAAAAAAAAAAARARE//aAAgBAwEBPwEZxf/EABcRAAMBAAAAAAAAAAAAAAAAAAIQEiH/2gAIAQIBAT8BKqxf/8QAGRAAAwADAAAAAAAAAAAAAAAAAAERQVFh/9oACAEBAAY/AozInsouER//xAAaEAEAAwEBAQAAAAAAAAAAAAABABEhMZHx/9oACAEBAAE/IXbN7D4pWIlL2N2twjY9Qj4GE//aAAwDAQACAAMAAAAQTB//xAAXEQEBAQEAAAAAAAAAAAAAAAARACEB/9oACAEDAQE/EC0t0cv/xAAYEQACAwAAAAAAAAAAAAAAAAAAARFRof/aAAgBAgEBPxC8yBH/xAAdEAEBAAICAwEAAAAAAAAAAAABEQAhMWFBccHR/9oACAEBAAE/EGkJCAunKzSvBqvrBNCA5GWbYEEJL+46K+C9l+4O0MDrP//Z&apos;); background-size: cover; display: block;&quot;
     &gt;
       &lt;img
         class=&quot;gatsby-resp-image-image&quot;
         style=&quot;width: 100%; height: 100%; margin: 0; vertical-align: middle; position: absolute; top: 0; left: 0; box-shadow: inset 0px 0px 0px 400px white;&quot;
         alt=&quot;New Stuff&quot;
         title=&quot;&quot;
-        src=&quot;/static/19d0a1dd297d346bf839219f3d793783/526f1/new.jpg&quot;
-        srcset=&quot;/static/19d0a1dd297d346bf839219f3d793783/879fb/new.jpg 148w,
-/static/19d0a1dd297d346bf839219f3d793783/cdff6/new.jpg 295w,
-/static/19d0a1dd297d346bf839219f3d793783/526f1/new.jpg 480w&quot;
+        src=&quot;/static/19d0a1dd297d346bf839219f3d793783/7cc5e/new.jpg&quot;
+        srcset=&quot;/static/19d0a1dd297d346bf839219f3d793783/a80bd/new.jpg 148w,
+/static/19d0a1dd297d346bf839219f3d793783/1c91a/new.jpg 295w,
+/static/19d0a1dd297d346bf839219f3d793783/7cc5e/new.jpg 480w&quot;
         sizes=&quot;(max-width: 480px) 100vw, 480px&quot;
       /&gt;
     &lt;/span&gt;
