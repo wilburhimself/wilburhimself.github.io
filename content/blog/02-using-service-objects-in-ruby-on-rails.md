@@ -1,4 +1,5 @@
 ---
+slug: "/using-service-objects-in-ruby-on-rails"
 title: Using Service Objects in Ruby on Rails
 date: '2019-03-15T23:46:37.121Z'
 ---

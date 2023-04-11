@@ -42,11 +42,11 @@ After Commitizen installs instead of using `git commit`, you create a commit usi
 
 First it will ask for the type of commit:
 
-![Commit Type](./images/1.png)
+![Commit Type](../assets/1.png)
 
 Then it will ask for a commit subject, description, breaking changes and open issues:
 
-![Commit details](./images/2.png)
+![Commit details](../assets/2.png)
 
 Now that the commit is ready we can continue to the next step.
 

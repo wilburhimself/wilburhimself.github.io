@@ -3,7 +3,7 @@ title: Hello World
 date: '2019-01-04T22:12:03.284Z'
 ---
 
-![New Stuff](./new.jpg)
+![New Stuff](../assets/new.jpg)
 
 This is my first post on this blog, again.
 
