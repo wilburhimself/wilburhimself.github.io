@@ -1,6 +1,6 @@
 ---
 title: Maximizing Productivity as a Software Developer - My 7 Go-To Techniques
-date: '2023-02-24T23:46:37.121Z'
+date: '2023-02-07'
 ---
 
 I am a software developer, and I know how difficult it may be to sustain productivity while handling demanding assignments and a healthy work-life balance. I've learned several strategies throughout the years that have enabled me to survive and deal with distractions at work. I'll outline the top 7 productivity tips that I've found to be effective in this post.

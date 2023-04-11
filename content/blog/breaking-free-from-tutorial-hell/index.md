@@ -1,6 +1,6 @@
 ---
 title: Breaking free from tutorial hell
-date: '2023-02-23T22:12:03.284Z'
+date: '2023-02-06'
 ---
 
 Numerous prospective programmers and developers have faced the phenomenon known as "tutorial hell." It occurs when someone spends many hours completing tutorials without making any headway toward finishing a real project. This may demotivate people and cause them to feel frustrated and stuck.
