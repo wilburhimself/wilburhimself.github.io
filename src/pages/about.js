@@ -23,9 +23,10 @@ class About extends React.Component {
             About
           </h3>
 
-          <p>I'm Wilbur Suero. I go by wilburhimself online. I have been writing here for many years, much more than what the current archive on this site reflects.</p>
-          <p>I have been part of software and advertising companies in the United States and in Europe. I've been part of advertising campaigns, non-profit organizations, customer service applications, tourism and a variety of open source projects.</p>
-          <p>I live in La Romana, Dominican Republic with my wife, Jennifer Núñez and our two children. I am interested in programming, the rights and welfare of animals, music, arts and systems of all kinds. I like to discuss varied topics with my friends, play guitar, spend time outdoors, and praying.</p>
+          <p>I am Wilbur Suero, a seasoned software engineer with years of experience in both the US and Europe. Throughout my career, I have contributed to the development of software for advertising campaigns, non-profit organizations, customer service applications, tourism, and various open source projects.</p>
+          <p>My passion for programming has led me to pursue diverse interests, such as systems design and architecture, which have broadened my knowledge and expertise in the field. I am constantly striving to stay updated on the latest advancements in technology, ensuring that I can deliver top-notch solutions for any project I undertake.</p>
+          <p>I currently reside in La Romana, Dominican Republic. When I am not working on software development projects, I enjoy pursuing my other interests, such as music and the arts. In my free time, I enjoy engaging in intellectual discussions with friends and spending time outdoors.</p>
+          <p>Thank you for taking the time to visit my website. I look forward to the opportunity to collaborate with you on any project you may have.</p>
 
           <p>You can find out more about me in <a href="https://github.com/wilburhimself">Github</a>, <a href="https://twitter.com/wilburhimself">Twitter</a>, <a href="https://www.linkedin.com/in/wilbursuero/">Linkedin</a> or you can <a href="mailto:wilbursuero@me.com">send me an email</a>.</p>
         </div>
