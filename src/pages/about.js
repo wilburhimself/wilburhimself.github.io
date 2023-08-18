@@ -28,7 +28,7 @@ class About extends React.Component {
           <p>I currently reside in La Romana, Dominican Republic. When I am not working on software development projects, I enjoy pursuing my other interests, such as music and the arts. In my free time, I enjoy engaging in intellectual discussions with friends and spending time outdoors.</p>
           <p>Thank you for taking the time to visit my website. I look forward to the opportunity to collaborate with you on any project you may have.</p>
 
-          <p>You can find out more about me in <a href="https://github.com/wilburhimself">Github</a>, <a href="https://twitter.com/wilburhimself">Twitter</a>, <a href="https://www.linkedin.com/in/wilbursuero/">Linkedin</a> or you can <a href="mailto:wilbursuero@me.com">send me an email</a>.</p>
+          <p>You can find out more about me in <a href="https://github.com/wilburhimself">Github</a>, <a href="https://twitter.com/wilburhimself">Twitter</a>, <a href="https://www.linkedin.com/in/wilbursuero/">Linkedin</a> or you can <a href="mailto:suerowilbur@gmail.com">send me an email</a>.</p>
         </div>
       </Layout>
     )
