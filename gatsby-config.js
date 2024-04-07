@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Rants & Ramblings`,
+    title: `Wilbur Suero - Software Craftsman`,
     author: `Wilbur Suero`,
     description: `Rants and ramblings about life and code.`,
     siteUrl: `https://wilburhimself.github.io/`,
@@ -60,8 +60,8 @@ module.exports = {
         name: `Gatsby Starter Blog`,
         short_name: `GatsbyJS`,
         start_url: `/`,
-        background_color: `#ffffff`,
-        theme_color: `#663399`,
+        background_color: `#ffff00`,
+        theme_color: `#663339`,
         display: `minimal-ui`,
         icon: `content/assets/gatsby-icon.png`,
       },

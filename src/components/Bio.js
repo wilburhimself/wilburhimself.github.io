@@ -13,8 +13,7 @@ function Bio() {
         return (
           <div
             style={{
-              display: `flex`,
-              marginBottom: rhythm(2.5),
+              display: `flex`
             }}
           >
             <Image
@@ -27,13 +26,7 @@ function Bio() {
                 borderRadius: `100%`,
               }}
             />
-            <p>
-              Written by <strong><a href="/about">{author}</a></strong> who lives and works in Dominican Republic building useful things.
-              {` `}
-              <a href={`https://twitter.com/${social.twitter}`}>
-                You should follow him on Twitter
-              </a>
-            </p>
+            <p>Crafted by <strong><a href="/about">Wilbur Suero</a></strong>, a Full-Stack Software Engineer based in La Romana, Dominican Republic, who is passionate about building innovative and impactful solutions that drive business growth and operational excellence.</p>
           </div>
         )
       }}

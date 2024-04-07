@@ -14,7 +14,7 @@ class Layout extends React.Component {
       header = (
         <h1
           style={{
-            ...scale(1.5),
+            ...scale(.8),
             marginBottom: rhythm(1.5),
             marginTop: 0,
           }}
@@ -64,8 +64,16 @@ class Layout extends React.Component {
       >
         {header}
         {children}
-        <footer>
-          © {date.getFullYear()}, <a href="http://github.com/wilburhimself">Github</a> <a href="http://twitter.com/wilburhimself">Twitter</a>
+        <footer style={{
+          borderTop: '1px solid #ccc',
+          paddingTop: '2em'
+        }}>
+          Ready to bring your software vision to life? Let's collaborate!<br />
+          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a consultation</a> to discuss your project requirements.<br />
+          Alternatively, you can <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer">send me an email</a> directly.<br />
+
+
+            Stay connected and explore my work further: <a href="https://read.cv/wilbursuero" target="_blank" rel="noopener noreferrer">Read CV</a> | <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </footer>
       </div>
     )

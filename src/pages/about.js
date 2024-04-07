@@ -23,12 +23,40 @@ class About extends React.Component {
             About
           </h3>
 
-          <p>I am Wilbur Suero, a seasoned software engineer with years of experience in both the US and Europe. Throughout my career, I have contributed to the development of software for advertising campaigns, non-profit organizations, customer service applications, tourism, and various open source projects.</p>
-          <p>My passion for programming has led me to pursue diverse interests, such as systems design and architecture, which have broadened my knowledge and expertise in the field. I am constantly striving to stay updated on the latest advancements in technology, ensuring that I can deliver top-notch solutions for any project I undertake.</p>
-          <p>I currently reside in La Romana, Dominican Republic. When I am not working on software development projects, I enjoy pursuing my other interests, such as music and the arts. In my free time, I enjoy engaging in intellectual discussions with friends and spending time outdoors.</p>
-          <p>Thank you for taking the time to visit my website. I look forward to the opportunity to collaborate with you on any project you may have.</p>
+          <p>As an experienced Full-Stack Software Engineer with a proven track record of delivering cutting-edge solutions
+            across diverse industries, I specialize in leveraging the power of Ruby on Rails, JavaScript, and modern web development
+             technologies to drive business growth and operational excellence.</p>
 
-          <p>You can find out more about me in <a href="https://github.com/wilburhimself">Github</a>, <a href="https://twitter.com/wilburhimself">Twitter</a>, <a href="https://www.linkedin.com/in/wilbursuero/">Linkedin</a> or you can <a href="mailto:suerowilbur@gmail.com">send me an email</a>.</p>
+          <h4>Technical Proficiency:</h4>
+          <ul>
+            <li>Ruby on Rails</li>
+            <li>JavaScript (React, Vue.js, Node.js)</li>
+            <li>Microservices Architecture</li>
+            <li>Cloud Computing (AWS, Heroku)</li>
+            <li>Containerization (Docker)</li>
+            <li>Agile Methodologies</li>
+            <li>Database Technologies (PostgreSQL, MongoDB, MySQL)</li>
+          </ul>
+
+          <p>With a career spanning over a decade, I have played pivotal roles in developing innovative software for advertising campaigns, non-profit organizations, customer service applications, the home inspection industry, and the tourism sector. From leading product development initiatives for CRM platforms to implementing secure payment gateways and streamlining member acquisition processes through microservices architecture, my expertise lies in architecting scalable, high-performance solutions that exceed client expectations.</p>
+
+          <h4>What Sets Me Apart:</h4>
+          <ul>
+            <li>Proven ability to troubleshoot complex technical issues and provide prompt resolutions, ensuring uninterrupted service delivery.</li>
+            <li>Expertise in implementing cutting-edge technologies, such as machine learning and GraphQL, to enhance operational efficiency and drive user engagement.</li>
+            <li>Dedication to fostering a culture of excellence and continuous improvement through mentorship and collaboration with cross-functional teams.</li>
+            <li>Unwavering commitment to staying up-to-date with the latest advancements in technology, enabling me to deliver innovative and future-proof solutions.</li>
+          </ul>
+
+          <p>Based in La Romana, Dominican Republic, I am available for remote collaboration or on-site consultations to bring your software vision to life.</p>
+
+          <h4>Let's Build Something Remarkable Together</h4>
+
+          <p>Whether you're seeking to optimize your existing software infrastructure, develop a new application, or explore the potential of emerging technologies, I am eager to collaborate with you. Schedule a consultation today, and let's discuss how we can leverage my expertise to propel your business to new heights.</p>
+
+          <p>When I'm not immersed in code, you can find me indulging in my love for music, art, and engaging intellectual discussions with fellow enthusiasts.</p>
+
+          <p>Take the first step towards transforming your business by contacting me today.</p>
         </div>
       </Layout>
     )
