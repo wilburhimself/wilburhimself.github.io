@@ -26,7 +26,7 @@ function Bio() {
                 borderRadius: `100%`,
               }}
             />
-            <p>Crafted by <strong><a href="/about">Wilbur Suero</a></strong>, a Full-Stack Software Engineer based in La Romana, Dominican Republic, who is passionate about building innovative and impactful solutions that drive business growth and operational excellence.</p>
+            <p>Crafted by <strong><a href="/about">Wilbur Suero</a></strong>, a Software Engineer, who is passionate about building innovative and impactful solutions that drive business growth and operational excellence.</p>
           </div>
         )
       }}
