@@ -3,6 +3,7 @@ import Layout from '../components/Layout'
 import SEO from '../components/seo'
 import { rhythm } from '../utils/typography'
 import { Link, graphql } from 'gatsby'
+import '../../static/style.css'
 
 class About extends React.Component {
   render () {
