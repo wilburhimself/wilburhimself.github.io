@@ -1,0 +1,23 @@
+body {
+  background: #e9e9f9;
+  color: #445;
+}
+
+a {
+  color: #009;
+}
+
+a:hover {
+  color: black;
+}
+
+.gatsby-highlight {
+  border-top: 4px solid lightgray;
+  border-bottom: 4px solid lightgray;
+  margin-bottom: 2em;
+}
+
+.gatsby-highlight > pre {
+  margin: 0;
+  background: white;
+}
