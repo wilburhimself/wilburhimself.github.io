@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Wilbur Suero - Software Craftsman]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 12 Sep 2024 13:20:41 GMT</lastBuildDate><item><title><![CDATA[Elevating Your Ruby on Rails Apps with Value Objects]]></title><description><![CDATA[I’ll never forget the day my team and I sat down to review the codebase for our latest Ruby on Rails project. As we dove into the details…]]></description><link>https://wilburhimself.github.io/16-elevating-ruby-on-rails-codebase-value-objects/</link><guid isPermaLink="false">https://wilburhimself.github.io/16-elevating-ruby-on-rails-codebase-value-objects/</guid><pubDate>Thu, 18 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I’ll never forget the day my team and I sat down to review the codebase for our latest Ruby on Rails project. As we dove into the details, it quickly became clear that our code was a tangled web of conditional logic, duplicated calculations, and a general lack of consistency. It was a mess - the kind of thing that keeps developers up at night.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Wilbur Suero - Software Craftsman]]></title><description><![CDATA[Rants and ramblings about life and code.]]></description><link>https://wilburhimself.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 12 Sep 2024 13:53:32 GMT</lastBuildDate><item><title><![CDATA[Implementing the Saga Design Pattern in Ruby on Rails]]></title><description><![CDATA[In the world of microservices, maintaining data consistency across multiple services can be a challenging task. The Saga Design Pattern…]]></description><link>https://wilburhimself.github.io/17-implementing-the-saga-design-pattern/</link><guid isPermaLink="false">https://wilburhimself.github.io/17-implementing-the-saga-design-pattern/</guid><pubDate>Thu, 12 Sep 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;In the world of microservices, maintaining data consistency across multiple services can be a challenging task. The Saga Design Pattern offers a solution by breaking down a long transaction into a series of smaller, local transactions that can be managed independently. In this blog post, we’ll explore how to implement the Saga Design Pattern in a Ruby on Rails application, ensuring that your microservices remain consistent and resilient.&lt;/p&gt;
+&lt;h2&gt;1. What is the Saga Design Pattern?&lt;/h2&gt;
+&lt;p&gt;The Saga Design Pattern is a way to manage the consistency of operations across multiple services in a distributed system. Instead of a single, long transaction, a saga is composed of a series of smaller, local transactions. Each local transaction updates the database of its service and publishes a message or event to trigger the next local transaction in the saga. If a local transaction fails, the saga executes a series of compensating transactions to undo the changes that were made by the preceding local transactions.&lt;/p&gt;
+&lt;h2&gt;2. Why Use the Saga Design Pattern?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Scalability&lt;/strong&gt;: By breaking down long transactions into smaller, independent transactions, the Saga Design Pattern allows for better scalability.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Resilience&lt;/strong&gt;: The pattern provides a way to handle failures gracefully by rolling back changes through compensating transactions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Isolation&lt;/strong&gt;: Each local transaction operates within its own service, reducing the risk of conflicts and ensuring that failures in one service do not affect others.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;3. Implementing the Saga Design Pattern&lt;/h2&gt;
+&lt;h3&gt;Step 1: Define the Saga Workflow&lt;/h3&gt;
+&lt;p&gt;The first step in implementing a saga is to define the workflow. This involves identifying the sequence of local transactions that need to be executed and the conditions under which each transaction should be triggered.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Example of a Saga Workflow&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSaga&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;initialize&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; order
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;
+    create_order
+    reserve_inventory
+    charge_customer
+    complete_order
+  &lt;span class=&quot;token keyword&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e
+    rollback
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;create_order&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Logic to create an order&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;reserve_inventory&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Logic to reserve inventory&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;charge_customer&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Logic to charge the customer&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;complete_order&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Logic to complete the order&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;rollback&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Logic to rollback the saga&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Step 2: Create Local Transactions&lt;/h3&gt;
+&lt;p&gt;Each local transaction should be a self-contained operation that updates the database of its service. These transactions should be idempotent, meaning that they can be safely retried without causing unintended side effects.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Example of a Local Transaction&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CreateOrderTransaction&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;save&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;compensate&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;destroy
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Step 3: Implement Compensation Logic&lt;/h3&gt;
+&lt;p&gt;Compensation logic is used to undo the effects of a local transaction if it fails. Each local transaction should have a corresponding compensating transaction that reverses its changes.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Example of Compensation Logic&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ReserveInventoryTransaction&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    inventory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; Inventory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;find_by&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;product_id&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;product_id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    inventory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;decrement&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:quantity&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;quantity&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;compensate&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    inventory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; Inventory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;find_by&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;product_id&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;product_id&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    inventory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;increment&lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token symbol&quot;&gt;:quantity&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; order&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;quantity&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Step 4: Orchestrate the Saga&lt;/h3&gt;
+&lt;p&gt;The saga should be orchestrated by a central coordinator that manages the execution of local transactions and handles any failures by triggering the appropriate compensating transactions.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# Example of Saga Orchestration&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;SagaOrchestrator&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;initialize&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;saga&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token variable&quot;&gt;@saga&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; saga
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token variable&quot;&gt;@saga&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute
+  &lt;span class=&quot;token keyword&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e
+    &lt;span class=&quot;token variable&quot;&gt;@saga&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;rollback
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;4. Example: Order Processing Saga&lt;/h2&gt;
+&lt;p&gt;Let’s consider an example of an order processing saga. The saga involves the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create an order.&lt;/li&gt;
+&lt;li&gt;Reserve inventory.&lt;/li&gt;
+&lt;li&gt;Charge the customer.&lt;/li&gt;
+&lt;li&gt;Complete the order.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If any step fails, the saga should roll back the changes made by the preceding steps.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;ruby&quot;&gt;&lt;pre class=&quot;language-ruby&quot;&gt;&lt;code class=&quot;language-ruby&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSaga&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;initialize&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;order&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; order
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;/span&gt;
+    create_order_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    reserve_inventory_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    charge_customer_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    complete_order_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;execute&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&gt;&lt;/span&gt; e
+    rollback
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;create_order_transaction&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;CreateOrderTransaction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;reserve_inventory_transaction&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;ReserveInventoryTransaction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;charge_customer_transaction&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;ChargeCustomerTransaction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;complete_order_transaction&lt;/span&gt;&lt;/span&gt;
+    &lt;span class=&quot;token class-name&quot;&gt;CompleteOrderTransaction&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token method-definition&quot;&gt;&lt;span class=&quot;token function&quot;&gt;rollback&lt;/span&gt;&lt;/span&gt;
+    complete_order_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;compensate&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;completed&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;
+    charge_customer_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;compensate&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;charged&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;
+    reserve_inventory_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;compensate&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;reserved&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;
+    create_order_transaction&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;compensate&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;@order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;created&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;5. Best Practices for Using the Saga Design Pattern&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Idempotency&lt;/strong&gt;: Ensure that all local transactions are idempotent to handle retries safely.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Logging&lt;/strong&gt;: Log the state of the saga at each step to facilitate debugging and auditing.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Timeout Handling&lt;/strong&gt;: Implement timeouts for local transactions to prevent the saga from getting stuck.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Testing&lt;/strong&gt;: Thoroughly test the saga and its compensating transactions to ensure that they handle all edge cases.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;: Monitor the state of the saga to ensure that it remains consistent and resilient.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Saga Design Pattern is a powerful tool for managing complex, distributed transactions in a microservices architecture. By breaking down long transactions into smaller, manageable pieces and providing a way to handle failures gracefully, the saga pattern helps ensure that your services remain consistent and resilient. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Elevating Your Ruby on Rails Apps with Value Objects]]></title><description><![CDATA[I’ll never forget the day my team and I sat down to review the codebase for our latest Ruby on Rails project. As we dove into the details…]]></description><link>https://wilburhimself.github.io/16-elevating-ruby-on-rails-codebase-value-objects/</link><guid isPermaLink="false">https://wilburhimself.github.io/16-elevating-ruby-on-rails-codebase-value-objects/</guid><pubDate>Thu, 18 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I’ll never forget the day my team and I sat down to review the codebase for our latest Ruby on Rails project. As we dove into the details, it quickly became clear that our code was a tangled web of conditional logic, duplicated calculations, and a general lack of consistency. It was a mess - the kind of thing that keeps developers up at night.&lt;/p&gt;
 &lt;p&gt;That’s when I realized we were missing an important tool in our application architecture: value objects. These small, immutable objects had the potential to transform our codebase from chaotic to clean, from error-prone to robust. In this post, we’ll explore what value objects are, why they’re so beneficial, and how to implement them in your Ruby on Rails projects.&lt;/p&gt;
 &lt;h3&gt;What is a Value Object?&lt;/h3&gt;
 &lt;p&gt;A value object is a small, immutable object that represents a specific value or concept within your application. Unlike an entity object, which has an identity and can change over time, a value object is purely defined by its attributes. Two value objects are considered equal if they have the same attribute values, regardless of their object identity.&lt;/p&gt;

@@ -1,14 +1,18 @@
 body {
-  background: #e9e9f9;
-  color: #445;
+  background: #ffeeaa;
+  color: #444a66;
 }
 
 a {
-  color: #009;
+  color: #667099;
 }
 
 a:hover {
   color: black;
+}
+
+ul, ol {
+  list-style-position: inside;
 }
 
 .gatsby-highlight {
