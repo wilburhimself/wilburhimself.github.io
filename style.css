@@ -1,14 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
 body {
-  background: #ffeeaa;
+  background: #fff;
   color: #444a66;
+  font-family: "Fraunces", serif;
+  font-optical-sizing: auto;
+  font-size: 20px;
 }
 
 a {
-  color: #667099;
+  color: rgb(255, 102, 0);
 }
 
 a:hover {
   color: black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Fraunces", serif;
+  font-size: 40px;
 }
 
 ul, ol {
