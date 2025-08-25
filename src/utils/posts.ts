@@ -42,47 +42,52 @@ export async function extractPostContent(htmlContent: string, slug: string): Pro
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  // Get all directories that match the pattern [0-9]+-*
-  const files = await fs.readdir('.');
-  const postDirs = files.filter(file => {
-    try {
-      const stats = fs.statSync(file);
-      return stats.isDirectory() && /^[0-9]+-.+/.test(file);
-    } catch (error) {
-      return false;
+  // Get all directories that match the pattern [0-9]+-* from the posts directory
+  try {
+    const files = await fs.readdir('posts');
+    const postDirs = files.filter(file => {
+      try {
+        const stats = fs.statSync(path.join('posts', file));
+        return stats.isDirectory() && /^[0-9]+-.+/.test(file);
+      } catch (error) {
+        return false;
+      }
+    });
+    
+    // Sort posts by slug to maintain chronological order
+    const sortedPostDirs = postDirs.sort();
+    
+    const posts = [];
+    
+    for (const slug of sortedPostDirs) {
+      try {
+        const htmlPath = path.join('posts', slug, 'index.html');
+        const htmlContent = await fs.readFile(htmlPath, 'utf-8');
+        const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
+        posts.push({ slug, title, date, content, excerpt });
+      } catch (error) {
+        console.error(`Error reading post ${slug}:`, error);
+        // Add a placeholder post if we can't read the file
+        posts.push({
+          slug,
+          title: slug.replace(/[0-9]+-/, '').replace(/-/g, ' '),
+          date: 'Unknown date',
+          content: '<p>Content not available.</p>',
+          excerpt: 'Content not available.'
+        });
+      }
     }
-  });
-  
-  // Sort posts by slug to maintain chronological order
-  const sortedPostDirs = postDirs.sort();
-  
-  const posts = [];
-  
-  for (const slug of sortedPostDirs) {
-    try {
-      const htmlPath = path.join(slug, 'index.html');
-      const htmlContent = await fs.readFile(htmlPath, 'utf-8');
-      const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
-      posts.push({ slug, title, date, content, excerpt });
-    } catch (error) {
-      console.error(`Error reading post ${slug}:`, error);
-      // Add a placeholder post if we can't read the file
-      posts.push({
-        slug,
-        title: slug.replace(/[0-9]+-/, '').replace(/-/g, ' '),
-        date: 'Unknown date',
-        content: '<p>Content not available.</p>',
-        excerpt: 'Content not available.'
-      });
-    }
+    
+    return posts;
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+    return [];
   }
-  
-  return posts;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   try {
-    const htmlPath = path.join(slug, 'index.html');
+    const htmlPath = path.join('posts', slug, 'index.html');
     const htmlContent = await fs.readFile(htmlPath, 'utf-8');
     const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
     return { slug, title, date, content, excerpt };
