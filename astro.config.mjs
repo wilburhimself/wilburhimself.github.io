@@ -11,5 +11,10 @@ export default defineConfig({
       wrap: true
     }
   },
-  compressHTML: true
+  compressHTML: true,
+  vite: {
+    build: {
+      assetsInlineLimit: 0 // Prevent inlining assets to avoid issues with GitHub Pages
+    }
+  }
 });
