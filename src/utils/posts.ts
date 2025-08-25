@@ -44,22 +44,21 @@ export async function extractPostContent(htmlContent: string, slug: string): Pro
 export async function getAllPosts(): Promise<Post[]> {
   // Get all directories that match the pattern [0-9]+-*
   const files = await fs.readdir('.');
-  const postDirs = files.filter(file => 
-    fs.stat(file).then(stats => stats.isDirectory()).catch(() => false) && 
-    /^[0-9]+-.+/.test(file)
-  );
+  const postDirs = files.filter(file => {
+    try {
+      const stats = fs.statSync(file);
+      return stats.isDirectory() && /^[0-9]+-.+/.test(file);
+    } catch (error) {
+      return false;
+    }
+  });
   
-  // For now, we'll just return a few sample posts since we're still setting up
-  // In a full implementation, we'd read all the directories
-  const samplePosts = [
-    '01-hello-world',
-    '02-using-service-objects-in-ruby-on-rails',
-    '03-update-redux-form-fields-using-bindactioncreators'
-  ];
+  // Sort posts by slug to maintain chronological order
+  const sortedPostDirs = postDirs.sort();
   
   const posts = [];
   
-  for (const slug of samplePosts) {
+  for (const slug of sortedPostDirs) {
     try {
       const htmlPath = path.join(slug, 'index.html');
       const htmlContent = await fs.readFile(htmlPath, 'utf-8');
