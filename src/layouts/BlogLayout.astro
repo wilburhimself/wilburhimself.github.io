@@ -10,301 +10,290 @@ const { title } = Astro.props;
     <title>{title ? `${title} - Wilbur Suero's Blog` : "Wilbur Suero's Blog"}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
-      /* CSS Variables for consistent design */
+      /* Apple-inspired Minimalist Design */
       :root {
         /* Colors */
-        --primary-color: #2563eb;
-        --primary-hover: #1d4ed8;
-        --secondary-color: #4b5563;
-        --background-color: #f9fafb;
-        --card-background: #ffffff;
-        --text-primary: #1f2937;
-        --text-secondary: #6b7280;
-        --border-color: #e5e7eb;
-        --code-background: #1e1e1e;
-        --code-text: #d4d4d4;
+        --background: #ffffff;
+        --foreground: #000000;
+        --secondary-text: #888888;
+        --border: #eaeaea;
+        --hover-bg: #f5f5f7;
+        --accent: #0071e3;
         
         /* Typography */
-        --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        --font-size-small: 0.875rem;
         --font-size-base: 1rem;
         --font-size-large: 1.25rem;
-        --font-size-small: 0.875rem;
-        --line-height-base: 1.6;
+        --font-size-xl: 1.5rem;
+        --font-size-2xl: 2rem;
+        --font-size-3xl: 2.5rem;
+        --line-height-base: 1.5;
         --line-height-heading: 1.2;
         
         /* Spacing */
-        --spacing-xs: 0.25rem;
-        --spacing-sm: 0.5rem;
-        --spacing-md: 1rem;
-        --spacing-lg: 1.5rem;
-        --spacing-xl: 2rem;
-        --spacing-2xl: 3rem;
+        --spacing-3xs: 0.25rem;
+        --spacing-2xs: 0.5rem;
+        --spacing-xs: 0.75rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+        --spacing-2xl: 4rem;
+        --spacing-3xl: 5rem;
         
         /* Borders */
-        --border-radius: 0.5rem;
+        --border-radius: 6px;
         --border-width: 1px;
-        
-        /* Shadows */
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
       
-      /* Dark mode variables */
+      /* Dark mode */
       @media (prefers-color-scheme: dark) {
         :root {
-          --background-color: #111827;
-          --card-background: #1f2937;
-          --text-primary: #f9fafb;
-          --text-secondary: #d1d5db;
-          --border-color: #374151;
+          --background: #000000;
+          --foreground: #ffffff;
+          --secondary-text: #a1a1a6;
+          --border: #2e2e2e;
+          --hover-bg: #1d1d1f;
         }
       }
-
-      /* Reset and base styles */
+      
+      /* Reset */
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
-
+      
+      /* Base styles */
       body {
-        font-family: var(--font-family-base);
+        font-family: var(--font-family);
         font-size: var(--font-size-base);
         line-height: var(--line-height-base);
-        color: var(--text-primary);
-        background-color: var(--background-color);
+        color: var(--foreground);
+        background-color: var(--background);
         transition: background-color 0.3s, color 0.3s;
       }
-
-      /* Layout */
+      
+      /* Container */
       .container {
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
-        padding: var(--spacing-md);
+        padding: 0 var(--spacing-sm);
       }
-
+      
       /* Header */
       header {
-        padding: var(--spacing-xl) 0;
-        text-align: center;
-        border-bottom: var(--border-width) solid var(--border-color);
-        margin-bottom: var(--spacing-xl);
+        padding: var(--spacing-lg) 0;
+        border-bottom: var(--border-width) solid var(--border);
       }
-
-      .site-title {
-        font-size: var(--font-size-large);
-        font-weight: 700;
-        margin-bottom: var(--spacing-md);
-      }
-
-      .site-title a {
-        text-decoration: none;
-        color: var(--text-primary);
-        transition: color 0.2s;
-      }
-
-      .site-title a:hover {
-        color: var(--primary-color);
-      }
-
-      nav {
+      
+      .header-content {
         display: flex;
-        justify-content: center;
-        gap: var(--spacing-lg);
+        justify-content: space-between;
+        align-items: center;
       }
-
-      nav a {
-        text-decoration: none;
-        color: var(--primary-color);
-        font-weight: 500;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border-radius: var(--border-radius);
-        transition: background-color 0.2s, color 0.2s;
-      }
-
-      nav a:hover {
-        background-color: rgba(37, 99, 235, 0.1);
-        color: var(--primary-hover);
-      }
-
-      /* Main content */
-      main {
-        margin-bottom: var(--spacing-2xl);
-      }
-
-      /* Typography */
-      h1, h2, h3, h4, h5, h6 {
-        line-height: var(--line-height-heading);
-        margin-bottom: var(--spacing-md);
-        margin-top: var(--spacing-lg);
+      
+      .site-title {
+        font-size: var(--font-size-xl);
         font-weight: 600;
+        letter-spacing: -0.01em;
       }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      p {
-        margin-bottom: var(--spacing-md);
-      }
-
-      a {
-        color: var(--primary-color);
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Post list */
-      .posts {
-        display: grid;
-        gap: var(--spacing-lg);
-      }
-
-      .post-link {
-        display: block;
-        padding: var(--spacing-lg);
-        background-color: var(--card-background);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.2s, box-shadow 0.2s;
+      
+      .site-title a {
         text-decoration: none;
         color: inherit;
       }
-
-      .post-link:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+      
+      nav ul {
+        display: flex;
+        list-style: none;
+        gap: var(--spacing-md);
+      }
+      
+      nav a {
+        text-decoration: none;
+        color: var(--foreground);
+        font-size: var(--font-size-small);
+        font-weight: 400;
+        padding: var(--spacing-2xs) var(--spacing-xs);
+        border-radius: var(--border-radius);
+        transition: background-color 0.2s;
+      }
+      
+      nav a:hover {
+        background-color: var(--hover-bg);
+      }
+      
+      /* Main content */
+      main {
+        padding: var(--spacing-xl) 0;
+      }
+      
+      /* Typography */
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: var(--line-height-heading);
+        letter-spacing: -0.02em;
+        margin-bottom: var(--spacing-sm);
+      }
+      
+      h1 {
+        font-size: var(--font-size-3xl);
+        margin-bottom: var(--spacing-md);
+      }
+      
+      h2 {
+        font-size: var(--font-size-2xl);
+        margin-top: var(--spacing-xl);
+      }
+      
+      p {
+        margin-bottom: var(--spacing-sm);
+        color: var(--foreground);
+      }
+      
+      a {
+        color: var(--accent);
         text-decoration: none;
       }
-
-      .post-title {
-        font-size: 1.25rem;
-        margin-bottom: var(--spacing-xs);
-        color: var(--primary-color);
+      
+      a:hover {
+        text-decoration: underline;
       }
-
-      .post-meta {
-        color: var(--text-secondary);
-        font-size: var(--font-size-small);
-        margin-bottom: var(--spacing-sm);
+      
+      /* Posts grid */
+      .posts {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-lg);
+        margin-top: var(--spacing-md);
       }
-
-      .post-excerpt {
-        color: var(--text-primary);
-        line-height: 1.5;
-      }
-
-      /* Individual post */
-      .post-header {
-        margin-bottom: var(--spacing-xl);
-        text-align: center;
-      }
-
-      .post-title-single {
-        font-size: 2rem;
-        margin-bottom: var(--spacing-sm);
-      }
-
-      .post-date {
-        color: var(--text-secondary);
-        font-size: var(--font-size-small);
-      }
-
-      /* Footer */
-      footer {
-        padding: var(--spacing-xl) 0;
-        border-top: var(--border-width) solid var(--border-color);
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: var(--font-size-small);
-      }
-
-      footer a {
-        color: var(--primary-color);
-      }
-
-      footer p {
-        margin-bottom: var(--spacing-sm);
-      }
-
-      /* Code blocks */
-      pre {
-        background-color: var(--code-background);
-        color: var(--code-text);
+      
+      .post-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
         padding: var(--spacing-md);
         border-radius: var(--border-radius);
-        overflow-x: auto;
-        margin: var(--spacing-md) 0;
-        font-family: var(--font-family-mono);
+        transition: background-color 0.2s;
+      }
+      
+      .post-link:hover {
+        background-color: var(--hover-bg);
+        text-decoration: none;
+      }
+      
+      .post-title {
+        font-size: var(--font-size-large);
+        font-weight: 600;
+        margin-bottom: var(--spacing-2xs);
+        letter-spacing: -0.01em;
+      }
+      
+      .post-meta {
+        color: var(--secondary-text);
+        font-size: var(--font-size-small);
+        margin-bottom: var(--spacing-xs);
+      }
+      
+      .post-excerpt {
+        color: var(--foreground);
         font-size: var(--font-size-small);
         line-height: 1.4;
       }
-
-      code {
-        font-family: var(--font-family-mono);
-        font-size: var(--font-size-small);
-        background-color: var(--border-color);
-        padding: 0.2em 0.4em;
-        border-radius: 0.25em;
+      
+      /* Individual post */
+      .post-header {
+        margin-bottom: var(--spacing-xl);
       }
-
+      
+      .post-title-single {
+        font-size: var(--font-size-3xl);
+        margin-bottom: var(--spacing-xs);
+        letter-spacing: -0.02em;
+      }
+      
+      .post-date {
+        color: var(--secondary-text);
+        font-size: var(--font-size-small);
+      }
+      
+      /* Footer */
+      footer {
+        padding: var(--spacing-xl) 0;
+        border-top: var(--border-width) solid var(--border);
+        text-align: center;
+        color: var(--secondary-text);
+        font-size: var(--font-size-small);
+      }
+      
+      footer a {
+        color: var(--accent);
+      }
+      
+      footer p {
+        margin-bottom: var(--spacing-2xs);
+      }
+      
+      /* Code blocks */
+      pre {
+        background-color: var(--hover-bg);
+        padding: var(--spacing-sm);
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+        margin: var(--spacing-sm) 0;
+        font-size: var(--font-size-small);
+        line-height: 1.4;
+      }
+      
+      code {
+        font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+        font-size: var(--font-size-small);
+        background-color: var(--hover-bg);
+        padding: 0.2em 0.4em;
+        border-radius: var(--border-radius);
+      }
+      
       pre code {
         background: none;
         padding: 0;
       }
-
+      
       /* Responsive design */
       @media (max-width: 768px) {
         .container {
-          padding: var(--spacing-sm);
-        }
-        
-        header {
-          padding: var(--spacing-lg) 0;
-        }
-        
-        .site-title {
-          font-size: 1.5rem;
-        }
-        
-        nav {
-          flex-direction: column;
-          gap: var(--spacing-sm);
-        }
-        
-        h1 {
-          font-size: 1.75rem;
-        }
-        
-        h2 {
-          font-size: 1.25rem;
-        }
-        
-        .post-link {
-          padding: var(--spacing-md);
-        }
-      }
-
-      @media (max-width: 480px) {
-        .container {
-          padding: var(--spacing-xs);
+          padding: 0 var(--spacing-xs);
         }
         
         header {
           padding: var(--spacing-md) 0;
         }
         
+        .header-content {
+          flex-direction: column;
+          gap: var(--spacing-sm);
+          text-align: center;
+        }
+        
+        nav ul {
+          gap: var(--spacing-sm);
+        }
+        
+        main {
+          padding: var(--spacing-lg) 0;
+        }
+        
+        h1 {
+          font-size: var(--font-size-2xl);
+        }
+        
         .post-title-single {
-          font-size: 1.5rem;
+          font-size: var(--font-size-2xl);
+        }
+        
+        .posts {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -312,24 +301,25 @@ const { title } = Astro.props;
   <body>
     <div class="container">
       <header>
-        <h1 class="site-title"><a href="/">Wilbur Suero - Software Craftsman</a></h1>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-        </nav>
+        <div class="header-content">
+          <h1 class="site-title"><a href="/">Wilbur Suero</a></h1>
+          <nav>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </nav>
+        </div>
       </header>
       <main>
         <slot />
       </main>
       <footer>
-        <p>Crafted by <strong>Wilbur Suero</strong>, a Software Engineer, who is passionate about building innovative and impactful solutions that drive business growth and operational excellence.</p>
+        <p>Crafted by <strong>Wilbur Suero</strong>, a Software Engineer passionate about building innovative solutions.</p>
         <p>
-          Ready to bring your software vision to life? 
-          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a consultation</a> to discuss your project requirements.<br/>
-          Alternatively, you can <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer">send me an email</a> directly.<br/>
-          Stay connected and explore my work further: 
-          <a href="https://read.cv/wilbursuero" target="_blank" rel="noopener noreferrer">Read CV</a> | 
-          <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a consultation</a> · 
+          <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer">Email me</a> · 
+          <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a> · 
           <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </p>
       </footer>
