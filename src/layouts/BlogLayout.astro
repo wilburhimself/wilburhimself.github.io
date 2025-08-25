@@ -6,99 +6,313 @@ const { title } = Astro.props;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title ? `${title} - Wilbur Suero's Blog` : "Wilbur Suero's Blog"}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
+      /* CSS Variables for consistent design */
       :root {
-        --font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
-          Helvetica, sans-serif;
+        /* Colors */
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary-color: #4b5563;
+        --background-color: #f9fafb;
+        --card-background: #ffffff;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+        --code-background: #1e1e1e;
+        --code-text: #d4d4d4;
+        
+        /* Typography */
+        --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        --font-family-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        --font-size-base: 1rem;
+        --font-size-large: 1.25rem;
+        --font-size-small: 0.875rem;
+        --line-height-base: 1.6;
+        --line-height-heading: 1.2;
+        
+        /* Spacing */
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+        --spacing-2xl: 3rem;
+        
+        /* Borders */
+        --border-radius: 0.5rem;
+        --border-width: 1px;
+        
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
+      /* Dark mode variables */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background-color: #111827;
+          --card-background: #1f2937;
+          --text-primary: #f9fafb;
+          --text-secondary: #d1d5db;
+          --border-color: #374151;
+        }
+      }
+
+      /* Reset and base styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
       body {
-        font-family: var(--font-family);
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-        color: #333;
-        line-height: 1.6;
+        font-family: var(--font-family-base);
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-base);
+        color: var(--text-primary);
+        background-color: var(--background-color);
+        transition: background-color 0.3s, color 0.3s;
       }
 
+      /* Layout */
       .container {
-        max-width: 42rem;
+        max-width: 800px;
         margin: 0 auto;
-        padding: 2rem;
-        background-color: white;
-        min-height: 100vh;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        padding: var(--spacing-md);
       }
 
+      /* Header */
       header {
-        border-bottom: 1px solid #eee;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+        border-bottom: var(--border-width) solid var(--border-color);
+        margin-bottom: var(--spacing-xl);
       }
 
-      header h1 {
-        margin: 0;
-        font-size: 1.5rem;
+      .site-title {
+        font-size: var(--font-size-large);
+        font-weight: 700;
+        margin-bottom: var(--spacing-md);
       }
 
-      header h1 a {
+      .site-title a {
         text-decoration: none;
-        color: inherit;
+        color: var(--text-primary);
+        transition: color 0.2s;
+      }
+
+      .site-title a:hover {
+        color: var(--primary-color);
       }
 
       nav {
-        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-lg);
       }
 
       nav a {
-        margin-right: 1rem;
         text-decoration: none;
-        color: #007acc;
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: var(--border-radius);
+        transition: background-color 0.2s, color 0.2s;
       }
 
       nav a:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary-hover);
+      }
+
+      /* Main content */
+      main {
+        margin-bottom: var(--spacing-2xl);
+      }
+
+      /* Typography */
+      h1, h2, h3, h4, h5, h6 {
+        line-height: var(--line-height-heading);
+        margin-bottom: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+        font-weight: 600;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        margin-bottom: var(--spacing-md);
+      }
+
+      a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      a:hover {
         text-decoration: underline;
       }
 
-      footer {
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
-        font-size: 0.9rem;
-        color: #666;
-      }
-
-      .post-meta {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+      /* Post list */
+      .posts {
+        display: grid;
+        gap: var(--spacing-lg);
       }
 
       .post-link {
         display: block;
-        margin-bottom: 1rem;
+        padding: var(--spacing-lg);
+        background-color: var(--card-background);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s, box-shadow 0.2s;
         text-decoration: none;
         color: inherit;
       }
 
       .post-link:hover {
-        text-decoration: underline;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        text-decoration: none;
       }
 
       .post-title {
-        margin: 0 0 0.25rem 0;
         font-size: 1.25rem;
-        color: #007acc;
+        margin-bottom: var(--spacing-xs);
+        color: var(--primary-color);
+      }
+
+      .post-meta {
+        color: var(--text-secondary);
+        font-size: var(--font-size-small);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .post-excerpt {
+        color: var(--text-primary);
+        line-height: 1.5;
+      }
+
+      /* Individual post */
+      .post-header {
+        margin-bottom: var(--spacing-xl);
+        text-align: center;
+      }
+
+      .post-title-single {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .post-date {
+        color: var(--text-secondary);
+        font-size: var(--font-size-small);
+      }
+
+      /* Footer */
+      footer {
+        padding: var(--spacing-xl) 0;
+        border-top: var(--border-width) solid var(--border-color);
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: var(--font-size-small);
+      }
+
+      footer a {
+        color: var(--primary-color);
+      }
+
+      footer p {
+        margin-bottom: var(--spacing-sm);
+      }
+
+      /* Code blocks */
+      pre {
+        background-color: var(--code-background);
+        color: var(--code-text);
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+        margin: var(--spacing-md) 0;
+        font-family: var(--font-family-mono);
+        font-size: var(--font-size-small);
+        line-height: 1.4;
+      }
+
+      code {
+        font-family: var(--font-family-mono);
+        font-size: var(--font-size-small);
+        background-color: var(--border-color);
+        padding: 0.2em 0.4em;
+        border-radius: 0.25em;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .container {
+          padding: var(--spacing-sm);
+        }
+        
+        header {
+          padding: var(--spacing-lg) 0;
+        }
+        
+        .site-title {
+          font-size: 1.5rem;
+        }
+        
+        nav {
+          flex-direction: column;
+          gap: var(--spacing-sm);
+        }
+        
+        h1 {
+          font-size: 1.75rem;
+        }
+        
+        h2 {
+          font-size: 1.25rem;
+        }
+        
+        .post-link {
+          padding: var(--spacing-md);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: var(--spacing-xs);
+        }
+        
+        header {
+          padding: var(--spacing-md) 0;
+        }
+        
+        .post-title-single {
+          font-size: 1.5rem;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
       <header>
-        <h1><a href="/">Wilbur Suero - Software Craftsman</a></h1>
+        <h1 class="site-title"><a href="/">Wilbur Suero - Software Craftsman</a></h1>
         <nav>
           <a href="/">Home</a>
           <a href="/about">About</a>

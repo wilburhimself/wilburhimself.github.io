@@ -17,8 +17,10 @@ const { title, date, content } = post;
 
 <BlogLayout title={title}>
   <article>
-    <h1>{title}</h1>
-    <p class="post-meta">{date}</p>
+    <header class="post-header">
+      <h1 class="post-title-single">{title}</h1>
+      <p class="post-date">{date}</p>
+    </header>
     <div set:html={content} />
   </article>
 </BlogLayout>

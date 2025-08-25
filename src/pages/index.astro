@@ -17,7 +17,7 @@ const posts = await getAllPosts();
         <a href={`/blog/${post.slug}/`} class="post-link">
           <h3 class="post-title">{post.title}</h3>
           <p class="post-meta">{post.date}</p>
-          <p>{post.excerpt || 'Read more...'}</p>
+          <p class="post-excerpt">{post.excerpt || 'Read more...'}</p>
         </a>
       ))
     }

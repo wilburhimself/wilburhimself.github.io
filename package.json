@@ -11,7 +11,9 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
-    "astro": "^5.13.3"
+    "@astrojs/markdown-remark": "^6.3.6",
+    "astro": "^5.13.3",
+    "rehype-pretty-code": "^0.14.1"
   },
   "devDependencies": {
     "cpy-cli": "^5.0.0",
