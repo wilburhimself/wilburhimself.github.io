@@ -45,14 +45,21 @@ export async function getAllPosts(): Promise<Post[]> {
   // Get all directories that match the pattern [0-9]+-* from the posts directory
   try {
     const files = await fs.readdir('posts');
-    const postDirs = files.filter(file => {
+    const postDirs = [];
+    
+    // Use a for...of loop to properly handle async operations
+    for (const file of files) {
       try {
-        const stats = fs.statSync(path.join('posts', file));
-        return stats.isDirectory() && /^[0-9]+-.+/.test(file);
+        const fullPath = path.join('posts', file);
+        const stats = await fs.stat(fullPath);
+        if (stats.isDirectory() && /^[0-9]+-.+/.test(file)) {
+          postDirs.push(file);
+        }
       } catch (error) {
-        return false;
+        // Ignore files that cause errors
+        continue;
       }
-    });
+    }
     
     // Sort posts by slug to maintain chronological order
     const sortedPostDirs = postDirs.sort();
