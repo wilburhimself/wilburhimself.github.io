@@ -42,48 +42,59 @@ export async function extractPostContent(htmlContent: string, slug: string): Pro
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  // Get all directories that match the pattern [0-9]+-*
-  const files = await fs.readdir('.');
-  const postDirs = files.filter(file => 
-    fs.stat(file).then(stats => stats.isDirectory()).catch(() => false) && 
-    /^[0-9]+-.+/.test(file)
-  );
-  
-  // For now, we'll just return a few sample posts since we're still setting up
-  // In a full implementation, we'd read all the directories
-  const samplePosts = [
-    '01-hello-world',
-    '02-using-service-objects-in-ruby-on-rails',
-    '03-update-redux-form-fields-using-bindactioncreators'
-  ];
-  
-  const posts = [];
-  
-  for (const slug of samplePosts) {
-    try {
-      const htmlPath = path.join(slug, 'index.html');
-      const htmlContent = await fs.readFile(htmlPath, 'utf-8');
-      const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
-      posts.push({ slug, title, date, content, excerpt });
-    } catch (error) {
-      console.error(`Error reading post ${slug}:`, error);
-      // Add a placeholder post if we can't read the file
-      posts.push({
-        slug,
-        title: slug.replace(/[0-9]+-/, '').replace(/-/g, ' '),
-        date: 'Unknown date',
-        content: '<p>Content not available.</p>',
-        excerpt: 'Content not available.'
-      });
+  // Get all directories that match the pattern [0-9]+-* from the posts directory
+  try {
+    const files = await fs.readdir('posts');
+    const postDirs = [];
+    
+    // Use a for...of loop to properly handle async operations
+    for (const file of files) {
+      try {
+        const fullPath = path.join('posts', file);
+        const stats = await fs.stat(fullPath);
+        if (stats.isDirectory() && /^[0-9]+-.+/.test(file)) {
+          postDirs.push(file);
+        }
+      } catch (error) {
+        // Ignore files that cause errors
+        continue;
+      }
     }
+    
+    // Sort posts by slug in descending order to show latest posts first
+    const sortedPostDirs = postDirs.sort().reverse();
+    
+    const posts = [];
+    
+    for (const slug of sortedPostDirs) {
+      try {
+        const htmlPath = path.join('posts', slug, 'index.html');
+        const htmlContent = await fs.readFile(htmlPath, 'utf-8');
+        const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
+        posts.push({ slug, title, date, content, excerpt });
+      } catch (error) {
+        console.error(`Error reading post ${slug}:`, error);
+        // Add a placeholder post if we can't read the file
+        posts.push({
+          slug,
+          title: slug.replace(/[0-9]+-/, '').replace(/-/g, ' '),
+          date: 'Unknown date',
+          content: '<p>Content not available.</p>',
+          excerpt: 'Content not available.'
+        });
+      }
+    }
+    
+    return posts;
+  } catch (error) {
+    console.error('Error reading posts directory:', error);
+    return [];
   }
-  
-  return posts;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   try {
-    const htmlPath = path.join(slug, 'index.html');
+    const htmlPath = path.join('posts', slug, 'index.html');
     const htmlContent = await fs.readFile(htmlPath, 'utf-8');
     const { title, date, content, excerpt } = await extractPostContent(htmlContent, slug);
     return { slug, title, date, content, excerpt };
