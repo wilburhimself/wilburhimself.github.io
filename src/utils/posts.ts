@@ -61,8 +61,8 @@ export async function getAllPosts(): Promise<Post[]> {
       }
     }
     
-    // Sort posts by slug to maintain chronological order
-    const sortedPostDirs = postDirs.sort();
+    // Sort posts by slug in descending order to show latest posts first
+    const sortedPostDirs = postDirs.sort().reverse();
     
     const posts = [];
     
