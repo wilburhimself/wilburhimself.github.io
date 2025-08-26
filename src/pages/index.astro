@@ -1,9 +1,8 @@
 ---
+import { getCollection } from 'astro:content';
 import BlogLayout from '../layouts/BlogLayout.astro';
-import { getAllPosts } from '../utils/posts';
-import type { Post } from '../utils/posts';
 
-const posts = await getAllPosts();
+const posts = await getCollection('blog');
 ---
 
 <BlogLayout title="Home">
@@ -11,9 +10,9 @@ const posts = await getAllPosts();
     {
       posts.map((post) => (
         <a href={`/blog/${post.slug}/`} class="post-link block border-b border-gray-light pb-4 mb-16">
-          <h2 class="post-title mb-0">{post.title}</h2>
-          <p class="post-meta text-sm">{post.date}</p>
-          <p class="post-excerpt">{post.excerpt || 'Read more...'}</p>
+          <h2 class="post-title mb-0">{post.data.title}</h2>
+          <p class="post-meta text-sm">{post.data.date}</p>
+          <p class="post-excerpt">{post.data.excerpt || 'Read more...'}</p>
         </a>
       ))
     }
