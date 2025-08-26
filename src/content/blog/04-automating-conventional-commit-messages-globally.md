@@ -1,6 +1,7 @@
 ---
 title: "Automating explicit commit story with Conventional Commits"
 date: "March 17, 2019"
+excerpt: "Automated conventional commit message enforcement across all projects becomes achievable through Commitizen, Commitlint, and Git hooks implementation. The workflow transforms version control documentation by standardizing commit formats, improving team collaboration, and creating consistent project histories through automated tooling."
 ---
 
 I am always looking for ways to make me a better developer. This includes improving the coding process and automation of coding tasks. One area I have been improving is my writing of commit messages.

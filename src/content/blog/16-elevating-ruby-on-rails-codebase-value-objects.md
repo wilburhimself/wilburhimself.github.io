@@ -1,6 +1,7 @@
 ---
 title: "Elevating Your Ruby on Rails Apps with Value Objects"
 date: "April 18, 2024"
+excerpt: "Chaotic Rails codebases transform through immutable value objects that encapsulate domain-specific concepts like money, addresses, and calculations. Implementation benefits include improved code readability, increased robustness through immutability, enhanced reusability, and superior error handling for maintainable applications."
 ---
 
 I’ll never forget the day my team and I sat down to review the codebase for our latest Ruby on Rails project. As we dove into the details, it quickly became clear that our code was a tangled web of conditional logic, duplicated calculations, and a general lack of consistency. It was a mess - the kind of thing that keeps developers up at night.

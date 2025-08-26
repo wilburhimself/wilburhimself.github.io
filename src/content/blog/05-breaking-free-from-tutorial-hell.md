@@ -1,6 +1,7 @@
 ---
 title: "Breaking free from tutorial hell"
 date: "February 06, 2023"
+excerpt: "Tutorial hell traps aspiring programmers in endless learning cycles without real progress, a problem solved through balancing structured education with hands-on project development. Effective strategies include setting concrete goals, building practical applications, collaborating with developers, and seeking feedback to transform theoretical knowledge into applicable programming skills."
 ---
 
 Numerous prospective programmers and developers have faced the phenomenon known as “tutorial hell.” It occurs when someone spends many hours completing tutorials without making any headway toward finishing a real project. This may demotivate people and cause them to feel frustrated and stuck.

@@ -1,6 +1,7 @@
 ---
 title: "Hash Maps"
 date: "February 11, 2023"
+excerpt: "Hash maps (dictionaries) in Ruby demonstrate efficient key-value pair operations through practical examples including element counting, word frequency analysis, and caching implementations. Performance characteristics and collision handling strategies optimize data retrieval and storage operations in Ruby applications."
 ---
 
 A hash map, also known as a dictionary or associative array, is a data structure that stores key-value pairs and provides fast access to the values based on their keys. In Ruby, the hash map data structure is implemented as a hash, which is represented by curly braces `{}` and each key-value pair is separated by a comma `,`.

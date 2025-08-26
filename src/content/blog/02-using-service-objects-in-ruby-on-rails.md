@@ -1,6 +1,7 @@
 ---
 title: "Using Service Objects in Ruby on Rails"
 date: "March 15, 2019"
+excerpt: "Service objects provide an architectural solution to Rails applications struggling with bloated models and controllers by extracting business logic into focused, testable classes and modules. Implementation examples demonstrate both class-based and module-based approaches following single responsibility principles for scalable application architecture."
 ---
 
 Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and basic rules exist for clean code:

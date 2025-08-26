@@ -1,6 +1,7 @@
 ---
 title: "Stacks and Queues"
 date: "February 10, 2023"
+excerpt: "Fundamental data structures stacks (LIFO) and queues (FIFO) receive comprehensive Ruby implementations with complete RSpec test suites, covering practical applications in function call management, task scheduling, and algorithm optimization essential for software engineering interviews and production development work."
 ---
 
 Stacks and Queues are two basic data structures used in computer science and software engineering. This post will explain what stacks and queues are, how they function, and how to use them in Ruby. I will also add RSpec tests for the implementations.

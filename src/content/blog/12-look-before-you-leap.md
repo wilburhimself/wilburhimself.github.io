@@ -1,6 +1,7 @@
 ---
 title: "Look before you leap"
 date: "April 15, 2023"
+excerpt: "Defensive programming principles emphasize state verification before execution to prevent runtime errors and improve application reliability. Ruby implementations demonstrate checking for nil values, empty arrays, hash key existence, and other validation patterns that ensure robust data structure operations."
 ---
 
 **Look before you leap** is a principle that emphasizes the importance of verifying the state of a program before executing an action. This principle is particularly useful when working with data structures, as it allows you to check if the data is valid and avoid potential errors or bugs.

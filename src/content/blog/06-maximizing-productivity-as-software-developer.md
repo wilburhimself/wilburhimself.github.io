@@ -1,6 +1,7 @@
 ---
 title: "Maximizing Productivity as a Software Developer - My 7 Go-To Techniques"
 date: "February 07, 2023"
+excerpt: "Seven proven productivity techniques including time management strategies, Pomodoro implementation, focused single-tasking, regular breaks, distraction elimination, task automation, and workspace organization form the foundation for maintaining high performance in demanding software development environments while achieving sustainable work-life balance."
 ---
 
 I am a software developer, and I know how difficult it may be to sustain productivity while handling demanding assignments and a healthy work-life balance. I’ve learned several strategies throughout the years that have enabled me to survive and deal with distractions at work. I’ll outline the top 7 productivity tips that I’ve found to be effective in this post.

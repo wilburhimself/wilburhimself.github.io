@@ -1,6 +1,7 @@
 ---
 title: "Procs, Lambdas and Blocks in Ruby on Rails"
 date: "August 18, 2023"
+excerpt: "Rails applications achieve enhanced maintainability and performance through strategic implementation of procs, lambdas, and blocks for collection filtering, view rendering, dynamic sorting, and parameterized logic patterns. Code examples demonstrate practical scenarios including reusable filtering logic and complex data manipulation workflows."
 ---
 
 In Ruby on Rails development, harnessing the power of procs, lambdas, and blocks can significantly improve the clarity, reusability, and performance of your code. In this comprehensive guide, we’ll explore real-world examples of using these constructs in Rails applications, complete with code snippets and insightful analysis of their performance impact.

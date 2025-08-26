@@ -1,6 +1,7 @@
 ---
 title: "Hello World"
 date: "January 04, 2019"
+excerpt: "A developer's return to technical blogging after a year of professional growth, marking the beginning of regular posts covering software engineering experiences, team collaboration insights, and the evolution of communication skills in modern development environments."
 ---
 
 [![New Stuff](/static/19d0a1dd297d346bf839219f3d793783/7cc5e/new.jpg)](/static/19d0a1dd297d346bf839219f3d793783/7cc5e/new.jpg)

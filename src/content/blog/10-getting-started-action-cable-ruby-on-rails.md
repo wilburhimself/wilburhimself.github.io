@@ -1,6 +1,7 @@
 ---
 title: "Getting started with ActionCable in Ruby on Rails - An Introduction"
 date: "February 20, 2023"
+excerpt: "Real-time web applications leverage ActionCable and WebSockets through comprehensive implementation covering Rails API setup, React integration, Redis configuration, and channel creation. Bidirectional communication patterns enable chat applications, live updates, and collaborative features in modern web development."
 ---
 
 ActionCable is a powerful feature in Ruby on Rails that allows developers to build real-time web applications using WebSockets. With ActionCable, you can create channels that handle bidirectional communication between the client and the server in real time. This tutorial will provide an introduction to ActionCable and guide you through creating a simple chat application.
