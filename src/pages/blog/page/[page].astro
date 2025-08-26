@@ -1,6 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
-import BlogLayout from '../layouts/BlogLayout.astro';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('blog')).sort((a, b) => {
+    const dateA = new Date(a.data.date);
+    const dateB = new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+  const POSTS_PER_PAGE = 10;
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+  
+  return Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => ({
+    params: { page: page.toString() },
+  }));
+}
+
+const { page: pageParam } = Astro.params;
+const page = parseInt(pageParam);
 
 const allPosts = (await getCollection('blog')).sort((a, b) => {
   const dateA = new Date(a.data.date);
@@ -10,11 +28,20 @@ const allPosts = (await getCollection('blog')).sort((a, b) => {
 
 const POSTS_PER_PAGE = 10;
 const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
-const page = 1;
-const posts = allPosts.slice(0, POSTS_PER_PAGE);
+
+// Redirect page 1 to the main blog index
+if (page === 1) {
+  Astro.response.status = 301;
+  Astro.response.headers.set('Location', '/');
+}
+
+const posts = allPosts.slice(
+  (page - 1) * POSTS_PER_PAGE,
+  page * POSTS_PER_PAGE
+);
 ---
 
-<BlogLayout title="Home">
+<BlogLayout title={`Page ${page}`}>
   <div class="posts">
     {
       posts.map((post) => (
@@ -29,7 +56,13 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
   
   <!-- Pagination -->
   <div class="pagination flex justify-between items-center mt-16">
-    <span></span> <!-- Empty span for spacing -->
+    {page > 1 && (
+      <a href={page === 2 ? '/' : `/blog/page/${page - 1}/`} class="text-gray-dark hover:text-near-black">
+        ← Previous
+      </a>
+    )}
+    {page === 1 && <span></span>}
+    
     <div class="pagination-links">
       {
         Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
@@ -42,10 +75,12 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
         ))
       }
     </div>
-    {totalPages > 1 && (
-      <a href="/blog/page/2/" class="text-gray-dark hover:text-near-black">
+    
+    {page < totalPages && (
+      <a href={`/blog/page/${page + 1}/`} class="text-gray-dark hover:text-near-black">
         Next →
       </a>
     )}
+    {page === totalPages && <span></span>}
   </div>
 </BlogLayout>
