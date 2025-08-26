@@ -1,122 +1,44 @@
 ---
 const { title } = Astro.props;
+import '../styles/global.css';
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title ? `${title} - Wilbur Suero's Blog` : "Wilbur Suero's Blog"}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title ? `${title} - Wilbur Suero` : "Wilbur Suero"}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <style>
-      :root {
-        --font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
-          Helvetica, sans-serif;
-      }
-
-      body {
-        font-family: var(--font-family);
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-        color: #333;
-        line-height: 1.6;
-      }
-
-      .container {
-        max-width: 42rem;
-        margin: 0 auto;
-        padding: 2rem;
-        background-color: white;
-        min-height: 100vh;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      }
-
-      header {
-        border-bottom: 1px solid #eee;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-      }
-
-      header h1 {
-        margin: 0;
-        font-size: 1.5rem;
-      }
-
-      header h1 a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      nav {
-        margin-top: 1rem;
-      }
-
-      nav a {
-        margin-right: 1rem;
-        text-decoration: none;
-        color: #007acc;
-      }
-
-      nav a:hover {
-        text-decoration: underline;
-      }
-
-      footer {
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
-        font-size: 0.9rem;
-        color: #666;
-      }
-
-      .post-meta {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-      }
-
-      .post-link {
-        display: block;
-        margin-bottom: 1rem;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .post-link:hover {
-        text-decoration: underline;
-      }
-
-      .post-title {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.25rem;
-        color: #007acc;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet">
   </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1><a href="/">Wilbur Suero - Software Craftsman</a></h1>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-        </nav>
+  <body class="bg-base text-near-black font-signika">
+    <div class="container mx-auto px-6">
+      <header class="py-2 border-b-2 border-gray-light">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold uppercase font-signika"><a href="/">Wilbur Suero</a></h1>
+          <nav>
+            <ul class="flex space-x-8">
+              <li><a href="/" class="text-gray-dark hover:text-near-black">Home</a></li>
+              <li><a href="/about" class="text-gray-dark hover:text-near-black">About</a></li>
+            </ul>
+          </nav>
+        </div>
       </header>
-      <main>
+      <main class="main-content py-8">
         <slot />
       </main>
-      <footer>
-        <p>Crafted by <strong>Wilbur Suero</strong>, a Software Engineer, who is passionate about building innovative and impactful solutions that drive business growth and operational excellence.</p>
+      <hr class="border-gray-light">
+      <footer class="py-16 text-center text-gray-medium">
+        <p>Crafted by <strong>Wilbur Suero</strong>, a Software Engineer passionate about building innovative solutions.</p>
         <p>
-          Ready to bring your software vision to life? 
-          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a consultation</a> to discuss your project requirements.<br/>
-          Alternatively, you can <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer">send me an email</a> directly.<br/>
-          Stay connected and explore my work further: 
-          <a href="https://read.cv/wilbursuero" target="_blank" rel="noopener noreferrer">Read CV</a> | 
-          <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a> | 
-          <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">Schedule a consultation</a> ·
+          <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">Email me</a> ·
+          <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">GitHub</a> ·
+          <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">LinkedIn</a>
         </p>
       </footer>
     </div>
