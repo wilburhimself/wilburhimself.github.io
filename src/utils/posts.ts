@@ -12,32 +12,32 @@ export interface Post {
 // Function to extract content from the existing HTML files
 export async function extractPostContent(htmlContent: string, slug: string): Promise<{title: string, date: string, content: string, excerpt: string}> {
   // Extract title
-  const titleMatch = htmlContent.match(/<title>([^<]+)<\/title>/i) || 
+  const titleMatch = htmlContent.match(/<title>([^<]+)<\/title>/i) ||
                     htmlContent.match(/<h1[^>]*>([^<]+)<\/h1>/i);
   const title = titleMatch ? titleMatch[1].replace(' — Wilbur Suero', '').trim() : 'Untitled';
-  
+
   // Extract date
   const dateMatch = htmlContent.match(/<p[^>]*style="[^"]*font-size:0\.83255rem[^"]*"[^>]*>([^<]+)<\/p>/i);
   const date = dateMatch ? dateMatch[1].trim() : '';
-  
+
   // Extract content (everything between the date paragraph and the HR tag or navigation)
   const contentStart = dateMatch ? htmlContent.indexOf(dateMatch[0]) + dateMatch[0].length : 0;
   const contentEndTag = htmlContent.indexOf('<hr', contentStart);
   const navStart = htmlContent.indexOf('<ul style="display:flex', contentStart);
-  
+
   let contentEndPos = contentEndTag;
   if (navStart > 0 && (contentEndPos === -1 || navStart < contentEndPos)) {
     contentEndPos = navStart;
   }
-  
-  const content = contentEndPos > contentStart ? 
-    htmlContent.substring(contentStart, contentEndPos) : 
+
+  const content = contentEndPos > contentStart ?
+    htmlContent.substring(contentStart, contentEndPos) :
     htmlContent.substring(contentStart);
-  
+
   // Create excerpt from the first paragraph
   const firstParaMatch = content.match(/<p[^>]*>(.*?)<\/p>/i);
-  const excerpt = firstParaMatch ? firstParaMatch[1].replace(/<[^>]*>/g, '').substring(0, 160) + '...' : '';
-  
+  const excerpt = firstParaMatch ? firstParaMatch[1].replace(/<[^>]*>/g, '').trim() : '';
+
   return { title, date, content, excerpt };
 }
 
@@ -46,7 +46,7 @@ export async function getAllPosts(): Promise<Post[]> {
   try {
     const files = await fs.readdir('posts');
     const postDirs = [];
-    
+
     // Use a for...of loop to properly handle async operations
     for (const file of files) {
       try {
@@ -60,12 +60,12 @@ export async function getAllPosts(): Promise<Post[]> {
         continue;
       }
     }
-    
+
     // Sort posts by slug in descending order to show latest posts first
     const sortedPostDirs = postDirs.sort().reverse();
-    
+
     const posts = [];
-    
+
     for (const slug of sortedPostDirs) {
       try {
         const htmlPath = path.join('posts', slug, 'index.html');
@@ -84,7 +84,7 @@ export async function getAllPosts(): Promise<Post[]> {
         });
       }
     }
-    
+
     return posts;
   } catch (error) {
     console.error('Error reading posts directory:', error);

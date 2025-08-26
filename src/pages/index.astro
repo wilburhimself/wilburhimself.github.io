@@ -7,15 +7,12 @@ const posts = await getAllPosts();
 ---
 
 <BlogLayout title="Home">
-  <h1>Wilbur Suero's Blog</h1>
-  <p>Welcome to my technical blog where I share insights, experiences, and thoughts on software development.</p>
-  
   <div class="posts">
     {
       posts.map((post) => (
-        <a href={`/blog/${post.slug}/`} class="post-link">
-          <h2 class="post-title">{post.title}</h2>
-          <p class="post-meta">{post.date}</p>
+        <a href={`/blog/${post.slug}/`} class="post-link block border-b border-gray-light pb-4 mb-16">
+          <h2 class="post-title mb-0">{post.title}</h2>
+          <p class="post-meta text-sm">{post.date}</p>
           <p class="post-excerpt">{post.excerpt || 'Read more...'}</p>
         </a>
       ))
