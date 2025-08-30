@@ -1,10 +1,8 @@
 ---
-title: "HOW I APPROACH A SLOW BACKGROUND JOB"
+title: "How I approach a slow background job"
 date: "2025-07-29"
 excerpt: "Background job performance optimization requires systemic analysis beyond simple retries or thread allocation. Effective troubleshooting includes payload size reduction, external call isolation, internal profiling, batching strategies, and queue structure review."
 ---
-
-# HOW I APPROACH A SLOW BACKGROUND JOB
 
 When a background job runs slow, I don't just add retries or throw more threads at it.
 

@@ -1,10 +1,8 @@
 ---
-title: "STOP MANAGING THREADS. START MODELING SYSTEMS"
+title: "Stop managing threads, start modeling systems"
 date: "2025-07-28"
 excerpt: "Effective concurrency requires thinking in terms of systems rather than low-level thread management. Languages like Elixir and Go enable this shift through lightweight processes and message passing that align with system thinking."
 ---
-
-# STOP MANAGING THREADS. START MODELING SYSTEMS
 
 Two languages stand out for how they embrace concurrency:
 

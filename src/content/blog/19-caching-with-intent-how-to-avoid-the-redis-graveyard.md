@@ -1,5 +1,5 @@
 ---
-title: "CACHING WITH INTENT: HOW TO AVOID THE REDIS GRAVEYARD"
+title: "Caching with intent: How to avoid the Redis graveyard"
 date: "2025-08-13"
 excerpt: "Effective caching strategies require intentional design to prevent memory waste and stale data issues. Implementation guidelines include evaluating query cost, frequency of access, data predictability, TTL settings, and scope management for optimal Redis performance."
 ---

@@ -1,10 +1,8 @@
 ---
-title: "DESIGNING FOR OPERATIONS"
+title: "Designing for operations"
 date: "2025-08-08"
 excerpt: "Operational excellence in system design prioritizes maintainability and debuggability alongside performance. Key practices include stable API contracts, structured logging, idempotent operations, and proactive error handling to reduce operational overhead."
 ---
-
-# DESIGNING FOR OPERATIONS
 
 We talk to no end about performance and scalability, but there's an spect non often talked about, but exists in systems that age well and don't "quietly" drain budgets in ops hours, something less glamorous: operations.
 
