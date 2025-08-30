@@ -18,23 +18,25 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
   <div class="posts">
     {
       posts.map((post) => (
-        <a href={`/blog/${post.slug}/`} class="post-link block border-b border-gray-light pb-4 mb-16">
-          <h2 class="post-title mb-0">{post.data.title}</h2>
+        <div class="post post-link block border-b border-gray-light pb-4 mb-16">
+          <h2 class="post-title mb-0">
+            <a href={`/blog/${post.slug}/`} class="underline hover:text-near-black hover:no-underline">{post.data.title}</a>
+          </h2>
           <p class="post-meta text-sm">{post.data.date}</p>
           <p class="post-excerpt">{post.data.excerpt || 'Read more...'}</p>
-        </a>
+        </div>
       ))
     }
   </div>
-  
+
   <!-- Pagination -->
   <div class="pagination flex justify-between items-center mt-16">
     <span></span> <!-- Empty span for spacing -->
     <div class="pagination-links">
       {
         Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <a 
-            href={pageNum === 1 ? '/' : `/blog/page/${pageNum}/`} 
+          <a
+            href={pageNum === 1 ? '/' : `/blog/page/${pageNum}/`}
             class={`px-3 py-1 mx-1 rounded ${pageNum === page ? 'bg-gray-200 font-bold' : 'hover:bg-gray-100'}`}
           >
             {pageNum}

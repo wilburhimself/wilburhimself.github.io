@@ -35,6 +35,9 @@
   }
 
   .main-content {
+    a {
+      color: #0000ff;
+    }
     ul {
       @apply list-disc list-inside;
       @apply mb-8;

@@ -4,8 +4,6 @@ date: "2025-08-11"
 excerpt: "Maintaining consistency in legacy codebases can become a barrier to improvement when it preserves bad design patterns. Effective refactoring requires distinguishing between beneficial consistency and resistance to necessary change."
 ---
 
-# Legacy Code And The Trap Of False Consistency
-
 "This new change is not consistent with our codebase."
 
 I'm used to hearing this when adding improvements to legacy codebases. It sounds like a call for consistency, but in reality, it's resistance to change.
