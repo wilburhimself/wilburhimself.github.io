@@ -1,7 +1,7 @@
 ---
 title: "How I Reduced API Latency by 50% Using Strategic Redis Architecture"
 date: "2025-08-31"
-excerpt: "SQL query optimization requires diagnostic thinking rather than checklist application. Effective performance tuning involves distinguishing between design issues and scaling problems through EXPLAIN analysis, indexing evaluation, filtering optimization, and concurrency assessment."
+excerpt: "Peak traffic was crushing our API—P95 latency at 450ms, dashboards taking 5 seconds to load, and users complaining of “slow mornings.” By introducing a Redis caching layer designed around real access patterns, not just generic key-value storage, we cut P95 latency in half, reduced DB CPU load from 85% to 45%, and eliminated the majority of timeouts. This is the story of how intentional caching turned a struggling system into one that scaled gracefully."
 ---
 
 The other day I wrote about [“Caching with Intent”](/blog/19-caching-with-intent-how-to-avoid-the-redis-graveyard/), and stated that caching should be deliberate, not accidental, and should become a tool to shape predictable performance.
