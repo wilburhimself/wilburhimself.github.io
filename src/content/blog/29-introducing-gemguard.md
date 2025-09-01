@@ -1,7 +1,7 @@
 ---
 title: "🚨 Introducing GemGuard: Automated Security for Ruby Gems (Scan, SBOM, Typosquat, Auto-Fix)"
 date: "2025-08-11"
-excerpt: "Peak traffic was crushing our API—P95 latency at 450ms, dashboards taking 5 seconds to load, and users complaining of “slow mornings.” By introducing a Redis caching layer designed around real access patterns, not just generic key-value storage, we cut P95 latency in half, reduced DB CPU load from 85% to 45%, and eliminated the majority of timeouts. This is the story of how intentional caching turned a struggling system into one that scaled gracefully."
+excerpt: "GemGuard is my attempt to make Ruby security less of a chore and more of a natural part of development. It scans your Gemfile.lock against OSV.dev and the Ruby Advisory Database, flags typosquat risks, and can even generate SBOMs in SPDX or CycloneDX formats. If it finds a vulnerable gem, it’ll suggest or apply safe upgrades, and because it’s designed with CI/CD in mind, you can drop it into your workflow without slowing things down."
 ---
 
 **Links:**
