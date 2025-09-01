@@ -137,7 +137,7 @@ client.chat(
 
 - Open-source and multilingual
 - Runs locally → no token limits, no vendor lock-in
-- Solid benchmarks (MTEB) and practical retrieval quality
+- Solid benchmarks ([MTEB](https://huggingface.co/mteb)) and practical retrieval quality
 
 ### 💡 Why Still Use OpenAI?
 
