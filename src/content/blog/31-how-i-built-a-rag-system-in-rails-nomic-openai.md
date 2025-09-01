@@ -1,7 +1,7 @@
 ---
 title: "How I Built a RAG System in Rails Using Nomic Embeddings and OpenAI"
 date: "2025-07-18"
-excerpt: "The moment I realized we had a problem was when our QA engineer asked, 'How do we know if someone accidentally changed how the AI behaves?' We had prompts scattered across a dozen files, each slightly different, with no way to test or version them. It hit me: we were making the same mistakes Rails solved 15 years ago with hardcoded strings. AI prompts aren't just text, they're critical business logic that shapes user experience. So I built Promptly to bring Rails conventions to AI development, treating prompts like the first-class citizens they should be. The result? 60% faster AI feature development and actual regression testing for AI behavior. Sometimes the best solutions aren't about new technology; they're about applying proven patterns to new problems."
+excerpt: "RAG doesn’t have to mean heavyweight infrastructure. In this post, I show how I wired up a lean Retrieval-Augmented Generation pipeline inside a Rails app using Nomic for embeddings, PgVector for search, and OpenAI for generation. The result is a flexible system: open-source at the embedding layer, powerful where it counts, and simple enough to extend without vendor lock-in."
 ---
 
 Retrieval-Augmented Generation (RAG) is a practical way to bring your own data into LLM workflows. Instead of fine-tuning, you give the model context that makes its answers specific and trustworthy.
