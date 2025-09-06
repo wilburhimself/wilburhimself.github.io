@@ -8,6 +8,7 @@
   body {
     @apply bg-base text-near-black font-roboto;
     font-size: 1.2em;
+    border-top: 1em solid #f28ff9;
   }
   p {
     @apply mb-4 text-gray-dark;
@@ -35,8 +36,8 @@
   }
 
   .main-content {
-    a {
-      color: #0000ff;
+    a, .post-title-single {
+      color: #0044aa;
     }
     ul {
       @apply list-disc list-inside;
@@ -61,6 +62,12 @@
 
     hr {
       @apply mb-8;
+    }
+
+    strong {
+      @apply font-bold;
+      @apply p-2;
+      background: #ffc;
     }
   }
 

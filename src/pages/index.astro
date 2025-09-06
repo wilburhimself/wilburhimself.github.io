@@ -20,7 +20,7 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
       posts.map((post) => (
         <div class="post post-link block border-b border-gray-light pb-4 mb-16">
           <h2 class="post-title mb-0">
-            <a href={`/blog/${post.slug}/`} class="underline hover:text-near-black hover:no-underline">{post.data.title}</a>
+            <a href={`/blog/${post.slug}/`} class="hover:text-near-black hover:no-underline">{post.data.title}</a>
           </h2>
           <p class="post-meta text-sm">{post.data.date}</p>
           <p class="post-excerpt">{post.data.excerpt || 'Read more...'}</p>
