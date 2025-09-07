@@ -51,24 +51,24 @@ const projects = [
 ---
 
 <BlogLayout title="Projects | Wilbur Suero">
-  <section class="py-12 px-4 max-w-5xl mx-auto">
+  <section class="py-12 px-4 mx-auto">
     <h1 class="text-4xl font-bold mb-6 text-center">My Projects</h1>
     <p class="text-lg mb-8 text-center">Here are some of the projects I've worked on, showcasing a range of technologies and impacts.</p>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       {projects.map(project => (
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <article class="bg-white rounded-lg shadow-md overflow-hidden" role="article" aria-labelledby={`project-title-${project.title}`}>
           <div class="p-6">
-            <h2 class="text-2xl font-semibold mb-2">{project.title}</h2>
+            <h2 id={`project-title-${project.title}`} class="text-2xl font-semibold mb-2">{project.title}</h2>
             <p class="text-gray-600 mb-2"><strong>Role:</strong> {project.role}</p>
             <p class="text-gray-600 mb-2"><strong>Problem & Impact:</strong> {project.problem} - {project.impact}</p>
             <p class="text-gray-600 mb-2"><strong>Tech Stack:</strong> {project.techStack.join(', ')}</p>
             <p class="text-gray-600 mb-4"><strong>Outcome:</strong> {project.outcome}</p>
-            <div class="flex space-x-4">
-              {project.blogLink && <a href={project.blogLink} class="text-blue-500 hover:underline">Blog Post</a>}
-              {project.githubLink && <a href={project.githubLink} class="text-blue-500 hover:underline">GitHub Repo</a>}
+            <div class="flex flex-wrap gap-4">
+              {project.blogLink && <a href={project.blogLink} class="text-blue-500 hover:underline" aria-label={`Blog post about ${project.title}`}>Blog Post</a>}
+              {project.githubLink && <a href={project.githubLink} class="text-blue-500 hover:underline" aria-label={`GitHub repository for ${project.title}`}>GitHub Repo</a>}
             </div>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   </section>

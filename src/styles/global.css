@@ -39,6 +39,12 @@
     a, .post-title-single {
       color: #0044aa;
     }
+    .buttons {
+      a {
+        color: white;
+        @apply shadow-sm;
+      }
+    }
     ul {
       @apply list-disc list-inside;
       @apply mb-8;

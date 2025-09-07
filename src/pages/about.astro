@@ -2,22 +2,16 @@
 import BlogLayout from '../layouts/BlogLayout.astro';
 ---
 
-<BlogLayout title="About">
-  <h1>About Wilbur Suero</h1>
-  <p>Hello! I'm Wilbur Suero, a Software Engineer with a passion for building innovative and impactful solutions that drive business growth and operational excellence.</p>
-  
-  <p>With years of experience in the software development industry, I've had the opportunity to work on diverse projects ranging from small startups to large enterprise applications. My expertise spans across multiple technologies and frameworks, always with a focus on clean code, maintainability, and performance.</p>
-  
-  <p>This blog is where I share my thoughts, experiences, and insights on software development, technology trends, and best practices. Whether you're a fellow developer, a tech enthusiast, or someone looking to learn more about software engineering, I hope you'll find something valuable here.</p>
-  
-  <h2>Let's Connect</h2>
-  <p>I'm always open to discussing new opportunities, collaborations, or just having a conversation about technology. Feel free to reach out through any of the channels below:</p>
-  
-  <ul>
-    <li><a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a consultation</a></li>
-    <li><a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer">Send me an email</a></li>
-    <li><a href="https://read.cv/wilbursuero" target="_blank" rel="noopener noreferrer">Read CV</a></li>
-    <li><a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-    <li><a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-  </ul>
+<BlogLayout title="About | Wilbur Suero">
+  <section class="py-12 px-4 mx-auto">
+    <h1 class="text-4xl font-bold mb-6 text-center">About Me</h1>
+    <p class="text-lg mb-6">I'm Wilbur Suero, a Software Engineer passionate about building systems that solve real problems. My focus is on creating efficient, scalable solutions with a strong emphasis on practical innovation.</p>
+    <p class="text-lg mb-6">With a background in software development, I specialize in crafting tools and workflows that streamline complex processes—whether it's AI prompt engineering, supply chain security, or API development. I believe in 'No Magic, Just Systems,' which means breaking down challenges into manageable, repeatable patterns.</p>
+    <p class="text-lg mb-8">When I'm not coding, I'm exploring new tech, refining my craft, or sharing insights through writing. Let's build something impactful together.</p>
+    <div class="flex flex-col md:flex-row justify-center gap-6 buttons">
+      <a href="/projects" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center">Explore my work → Projects</a>
+      <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-900 transition-colors text-center">See the code → GitHub</a>
+      <a href="mailto:suerowilbur@gmail.com" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-center">Want to work together? → Contact</a>
+    </div>
+  </section>
 </BlogLayout>
