@@ -1,0 +1,75 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+
+const projects = [
+  {
+    title: "Promptly",
+    role: "Creator & Maintainer",
+    problem: "Managing AI prompts in production was fragmented and error-prone, with no clean way to version, test, and reuse prompts across projects.",
+    impact: "Enabled teams to treat prompts as first-class assets with versioning, templating, and testing, cutting iteration cycles by over 60%.",
+    techStack: ["Ruby", "Rails", "Liquid", "ERB", "RSpec"],
+    outcome: "Streamlined AI development workflows with reusable, testable prompt templates integrated into CI/CD pipelines.",
+    image: "/images/projects/promptly.jpg",
+    blogLink: "/blog/27-promptly-introducing",
+    githubLink: "https://github.com/wilburhimself/promptly"
+  },
+  {
+    title: "GemGuard",
+    role: "Creator & Maintainer",
+    problem: "Ruby applications often rely on unverified gem dependencies, exposing projects to security and supply chain vulnerabilities.",
+    impact: "Introduced automated Software Bill of Materials (SBOM) generation and dependency validation, securing the gem ecosystem with minimal developer overhead.",
+    techStack: ["Ruby", "CLI", "CycloneDX"],
+    outcome: "Provided developers with an easy way to audit and protect Ruby apps against compromised gems, improving security posture with actionable insights.",
+    image: "/images/projects/gemguard.jpg",
+    blogLink: "/blog/29-introducing-gemguard",
+    githubLink: "https://github.com/wilburhimself/gem_guard"
+  },
+  {
+    title: "GraphQL API Starter",
+    role: "Creator & Maintainer",
+    problem: "Bootstrapping a GraphQL server with Prisma, CRUD resolvers, tests, and type safety is repetitive and error-prone across projects.",
+    impact: "Offered a fully typed and tested GraphQL starter kit using Prisma, Pothos, and GraphQL Yoga—eliminating boilerplate and accelerating initial setup.",
+    techStack: ["TypeScript", "Node.js", "Prisma", "Pothos", "GraphQL Yoga", "Jest"],
+    outcome: "Enabled rapid prototyping of GraphQL APIs with type-safe CRUD operations, seamless JS↔TS migration, and built-in testing support.",
+    image: "/images/projects/graphql-starter.jpg",
+    blogLink: "/blog/graphql-api-starter",  // adjust if you publish a post
+    githubLink: "https://github.com/wilburhimself/graphql_api_starter"
+  },
+  {
+    title: "Theory (Go)",
+    role: "Creator & Maintainer",
+    problem: "Go developers often lack a simple yet flexible ORM that doesn’t overcomplicate domain modeling across services.",
+    impact: "Delivered a lightweight, intuitive ORM specifically tailored to Go’s language idioms—making data access cleaner without heavy abstraction.",
+    techStack: ["Go"],
+    outcome: "Streamlined data layer development in Go codebases, reducing boilerplate and encouraging clearer persistence patterns.",
+    image: "/images/projects/theory-go.jpg",
+    blogLink: "",  // add if you publish a write-up
+    githubLink: "https://github.com/wilburhimself/theory"
+  }
+]
+
+---
+
+<BlogLayout title="Projects | Wilbur Suero">
+  <section class="py-12 px-4 max-w-5xl mx-auto">
+    <h1 class="text-4xl font-bold mb-6 text-center">My Projects</h1>
+    <p class="text-lg mb-8 text-center">Here are some of the projects I've worked on, showcasing a range of technologies and impacts.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {projects.map(project => (
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-2xl font-semibold mb-2">{project.title}</h2>
+            <p class="text-gray-600 mb-2"><strong>Role:</strong> {project.role}</p>
+            <p class="text-gray-600 mb-2"><strong>Problem & Impact:</strong> {project.problem} - {project.impact}</p>
+            <p class="text-gray-600 mb-2"><strong>Tech Stack:</strong> {project.techStack.join(', ')}</p>
+            <p class="text-gray-600 mb-4"><strong>Outcome:</strong> {project.outcome}</p>
+            <div class="flex space-x-4">
+              {project.blogLink && <a href={project.blogLink} class="text-blue-500 hover:underline">Blog Post</a>}
+              {project.githubLink && <a href={project.githubLink} class="text-blue-500 hover:underline">GitHub Repo</a>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BlogLayout>
