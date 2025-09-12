@@ -75,6 +75,15 @@
         font-family: 'Fira Code', monospace;
         font-size: 0.9em;
       }
+
+      pre {
+        @apply block mb-4;
+        code {
+          background: none;
+          border: none;
+
+        }
+      }
     }
 
 
