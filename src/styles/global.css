@@ -69,9 +69,10 @@
 
     p, ol, ul {
       code {
-        @apply bg-gray-200;
+        background: rgb(214, 214, 192);
         @apply px-1 rounded;
-        border: 1px solid #ddd;
+        border: 1px solid #b9b9a1;
+        color: rgb(85, 85, 71);
         font-family: 'Fira Code', monospace;
         font-size: 0.9em;
       }
