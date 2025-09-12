@@ -66,6 +66,18 @@
       }
     }
 
+
+    p, ol, ul {
+      code {
+        @apply bg-gray-200;
+        @apply px-1 rounded;
+        border: 1px solid #ddd;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9em;
+      }
+    }
+
+
     hr {
       @apply mb-8;
     }
