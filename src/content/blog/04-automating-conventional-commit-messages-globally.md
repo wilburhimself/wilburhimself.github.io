@@ -79,7 +79,7 @@ Like with the earlier packages, I wanted to set this up for all my projects with
 I had global git hooks set up, so I added a `commit-msg` file with a simple script. This script compares it with commitlint, and fails if the message is not following the rules:
 
     #!/bin/bash
-    
+
     cat $1 | commitlint
 
 ### Conclusion

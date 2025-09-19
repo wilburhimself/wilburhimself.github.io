@@ -14,7 +14,7 @@ In this example, we’ll create a hash map to count the occurrences of each elem
 
     # Define the array
     arr = [1, 2, 3, 1, 2, 3, 4]
-    
+
     # Create a hash map to count the occurrences of each element
     counts = {}
     arr.each do |element|
@@ -24,7 +24,7 @@ In this example, we’ll create a hash map to count the occurrences of each elem
         counts[element] += 1
       end
     end
-    
+
     # Print the counts
     puts counts # Output: {1=>2, 2=>2, 3=>2, 4=>1}
 
@@ -34,7 +34,7 @@ In this example, we’ll create a hash map to find the frequency of words in a s
 
     # Define the string
     str = "Ruby is a dynamic, open source programming language with a focus on simplicity and productivity."
-    
+
     # Create a hash map to find the frequency of words in the string
     words = str.split(" ")
     frequency = {}
@@ -45,7 +45,7 @@ In this example, we’ll create a hash map to find the frequency of words in a s
         frequency[word] += 1
       end
     end
-    
+
     # Print the frequency of words
     puts frequency # Output: {"Ruby"=>1, "is"=>1, "a"=>2, "dynamic,"=>1, "open"=>1, "source"=>1, "programming"=>1, "language"=>1, "with"=>1, "focus"=>1, "on"=>1, "simplicity"=>1, "and"=>1, "productivity."=>1}
 
@@ -55,7 +55,7 @@ In this example, we’ll create a hash map to group the elements of an array by 
 
     # Define the array
     arr = [1, "Hello", 2.0, [1, 2, 3], {a: 1, b: 2}]
-    
+
     # Create a hash map to group the elements of the array by their type
     grouped = {}
     arr.each do |element|
@@ -66,7 +66,7 @@ In this example, we’ll create a hash map to group the elements of an array by 
         grouped[type].push(element)
       end
     end
-    
+
     # Print the grouped elements
     puts grouped # Output: {Fixnum=>[1, 2], String=>["Hello"], Float=>[2.0], Array=>[[1, 2, 3]], Hash=>[{:a=>1, :b=>2}]}
 

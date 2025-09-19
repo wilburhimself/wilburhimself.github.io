@@ -18,7 +18,7 @@ Setting it up was as simple as:
 
     import { bindActionCreators } from 'redux'
     import { Field, change } from 'redux-form'
-    
+
     // other imports ...
 
     const mapDispatchToProps = (dispatch) => ({

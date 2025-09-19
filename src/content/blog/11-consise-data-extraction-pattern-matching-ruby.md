@@ -15,7 +15,7 @@ Here’s an example of how you can use pattern matching to extract fields from a
       { name: "Jane", age: 25, gender: "female" },
       { name: "Jack", age: 40, gender: "male" }
     ]
-    
+
     people.each do |person|
       case person
       in { name: name, age: age, gender: gender }
@@ -34,7 +34,7 @@ Here’s another example. Let’s say you have an array of structured data that 
       { red: 0, green: 255, blue: 0 },
       { red: 0, green: 0, blue: 255 }
     ]
-    
+
     colors.each do |color|
       case color
       in { red: 255, green: 0, blue: 0 }

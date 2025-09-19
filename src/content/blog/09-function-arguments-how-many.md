@@ -23,7 +23,7 @@ Here’s an example:
     def send_email(to:, subject:, body:, attachments: [])
       # Send email
     end
-    
+
     send_email(to: 'example@example.com', subject: 'Hello', body: 'World')
 
 In this example, the `send_email` function takes a hash as its only argument, which contains the `to`, `subject`, `body`, and `attachments` keys. This approach allows for more flexibility in the arguments that are passed, as the `attachments` argument is optional.
@@ -35,11 +35,11 @@ Another alternative to using a large number of arguments is to create a Struct o
 Here’s an example using a Struct:
 
     Email = Struct.new(:to, :subject, :body, :attachments)
-    
+
     def send_email(email)
       # Send email
     end
-    
+
     send_email(Email.new('example@example.com', 'Hello', 'World', []))
 
 In this example, we define a new `Email` struct that contains the `to`, `subject`, `body`, and `attachments` fields. We then pass an instance of this struct as the argument to the `send_email` function. This approach provides a clear separation of concerns and allows for more flexibility in the arguments that are passed.
@@ -53,7 +53,7 @@ Here’s an example:
     def send_email(to, subject, body, attachments: [])
       # Send email
     end
-    
+
     send_email('example@example.com', 'Hello', 'World')
 
 In this example, the `attachments` argument has a default value of an empty array. This approach allows the function to be called with fewer arguments and provides a default value for the optional `attachments` argument.

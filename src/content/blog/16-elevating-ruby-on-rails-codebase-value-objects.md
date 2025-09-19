@@ -30,37 +30,37 @@ Let’s look at an example of how you might implement a value object for represe
     # app/value_objects/money.rb
     class Money
       include Comparable
-    
+
       attr_reader :amount, :currency
-    
+
       def initialize(amount, currency)
         @amount = amount
         @currency = currency
       end
-    
+
       def +(other)
         raise ArgumentError, "Cannot add values with different currencies" if currency != other.currency
         Money.new(amount + other.amount, currency)
       end
-    
+
       def -(other)
         raise ArgumentError, "Cannot subtract values with different currencies" if currency != other.currency
         Money.new(amount - other.amount, currency)
       end
-    
+
       def *(scalar)
         Money.new(amount * scalar, currency)
       end
-    
+
       def /(scalar)
         Money.new(amount / scalar, currency)
       end
-    
+
       def <=>(other)
         raise ArgumentError, "Cannot compare values with different currencies" if currency != other.currency
         amount <=> other.amount
       end
-    
+
       def to_s
         "#{amount} #{currency}"
       end

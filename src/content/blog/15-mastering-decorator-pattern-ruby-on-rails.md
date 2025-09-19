@@ -33,7 +33,7 @@ Instead, let’s create a `UserDecorator` class that wraps the `User` model and 
       def full_name
         "#{first_name} #{last_name}"
       end
-    
+
       def full_address
         "#{address_line_1}, #{address_line_2}, #{city}, #{state} #{zip_code}"
       end
@@ -63,11 +63,11 @@ Imagine you have a `FacilityService` that is responsible for managing facilities
       def get_facility(id)
         Facility.find(id)
       end
-    
+
       def create_facility(attributes)
         Facility.create(attributes)
       end
-    
+
       def update_facility(facility, attributes)
         facility.update(attributes)
         facility
@@ -83,13 +83,13 @@ Now, let’s say you want to add some additional functionality to the `FacilityS
           super(id)
         end
       end
-    
+
       def create_facility(attributes)
         facility = super(attributes)
         Rails.cache.delete("facility_#{facility.id}")
         facility
       end
-    
+
       def update_facility(facility, attributes)
         updated_facility = super(facility, attributes)
         Rails.cache.delete("facility_#{facility.id}")
@@ -108,12 +108,12 @@ You can also use the Decorator Pattern to enhance the presentation logic of your
       def formatted_name
         "#{first_name} #{last_name}"
       end
-    
+
       def formatted_email
         "#{email} (#{role})"
       end
     end
-    
+
     # Usage in a view
     <h1><%= UserViewDecorator.new(@user).formatted_name %></h1>
     <p><%= UserViewDecorator.new(@user).formatted_email %></p>
@@ -128,15 +128,15 @@ Finally, you can use the Decorator Pattern to extend the behavior of your models
         before_save
         super
       end
-    
+
       private
-    
+
       def before_save
         # Add custom validation or business logic
         errors.add(:name, 'cannot be blank') if name.blank?
       end
     end
-    
+
     # Usage
     user = UserModelDecorator.new(User.new)
     user.name = ''

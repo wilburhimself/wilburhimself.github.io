@@ -20,7 +20,7 @@ Here’s a simple implementation of a trie in Ruby:
       def initialize
         @root = {}
       end
-    
+
       def insert(word)
         node = @root
         word.each_char do |char|
@@ -29,7 +29,7 @@ Here’s a simple implementation of a trie in Ruby:
         end
         node[:is_end_of_word] = true
       end
-    
+
       def search(word)
         node = @root
         word.each_char do |char|
@@ -71,7 +71,7 @@ While lazy loading can help with the initial setup, as new words are added to th
     class Word < ApplicationRecord
       class << self
         BATCH_SIZE = 10_000
-    
+
         def trie
           @@trie ||= begin
             trie = Trie.new
@@ -107,16 +107,16 @@ Instead of a single trie, we can create a partitioned trie, where each partition
         end
       end
     end
-    
+
     class PartitionedTrie
       def initialize
         @tries = Hash.new { |h, k| h[k] = Trie.new }
       end
-    
+
       def insert(word)
         @tries[word[0]].insert(word)
       end
-    
+
       def autocomplete(prefix, page: 1, per_page: 10)
         trie = @tries[prefix[0]]
         trie.autocomplete(prefix, page: page, per_page: per_page)

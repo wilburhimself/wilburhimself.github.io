@@ -30,7 +30,7 @@ The first step in implementing a saga is to define the workflow. This involves i
       def initialize(order)
         @order = order
       end
-    
+
       def execute
         create_order
         reserve_inventory
@@ -39,25 +39,25 @@ The first step in implementing a saga is to define the workflow. This involves i
       rescue => e
         rollback
       end
-    
+
       private
-    
+
       def create_order
         # Logic to create an order
       end
-    
+
       def reserve_inventory
         # Logic to reserve inventory
       end
-    
+
       def charge_customer
         # Logic to charge the customer
       end
-    
+
       def complete_order
         # Logic to complete the order
       end
-    
+
       def rollback
         # Logic to rollback the saga
       end
@@ -72,7 +72,7 @@ Each local transaction should be a self-contained operation that updates the dat
       def execute(order)
         order.save!
       end
-    
+
       def compensate(order)
         order.destroy
       end
@@ -88,7 +88,7 @@ Compensation logic is used to undo the effects of a local transaction if it fail
         inventory = Inventory.find_by(product_id: order.product_id)
         inventory.decrement!(:quantity, order.quantity)
       end
-    
+
       def compensate(order)
         inventory = Inventory.find_by(product_id: order.product_id)
         inventory.increment!(:quantity, order.quantity)
@@ -104,7 +104,7 @@ The saga should be orchestrated by a central coordinator that manages the execut
       def initialize(saga)
         @saga = saga
       end
-    
+
       def execute
         @saga.execute
       rescue => e
@@ -128,7 +128,7 @@ If any step fails, the saga should roll back the changes made by the preceding s
       def initialize(order)
         @order = order
       end
-    
+
       def execute
         create_order_transaction.execute(@order)
         reserve_inventory_transaction.execute(@order)
@@ -137,25 +137,25 @@ If any step fails, the saga should roll back the changes made by the preceding s
       rescue => e
         rollback
       end
-    
+
       private
-    
+
       def create_order_transaction
         CreateOrderTransaction.new
       end
-    
+
       def reserve_inventory_transaction
         ReserveInventoryTransaction.new
       end
-    
+
       def charge_customer_transaction
         ChargeCustomerTransaction.new
       end
-    
+
       def complete_order_transaction
         CompleteOrderTransaction.new
       end
-    
+
       def rollback
         complete_order_transaction.compensate(@order) if @order.completed?
         charge_customer_transaction.compensate(@order) if @order.charged?

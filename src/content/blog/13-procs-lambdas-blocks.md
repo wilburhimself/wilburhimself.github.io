@@ -37,7 +37,7 @@ Both procs and lambdas can accept parameters, allowing you to create dynamic and
     title_contains = lambda do |keyword|
       proc { |post| post.published? && post.title.include?(keyword) }
     end
-    
+
     keyword_filter = title_contains.call('Ruby')
     @ruby_posts = @posts.select(&keyword_filter)
 

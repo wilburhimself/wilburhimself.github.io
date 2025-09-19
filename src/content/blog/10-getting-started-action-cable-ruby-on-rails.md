@@ -65,7 +65,7 @@ This will create a new `chat_channel.rb` file in `app/channels` with the followi
       def subscribed
         stream_from "chat_channel"
       end
-    
+
       def unsubscribed
         # Any cleanup needed when channel is unsubscribed
       end
@@ -98,7 +98,7 @@ This will create a new `chat_rooms_controller.rb` file in `app/controllers` with
       def index
         @messages = Message.all
       end
-    
+
       def create
         ActionCable.server.broadcast "chat_channel", message: params[:message], user: "anonymous"
         Message.create(content: params[:message], user: "anonymous")
@@ -116,20 +116,20 @@ In the React client, update the `App.js` file in the `src` directory with the fo
     import './App.css';
     import ChatRoom from './ChatRoom';
     import ActionCableConsumer from 'react-actioncable-provider';
-    
+
     function App() {
       const [messages, setMessages] = useState([]);
-    
+
       useEffect(() => {
         fetch('/chat_rooms')
           .then(response => response.json())
           .then(data => setMessages(data));
       }, []);
-    
+
       const handleReceivedMessage = (response) => {
         setMessages([...messages, response]);
       }
-    
+
       return (
         <div className="App">
           <header className="App-header">
@@ -146,7 +146,7 @@ In the React client, update the `App.js` file in the `src` directory with the fo
         </div>
       );
     }
-    
+
     export default App;
 
 This code sets up the `App` component to fetch the initial list of messages from the server and render a `ChatRoom` component with an `ActionCableConsumer` to listen for new messages.
@@ -156,14 +156,14 @@ This code sets up the `App` component to fetch the initial list of messages from
 Create a new `ChatRoom.js` file in the `src` directory with the following code:
 
     import React, { useState } from 'react';
-    
+
     function ChatRoom({ messages }) {
       const [message, setMessage] = useState('');
-    
+
       const handleChange = (event) => {
         setMessage(event.target.value);
       }
-    
+
       const handleSubmit = (event) => {
         event.preventDefault();
         fetch('/chat_rooms', {
@@ -176,7 +176,7 @@ Create a new `ChatRoom.js` file in the `src` directory with the following code:
         });
         setMessage('');
       }
-    
+
       return (
         <div className="Chat-room-container">
           <div className="Chat-messages">
@@ -199,7 +199,7 @@ Create a new `ChatRoom.js` file in the `src` directory with the following code:
         </div>
       );
     }
-    
+
     export default ChatRoom;
 
 This code defines the `ChatRoom` component to render the list of messages and a form to send new messages.

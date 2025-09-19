@@ -76,7 +76,7 @@ In some cases we need to store instance variables and other methods, if so, we u
         @title = params[:title]
         @content = params[:content]
       end
-    
+
       def call
         Post.new(title: @title, content: @content)
       end

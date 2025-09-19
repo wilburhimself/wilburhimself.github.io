@@ -17,15 +17,15 @@ Here’s an example of a basic Ruby stack implementation:
       def initialize
         @elements = []
       end
-    
+
       def push(element)
         @elements.push(element)
       end
-    
+
       def pop
         @elements.pop
       end
-    
+
       def empty?
         @elements.empty?
       end
@@ -44,7 +44,7 @@ Here are some RSpec tests for our stack implementation:
           expect(stack.instance_variable_get(:@elements)).to eq([1, 2])
         end
       end
-    
+
       describe "#pop" do
         it "removes the top element from the stack" do
           stack = Stack.new
@@ -54,13 +54,13 @@ Here are some RSpec tests for our stack implementation:
           expect(stack.instance_variable_get(:@elements)).to eq([1])
         end
       end
-    
+
       describe "#empty?" do
         it "returns true if the stack is empty" do
           stack = Stack.new
           expect(stack.empty?).to be true
         end
-    
+
         it "returns false if the stack is not empty" do
           stack = Stack.new
           stack.push(1)
@@ -80,15 +80,15 @@ Here’s an example of a simple Ruby queue implementation:
       def initialize
         @elements = []
       end
-    
+
       def enqueue(element)
         @elements.push(element)
       end
-    
+
       def dequeue
         @elements.shift
       end
-    
+
       def empty?
         @elements.empty?
       end
@@ -107,7 +107,7 @@ Here are some RSpec tests for our queue implementation:
           expect(queue.instance_variable_get(:@elements)).to eq([1, 2])
         end
       end
-    
+
       describe "#dequeue" do
         it "removes the first element from the queue" do
           queue = Queue.new
@@ -117,13 +117,13 @@ Here are some RSpec tests for our queue implementation:
           expect(queue.instance_variable_get(:@elements)).to eq([2])
         end
       end
-    
+
       describe "#empty?" do
         it "returns true if the queue is empty" do
           queue = Queue.new
           expect(queue.empty?).to be true
         end
-    
+
         it "returns false if the queue is not empty" do
           queue = Queue.new
           queue.enqueue(1)
