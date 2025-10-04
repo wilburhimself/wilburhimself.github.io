@@ -1,7 +1,7 @@
 ---
-title: 'A Guide to Production-Ready RAG Evaluation in Rails'
+title: 'A Production-Oriented Guide to RAG Evaluation in Rails'
 pubDate: 2025-10-04
-description: 'A production-focused guide to building a robust, automated RAG evaluation framework in Rails with detailed code for metrics, parallelization, and CI/CD integration.'
+description: 'An advanced guide to building a robust, automated RAG evaluation framework in Rails, with production-minded code for metrics, parallelization, and CI/CD integration.'
 author: 'Wilbur Suero'
 image:
     url: 'https://wilbur.io/images/posts/evaluating-rag-system-in-rails.png'
@@ -9,17 +9,16 @@ image:
 tags: ["ruby", "rails", "ai", "rag", "testing", "llm", "observability", "devops"]
 ---
 
-You've built a RAG system in Rails, but a critical question remains: "How good is it, really?" This guide provides a production-focused starting point for building an automated evaluation framework. We'll create a parallelized Rake task using an LLM-as-a-judge and embedding comparisons, and integrate it into CI/CD to catch regressions before they hit production.
+You've built a RAG system, but how do you ensure it's production-ready? This guide provides a production-oriented approach to building an automated evaluation framework in Rails. We'll create a parallelized Rake task that uses an LLM-as-a-judge and embedding comparisons, and integrate it into CI/CD to catch regressions.
 
 ### Prerequisites
 
 This guide assumes you have:
-*   A working RAG system with a `RagQueryService`.
-*   An `EmbeddingService` that returns vectors from a model like `text-embedding-3-small`.
-*   An `OpenAiService` client for an LLM provider.
-*   Gems like `parallel` and `linalg` in your Gemfile for performance and calculations.
+*   A `RagQueryService` and an `OpenAiService` client.
+*   An `EmbeddingService` that returns vectors. The quality of the `answer_correctness` metric depends heavily on your model choice (e.g., `text-embedding-3-small` offers a good balance of performance and cost).
+*   Gems like `parallel` and `retriable` in your Gemfile.
 
-### Step 1: Curate and Version Your Evaluation Dataset
+### Step 1: Curate and Version Your Dataset
 
 Start with 30-50 diverse questions and grow this set over time. For traceability, version your dataset files (e.g., `rag_eval_set_v2.yml`).
 
@@ -29,14 +28,13 @@ Start with 30-50 diverse questions and grow this set over time. For traceability
   ground_truth: "The Outbox Pattern ensures reliable message delivery by saving messages to a database table as part of the local transaction, then publishing them from that table asynchronously."
 ```
 
-### Step 2: A Production-Grade Evaluator Service
+### Step 2: The Evaluator Service
 
-A robust service needs to handle errors, validate data, and perform correct calculations.
+This service is updated with manual cosine similarity and more robust score parsing.
 
 `app/services/rag_evaluator_service.rb`:
 ```ruby
 # frozen_string_literal: true
-require 'linalg' # For vector calculations
 
 class RagEvaluatorService
   LLM_TEMPERATURE = 0.0
@@ -62,16 +60,12 @@ class RagEvaluatorService
   private
 
   def evaluate_with_llm
-    # Correctly interpolate variables into the prompt
-    prompt = format(
-      multi_metric_evaluation_prompt, 
-      context: @context, 
-      question: @question, 
-      answer: @generated_answer
-    )
-    # For transient errors, consider a gem like `retriable`
-    response = @llm_client.call(prompt: prompt, temperature: LLM_TEMPERATURE)
-    JSON.parse(response)
+    prompt = format(multi_metric_evaluation_prompt, context: @context, question: @question, answer: @generated_answer)
+    
+    Retriable.retriable(tries: 3, base_interval: 1) do
+      response = @llm_client.call(prompt: prompt, temperature: LLM_TEMPERATURE, timeout: 30)
+      return JSON.parse(response)
+    end
   rescue JSON::ParserError => e
     Rails.logger.error "RAG-Eval: Failed to parse LLM evaluation response: #{e.message}"
     {}
@@ -85,15 +79,14 @@ class RagEvaluatorService
   end
 
   def cosine_similarity(vec_a, vec_b)
-    # Most embedding APIs return vectors; the calculation is done in your code.
-    Linalg::DMatrix.rows([vec_a, vec_b]).cosine_similarity[0, 1]
-  rescue StandardError => e
-    Rails.logger.error "RAG-Eval: Cosine similarity failed: #{e.message}"
-    0.0
+    dot_product = vec_a.zip(vec_b).sum { |a, b| a * b }
+    magnitude_a = Math.sqrt(vec_a.sum { |x| x**2 })
+    magnitude_b = Math.sqrt(vec_b.sum { |x| x**2 })
+    return 0.0 if magnitude_a.zero? || magnitude_b.zero?
+    dot_product / (magnitude_a * magnitude_b)
   end
 
   def parse_score(score)
-    # Validate that the score is a float within the expected range.
     parsed_score = Float(score) rescue nil
     return 0.0 unless parsed_score && parsed_score.between?(0.0, 1.0)
     parsed_score
@@ -119,43 +112,57 @@ class RagEvaluatorService
 end
 ```
 
-### Step 3: A Parallelized Rake Task
+### Step 3: The Rake Task
 
-To speed up evaluation, we'll use the `parallel` gem to make concurrent requests.
+This version handles failures gracefully, calculates averages safely, and persists results.
 
 `lib/tasks/rag.rake`:
 ```ruby
 require 'yaml'
 require 'table_print'
 require 'parallel'
+require 'csv'
 
 namespace :rag do
   desc "Evaluates the RAG system against a predefined dataset"
   task evaluate: :environment do
-    puts "Starting RAG evaluation..."
+    EVAL_THREADS = ENV.fetch('RAG_EVAL_THREADS', 4).to_i
+    FAITHFULNESS_THRESHOLD = ENV.fetch('RAG_FAITH_THRESHOLD', 0.75).to_f
+    RESULTS_CSV_PATH = Rails.root.join('tmp', 'rag_evaluation_history.csv')
+
+    puts "Starting RAG evaluation with #{EVAL_THREADS} threads..."
     dataset = YAML.load_file(Rails.root.join('db', 'rag_eval_set_v1.yml'))
-    results = []
 
-    # Use `map` to collect results, `in_threads` for I/O-bound tasks
-    results = Parallel.map(dataset, in_threads: 4) do |item|
+    all_results = Parallel.map(dataset, in_threads: EVAL_THREADS) do |item|
       rag_response = RagQueryService.ask(item['question'])
-      next if rag_response.answer.blank?
+      if rag_response.answer.blank?
+        { error: 'No answer generated', question: item['question'] }
+      else
+        RagEvaluatorService.new(
+          question: item['question'],
+          ground_truth: item['ground_truth'],
+          generated_answer: rag_response.answer,
+          context: rag_response.context
+        ).evaluate.merge(question: item['question'])
+      end
+    end
 
-      RagEvaluatorService.new(
-        question: item['question'],
-        ground_truth: item['ground_truth'],
-        generated_answer: rag_response.answer,
-        context: rag_response.context
-      ).evaluate.merge(question: item['question'][0..45] + '...')
-    end.compact
+    successes = all_results.reject { |r| r[:error] }
+    failures = all_results.select { |r| r[:error] }
 
-    # --- Reporting and Thresholds ---
     puts "\n--- RAG Evaluation Report ---"
-    tp(results, :question, :faithfulness, :answer_relevancy, :answer_correctness)
+    tp(successes, :question, :faithfulness, :answer_relevancy, :answer_correctness)
+
+    if failures.any?
+      puts "\n--- Failures ---"
+      tp(failures, :question, :error)
+    end
+
+    return puts "\nNo successful results to analyze." if successes.empty?
 
     avg_scores = {
-      faithfulness: (results.sum { |r| r[:faithfulness] } / results.size).round(3),
-      correctness: (results.sum { |r| r[:answer_correctness] } / results.size).round(3)
+      faithfulness: (successes.sum { |r| r[:faithfulness] } / successes.size).round(3),
+      correctness: (successes.sum { |r| r[:answer_correctness] } / successes.size).round(3)
     }
 
     puts "\n--- Average Scores ---"
@@ -163,30 +170,28 @@ namespace :rag do
     puts "Correctness:  #{avg_scores[:correctness]}"
     puts "----------------------"
 
-    # Operationalize thresholds for CI/CD
-    faithfulness_threshold = 0.75
-    if avg_scores[:faithfulness] < faithfulness_threshold
-      raise "Faithfulness score #{avg_scores[:faithfulness]} is below the #{faithfulness_threshold} threshold!"
+    # Persist results
+    CSV.open(RESULTS_CSV_PATH, 'a') do |csv|
+      csv << [Time.now.iso8601, avg_scores[:faithfulness], avg_scores[:correctness]]
+    end
+
+    if avg_scores[:faithfulness] < FAITHFULNESS_THRESHOLD
+      raise "Faithfulness score #{avg_scores[:faithfulness]} is below the #{FAITHFULNESS_THRESHOLD} threshold!"
     end
   end
 end
 ```
 
-### Step 4: Nuanced Interpretation & Cost
+### Step 4: CI/CD with PR Comments
 
-*   **Diagnosis:** A high correctness score but low faithfulness score is a great result—it means your LLM is smart, but you need to improve your retrieval to provide the right context.
-*   **Cost:** Be mindful of cost. For a 50-question dataset using GPT-4 as a judge, a single evaluation run could cost ~$0.50-$1.00. Using a cheaper model for the judge (like GPT-3.5-Turbo) can significantly reduce this.
-
-### Step 5: CI/CD Integration
-
-This updated workflow correctly references the repo name and will fail the build if the Rake task raises an error due to a threshold breach.
+This workflow now includes the PR comment step to provide immediate feedback.
 
 `.github/workflows/rag_evaluation.yml`:
 ```yaml
 name: RAG Evaluation
 on:
   pull_request:
-    paths: ['app/services/**', 'config/prompts/**', 'db/rag_eval_set_*.yml']
+    paths: ['app/services/**', 'db/rag_eval_set_*.yml']
 jobs:
   evaluate:
     runs-on: ubuntu-latest
@@ -196,12 +201,26 @@ jobs:
         with: { ruby-version: 3.2.2, bundler-cache: true }
 
       - name: Run RAG Evaluation
+        id: evaluation
         env:
           RAILS_ENV: test
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: bundle exec rake rag:evaluate
+        run: bundle exec rake rag:evaluate > ${{ runner.temp }}/evaluation_results.txt
+
+      - name: Comment on PR with Results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const results = fs.readFileSync(`${process.env.RUNNER_TEMP}/evaluation_results.txt`, 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### RAG Evaluation Results\n\n<details><summary>Click to expand</summary>\n\n```\n${results}\n```\n\n</details>`
+            });
 ```
 
 ### Conclusion
 
-This production-focused approach provides a more robust framework for RAG evaluation. By parallelizing workloads, validating data, operationalizing thresholds, and being mindful of costs, you can create a reliable feedback loop that drives meaningful improvements to your AI features.
+This production-oriented approach provides a more robust framework for RAG evaluation. By handling failures gracefully, parallelizing workloads, persisting results for trend analysis, and operationalizing thresholds, you can create a reliable feedback loop that drives meaningful improvements to your AI features.
