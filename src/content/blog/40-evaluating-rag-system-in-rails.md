@@ -117,7 +117,7 @@ end
 
 ### Step 3: The Rake Task
 
-This version handles failures, calculates averages safely, and persists results.
+This version handles failures gracefully, calculates averages safely, and persists results.
 
 `lib/tasks/rag.rake`:
 ```ruby
