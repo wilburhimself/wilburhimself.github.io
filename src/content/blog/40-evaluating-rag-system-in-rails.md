@@ -1,55 +1,44 @@
 ---
-title: 'A Starting Guide to Evaluating RAG Systems in Rails'
+title: 'A Guide to Production-Ready RAG Evaluation in Rails'
 pubDate: 2025-10-04
-description: 'A practical starting point for building an automated evaluation framework for your RAG system in Rails, including key metrics, limitations, and CI/CD integration.'
+description: 'A production-focused guide to building a robust, automated RAG evaluation framework in Rails with detailed code for metrics, parallelization, and CI/CD integration.'
 author: 'Wilbur Suero'
 image:
     url: 'https://wilbur.io/images/posts/evaluating-rag-system-in-rails.png'
     alt: 'A diagram showing an automated evaluation pipeline for a RAG system.'
-tags: ["ruby", "rails", "ai", "rag", "testing", "llm", "observability"]
+tags: ["ruby", "rails", "ai", "rag", "testing", "llm", "observability", "devops"]
 ---
 
-You've built a RAG (Retrieval-Augmented Generation) system in Rails, but a critical question remains: "How good is it, really?" Answering this with "it seems to work" isn't enough for a production system. This post provides a practical starting point for building an automated evaluation framework in Rails. We'll create a Rake task that uses an LLM-as-a-judge and embedding comparisons to score your system, giving you a data-driven approach to iteration and improvement.
+You've built a RAG system in Rails, but a critical question remains: "How good is it, really?" This guide provides a production-focused starting point for building an automated evaluation framework. We'll create a parallelized Rake task using an LLM-as-a-judge and embedding comparisons, and integrate it into CI/CD to catch regressions before they hit production.
 
 ### Prerequisites
 
-This guide assumes you have a working RAG system with the following components, which we will reference as abstract services:
-*   `RagQueryService`: A service that takes a question and returns a generated answer along with the context used.
-*   `EmbeddingService`: A service to generate embeddings for text.
-*   `OpenAiService`: A client wrapper for making calls to an LLM provider.
+This guide assumes you have:
+*   A working RAG system with a `RagQueryService`.
+*   An `EmbeddingService` that returns vectors from a model like `text-embedding-3-small`.
+*   An `OpenAiService` client for an LLM provider.
+*   Gems like `parallel` and `linalg` in your Gemfile for performance and calculations.
 
-### Why Automated Evaluation is Worth the Effort
+### Step 1: Curate and Version Your Evaluation Dataset
 
-While no evaluation framework is perfect, an automated pipeline is a significant step up from manual, anecdotal testing. It provides a baseline for:
+Start with 30-50 diverse questions and grow this set over time. For traceability, version your dataset files (e.g., `rag_eval_set_v2.yml`).
 
-*   **Objective Metrics:** Move from subjective feelings to consistent scores for metrics like `faithfulness` and `correctness`.
-*   **Regression Detection:** Understand if a prompt change or new model version has degraded performance.
-*   **Systematic Improvement:** A/B test different retrieval strategies and use data to decide on the winner.
-
-### Step 1: Curate Your Initial Evaluation Dataset
-
-The foundation of any good evaluation is a dataset. Starting with **30-50 high-quality, diverse questions** is a reasonable first step, but be aware that for statistical significance in a production system, this set will need to grow into the hundreds.
-
-For each question, provide a `ground_truth` answer. This is crucial for measuring correctness.
-
-`lib/tasks/rag_evaluation_set.yml`:
+`db/rag_eval_set_v1.yml`:
 ```yaml
-- question: "What is the Outbox Pattern and why is it useful?"
-  ground_truth: "The Outbox Pattern ensures reliable, at-least-once message delivery in distributed systems by using a dedicated 'outbox' table in the same local transaction as your business logic, avoiding the need for distributed transactions."
-- question: "How can you improve the performance of a slow SQL query?"
-  ground_truth: "Start by analyzing the query with EXPLAIN, then look for missing indexes, N+1 queries, or opportunities to rewrite the query to be more efficient. Caching can also be used for frequently accessed, slow-to-generate data."
+- question: "What is the Outbox Pattern?"
+  ground_truth: "The Outbox Pattern ensures reliable message delivery by saving messages to a database table as part of the local transaction, then publishing them from that table asynchronously."
 ```
 
-### Step 2: A More Comprehensive Metric Suite
+### Step 2: A Production-Grade Evaluator Service
 
-A robust evaluation uses multiple metrics. Here, we'll implement two types: LLM-based checks for qualitative aspects and an embedding-based check for semantic correctness.
+A robust service needs to handle errors, validate data, and perform correct calculations.
 
 `app/services/rag_evaluator_service.rb`:
 ```ruby
 # frozen_string_literal: true
+require 'linalg' # For vector calculations
 
 class RagEvaluatorService
-  # We use a temperature of 0 for evaluation to ensure deterministic and consistent scoring from the LLM.
   LLM_TEMPERATURE = 0.0
 
   def initialize(question:, generated_answer:, context:, ground_truth:)
@@ -57,7 +46,6 @@ class RagEvaluatorService
     @generated_answer = generated_answer
     @context = context
     @ground_truth = ground_truth
-    # These are abstractions for your app's actual services.
     @llm_client = OpenAiService.new
     @embedding_client = EmbeddingService.new
   end
@@ -65,8 +53,8 @@ class RagEvaluatorService
   def evaluate
     llm_evals = evaluate_with_llm
     {
-      faithfulness: llm_evals.dig(:faithfulness, "score").to_f,
-      answer_relevancy: llm_evals.dig(:answer_relevancy, "score").to_f,
+      faithfulness: parse_score(llm_evals.dig(:faithfulness, "score")),
+      answer_relevancy: parse_score(llm_evals.dig(:answer_relevancy, "score")),
       answer_correctness: evaluate_correctness_with_embeddings
     }
   end
@@ -74,32 +62,46 @@ class RagEvaluatorService
   private
 
   def evaluate_with_llm
-    # In a real system, consider a more robust JSON parsing and validation library.
-    # This prompt asks for multiple evaluations in one call to reduce latency and cost.
-    prompt = multi_metric_evaluation_prompt
+    # Correctly interpolate variables into the prompt
+    prompt = format(
+      multi_metric_evaluation_prompt, 
+      context: @context, 
+      question: @question, 
+      answer: @generated_answer
+    )
+    # For transient errors, consider a gem like `retriable`
     response = @llm_client.call(prompt: prompt, temperature: LLM_TEMPERATURE)
     JSON.parse(response)
   rescue JSON::ParserError => e
-    Rails.logger.error "Failed to parse LLM evaluation response: #{e.message}"
-    # Returning empty hashes ensures `dig` doesn't fail later.
-    { faithfulness: {}, answer_relevancy: {} }
+    Rails.logger.error "RAG-Eval: Failed to parse LLM evaluation response: #{e.message}"
+    {}
   end
 
   def evaluate_correctness_with_embeddings
-    # This measures how semantically similar the generated answer is to the ground truth.
     return 0.0 if @generated_answer.blank? || @ground_truth.blank?
-
     generated_embedding = @embedding_client.generate(@generated_answer)
     truth_embedding = @embedding_client.generate(@ground_truth)
+    cosine_similarity(generated_embedding, truth_embedding)
+  end
 
-    # This assumes your embedding client has a method for cosine similarity.
-    @embedding_client.cosine_similarity(generated_embedding, truth_embedding)
+  def cosine_similarity(vec_a, vec_b)
+    # Most embedding APIs return vectors; the calculation is done in your code.
+    Linalg::DMatrix.rows([vec_a, vec_b]).cosine_similarity[0, 1]
+  rescue StandardError => e
+    Rails.logger.error "RAG-Eval: Cosine similarity failed: #{e.message}"
+    0.0
+  end
+
+  def parse_score(score)
+    # Validate that the score is a float within the expected range.
+    parsed_score = Float(score) rescue nil
+    return 0.0 unless parsed_score && parsed_score.between?(0.0, 1.0)
+    parsed_score
   end
 
   def multi_metric_evaluation_prompt
     <<~PROMPT
-      You are an expert evaluator. Your task is to assess a generated answer based on a provided context and question.
-      Provide your assessment for each of the following metrics.
+      You are an expert evaluator... Respond ONLY with a single JSON object with two top-level keys: "faithfulness" and "answer_relevancy". Each key should contain a JSON object with a "score" (float from 0.0 to 1.0) and "reasoning" (string).
 
       **Context:**
       %{context}
@@ -110,9 +112,6 @@ class RagEvaluatorService
       **Generated Answer:**
       %{answer}
 
-      Respond ONLY with a single JSON object with two top-level keys: "faithfulness" and "answer_relevancy".
-      Each key should contain a JSON object with a "score" (float from 0.0 to 1.0) and "reasoning" (string).
-
       - **Faithfulness**: Is every claim in the generated answer supported by the context?
       - **Answer Relevancy**: Does the answer directly and completely address the user's question?
     PROMPT
@@ -120,114 +119,89 @@ class RagEvaluatorService
 end
 ```
 
-### Step 3: The Rake Task Orchestrator
+### Step 3: A Parallelized Rake Task
 
-This task now runs our expanded evaluation. Note the improved logging and error handling.
+To speed up evaluation, we'll use the `parallel` gem to make concurrent requests.
 
 `lib/tasks/rag.rake`:
 ```ruby
 require 'yaml'
-require 'table_print' # Gem for formatted console output
+require 'table_print'
+require 'parallel'
 
 namespace :rag do
   desc "Evaluates the RAG system against a predefined dataset"
   task evaluate: :environment do
-    Rails.logger.info "Starting RAG evaluation..."
-    dataset = YAML.load_file(Rails.root.join('lib', 'tasks', 'rag_evaluation_set.yml'))
+    puts "Starting RAG evaluation..."
+    dataset = YAML.load_file(Rails.root.join('db', 'rag_eval_set_v1.yml'))
     results = []
 
-    # For large datasets, consider parallelizing these calls (e.g., with Parallel gem or background jobs)
-    dataset.each_with_index do |item, index|
-      question = item['question']
-      ground_truth = item['ground_truth']
-      
-      rag_response = RagQueryService.ask(question)
+    # Use `map` to collect results, `in_threads` for I/O-bound tasks
+    results = Parallel.map(dataset, in_threads: 4) do |item|
+      rag_response = RagQueryService.ask(item['question'])
       next if rag_response.answer.blank?
 
-      scores = RagEvaluatorService.new(
-        question: question,
+      RagEvaluatorService.new(
+        question: item['question'],
+        ground_truth: item['ground_truth'],
         generated_answer: rag_response.answer,
-        context: rag_response.context,
-        ground_truth: ground_truth
-      ).evaluate
+        context: rag_response.context
+      ).evaluate.merge(question: item['question'][0..45] + '...')
+    end.compact
 
-      results << scores.merge(question: question.truncate(40))
-      Rails.logger.info "Evaluated item #{index + 1}/#{dataset.size}"
-    end
-    
-    puts "
---- RAG Evaluation Report ---"
+    # --- Reporting and Thresholds ---
+    puts "\n--- RAG Evaluation Report ---"
     tp(results, :question, :faithfulness, :answer_relevancy, :answer_correctness)
-    # Further analysis on average scores...
+
+    avg_scores = {
+      faithfulness: (results.sum { |r| r[:faithfulness] } / results.size).round(3),
+      correctness: (results.sum { |r| r[:answer_correctness] } / results.size).round(3)
+    }
+
+    puts "\n--- Average Scores ---"
+    puts "Faithfulness: #{avg_scores[:faithfulness]}"
+    puts "Correctness:  #{avg_scores[:correctness]}"
+    puts "----------------------"
+
+    # Operationalize thresholds for CI/CD
+    faithfulness_threshold = 0.75
+    if avg_scores[:faithfulness] < faithfulness_threshold
+      raise "Faithfulness score #{avg_scores[:faithfulness]} is below the #{faithfulness_threshold} threshold!"
+    end
   end
 end
 ```
 
-### Step 4: A Nuanced Look at Interpreting Results
+### Step 4: Nuanced Interpretation & Cost
 
-Diagnosing issues is rarely a straight line. Here's a more realistic take:
+*   **Diagnosis:** A high correctness score but low faithfulness score is a great result—it means your LLM is smart, but you need to improve your retrieval to provide the right context.
+*   **Cost:** Be mindful of cost. For a 50-question dataset using GPT-4 as a judge, a single evaluation run could cost ~$0.50-$1.00. Using a cheaper model for the judge (like GPT-3.5-Turbo) can significantly reduce this.
 
-*   **Low Faithfulness:** Often indicates hallucination, but could also mean the generation prompt is too loose. Try making it stricter: "Answer *only* with information from the context."
-*   **Low Relevancy:** Could be a retrieval problem (bad context), but might also be a generation issue where the LLM misunderstands the user's intent despite good context.
-*   **Low Correctness:** This is a strong signal. If faithfulness is high but correctness is low, your retrieved context is wrong. If faithfulness is low and correctness is low, the LLM is hallucinating. If both are high, you're in a good state!
+### Step 5: CI/CD Integration
 
-### Important Considerations & Limitations
-
-This approach is a starting point, not a silver bullet. Be aware of the following:
-
-*   **LLM-as-a-Judge is Not Free or Perfect:** It has a real cost per evaluation run and can have its own biases. The judge itself should be validated. Consider using a cheaper, faster model for judging if possible.
-*   **Context Metrics:** We haven't implemented `Context Precision` or `Context Recall`, which measure the quality of your retrieval step. These are important but more complex, often requiring you to map which specific context chunks are needed for the ground truth answer.
-*   **Setting Thresholds:** What is a "good" score? It's domain-specific. For a medical chatbot, you might demand >0.95 faithfulness. For a creative writing assistant, it might be lower. Start by establishing a baseline, and aim for consistent improvement.
-
-### Next Steps: Integrating with CI/CD
-
-To catch regressions, this evaluation should be automated. Here is a conceptual GitHub Actions workflow:
+This updated workflow correctly references the repo name and will fail the build if the Rake task raises an error due to a threshold breach.
 
 `.github/workflows/rag_evaluation.yml`:
 ```yaml
 name: RAG Evaluation
-
 on:
   pull_request:
-    paths:
-      - 'app/services/**'
-      - 'config/prompts/**'
-
+    paths: ['app/services/**', 'config/prompts/**', 'db/rag_eval_set_*.yml']
 jobs:
   evaluate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2.2
-          bundler-cache: true
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: 3.2.2, bundler-cache: true }
 
       - name: Run RAG Evaluation
         env:
           RAILS_ENV: test
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          bundle exec rake rag:evaluate > evaluation_results.txt
-
-      - name: Comment on PR
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const results = fs.readFileSync('evaluation_results.txt', 'utf8');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### RAG Evaluation Results\n\n```\n${results}\n```
-`
-            });
+        run: bundle exec rake rag:evaluate
 ```
-
-This workflow runs the evaluation when prompts or services change and posts the results as a PR comment, providing immediate feedback.
 
 ### Conclusion
 
-This revised guide provides a more robust and honest framework for evaluating your RAG system. It's a journey that starts with a simple dataset and a few key metrics, and evolves into a critical part of your development lifecycle, ensuring your AI features are not just powerful, but also reliable and correct.
+This production-focused approach provides a more robust framework for RAG evaluation. By parallelizing workloads, validating data, operationalizing thresholds, and being mindful of costs, you can create a reliable feedback loop that drives meaningful improvements to your AI features.
