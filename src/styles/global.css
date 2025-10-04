@@ -45,6 +45,12 @@
         @apply shadow-sm;
       }
     }
+
+    img {
+      @apply p-2;
+      @apply border border-gray-light;
+      @apply max-w-[30%];
+    }
     ul {
       @apply list-disc list-inside;
       @apply mb-8;
