@@ -1,64 +1,129 @@
 ---
-title: 'From Seconds to Milliseconds: Speeding Up AI Features in Rails'
+title: 'From Seconds to Milliseconds: Architecting Fast AI Features in Rails'
 pubDate: 2025-10-06
-description: 'How to use asynchronous processing and smart caching to make your Rails AI features faster.'
+description: 'A deep dive into architectural patterns using Sidekiq and Redis to solve LLM latency issues in Rails applications, focusing on UX, robustness, and cache strategies.'
 author: 'Wilbur Suero'
 image:
     url: 'https://wilbur.io/images/posts/speeding-up-ai-features-in-rails.png'
     alt: 'A rocket ship with the Ruby on Rails logo accelerating.'
-tags: ["ruby", "rails", "ai", "performance", "sidekiq", "redis"]
+tags: ["ruby", "rails", "ai", "performance", "sidekiq", "redis", "architecture"]
 ---
 
-Integrating LLMs can introduce significant latency, harming the user experience. Drawing from previous posts on performance, this article tackles the challenge of slow AI API calls. We'll demonstrate how to move expensive LLM interactions into asynchronous background jobs using Sidekiq and implement a strategic caching layer with Redis to store and reuse costly embeddings and API responses, ensuring your AI-powered features are both intelligent and instantaneous.
+Integrating LLMs can introduce significant latency, often turning a snappy feature into a frustrating user experience. This post moves beyond simple fixes to discuss architectural patterns for building fast, production-grade AI features in Rails using asynchronous jobs and intelligent caching.
 
-### The Problem: Synchronous API Calls
+We'll explore the trade-offs and cover not just the "how," but the "why" behind creating a system that feels instantaneous to the user, even when the underlying AI calls take seconds.
 
-Calling an external LLM API in the middle of a web request is a recipe for a slow user experience. The entire request is blocked waiting for the API to respond.
+### Pattern 1: The Asynchronous Job with Real-time UI Updates
 
+Moving an LLM call to a background job is the most common first step. But how does the user get the result? The key is to pair a background job with a real-time frontend update.
+
+**The UX Flow:**
+1.  User clicks "Generate Summary." The request immediately enqueues a job and returns.
+2.  The UI instantly shows a placeholder: "Generating summary..."
+3.  The background job runs, calls the LLM, and saves the result.
+4.  Upon completion, the job broadcasts an event using Action Cable.
+5.  A Stimulus controller on the frontend catches the event and seamlessly replaces the placeholder with the final summary.
+
+**The Backend Implementation:**
+
+Let's make the job more robust with error handling and status updates. Sidekiq's built-in retries are great for transient network issues.
+
+`app/models/document.rb`
 ```ruby
-# The slow way: in the controller
-class AiController < ApplicationController
-  def generate_summary
-    # This blocks the request!
-    @summary = OpenAiService.generate_summary(params[:text])
-  end
+class Document < ApplicationRecord
+  # Add a status field to track the summary generation
+  enum summary_status: { pending: 0, processing: 1, complete: 2, failed: 3 }
 end
 ```
 
-### Solution 1: Asynchronous Processing with Sidekiq
-
-We can immediately improve the user experience by moving this work to a background job. The controller can enqueue the job and the user gets a response right away.
-
+`app/jobs/generate_summary_job.rb`
 ```ruby
-# app/jobs/generate_summary_job.rb
 class GenerateSummaryJob < ApplicationJob
   queue_as :default
+  sidekiq_options retry: 5 # Retry on failure
 
   def perform(document_id)
     document = Document.find(document_id)
+    document.processing!
+
     summary = OpenAiService.generate_summary(document.text)
-    document.update!(summary: summary)
-    # Optionally, notify the user via ActionCable or email
+    document.update!(summary: summary, summary_status: :complete)
+
+    # Notify the frontend that the work is done
+    DocumentChannel.broadcast_to(document, { summary: summary })
+  rescue StandardError => e
+    document.failed!
+    Rails.logger.error "Failed to generate summary for document #{document_id}: #{e.message}"
   end
 end
 ```
 
-### Solution 2: Strategic Caching with Redis
+This approach provides a great user experience but adds architectural complexity with real-time updates.
 
-Many AI API calls are expensive and deterministic. If you ask for a summary of the same text twice, you should get the same result. This is a perfect use case for caching.
+### Pattern 2: Proactive Caching with Robust Keys
 
+For data that is expensive to generate but frequently read, caching is essential. However, a naive cache key can cause major issues.
+
+A robust cache key should include:
+*   **The object identifier:** `document.id`
+*   **The object's last-updated timestamp:** `document.updated_at.to_i`
+*   **The prompt/model version:** A constant that you bump when you change the prompt or underlying LLM.
+
+This ensures that if the document or the prompt changes, the cache is automatically invalidated.
+
+`app/services/summary_service.rb`
 ```ruby
-# app/services/open_ai_service.rb
-class OpenAiService
-  def self.generate_summary(text)
-    cache_key = ["summary", Digest::SHA256.hexdigest(text)]
+class SummaryService
+  PROMPT_VERSION = "v1.1"
 
-    Rails.cache.fetch(cache_key, expires_in: 24.hours) do
-      # This block only runs if the cache key is not found
-      # ... actual call to the OpenAI API ...
+  def self.get_for(document)
+    # This robust key prevents serving stale data
+    cache_key = ["summary", document.id, document.updated_at.to_i, PROMPT_VERSION].join('/')
+
+    Rails.cache.fetch(cache_key, expires_in: 7.days) do
+      # This block only runs on a cache miss
+      OpenAiService.generate_summary(document.text)
     end
   end
 end
 ```
 
-By combining background jobs and smart caching, you can build AI features that feel seamless and incredibly fast to your users.
+**Cache Invalidation Strategy:** The `updated_at` timestamp in the cache key provides an elegant, automatic invalidation strategy. Whenever the document is updated, the key changes, and a new summary will be generated on the next request.
+
+### The Hybrid Approach: Proactive Cache Warming
+
+The best systems often combine both patterns. When a document is created or updated, enqueue a background job not to just generate a summary, but to *warm the cache*.
+
+`app/controllers/documents_controller.rb`
+```ruby
+def create
+  @document = Document.new(document_params)
+  if @document.save
+    # Enqueue a job to warm the cache for the new document
+    WarmSummaryCacheJob.perform_async(@document.id)
+    redirect_to @document
+  else
+    render :new
+  end
+end
+```
+
+`app/jobs/warm_summary_cache_job.rb`
+```ruby
+class WarmSummaryCacheJob
+  include Sidekiq::Job
+
+  def perform(document_id)
+    document = Document.find(document_id)
+    # This call will execute the block inside `fetch`, generating the summary
+    # and storing it in the cache for future reads.
+    SummaryService.get_for(document)
+  end
+end
+```
+
+With this hybrid pattern, the first user to view the summary gets an instant, cache-hit response, as the work was already done proactively in the background. This provides the best of both worlds: a responsive UI and efficient resource use.
+
+### Conclusion
+
+Moving beyond a simple synchronous call to an LLM requires thinking architecturally about the user experience and system robustness. By using asynchronous jobs for long-running tasks, implementing intelligent caching with versioned keys, and combining these patterns to proactively warm your cache, you can build AI features in Rails that are not only powerful but also feel incredibly fast and reliable to your users.
