@@ -1,7 +1,7 @@
 ---
 title: 'Building a Production-Ready AI Agent Foundation in Ruby'
 date: "October 6, 2025"
-excerpt: 'Go beyond basic tutorials. This guide provides an A+ foundation for building secure, multi-turn AI agents in Ruby, integrating robust validation, cost controls, logging, and production-safe patterns.'
+excerpt: 'Most function calling tutorials show toy examples that break in production. This guide provides the 80% foundation you actually need: a security-hardened, multi-turn agent with complete parameter validation, proper error handling, logging, and timeouts. Copy, customize, and build on it'
 ---
 
 Most guides on "function calling" show a fragile proof-of-concept that would crumble in production. This guide provides a security-first, production-focused foundation for building real-world AI agents in Ruby.
