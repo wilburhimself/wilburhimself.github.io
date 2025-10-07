@@ -51,6 +51,26 @@
       @apply border border-gray-light;
       @apply max-w-[30%];
     }
+
+    table {
+      th, td {
+        @apply p-2;
+        text-align: left;
+      }
+      thead {
+        th {
+          background: rgb(143, 249, 159);
+        }
+      }
+
+      tbody {
+        td {
+          @apply border-b-2 border-gray-200;
+          vertical-align: top;
+        }
+      }
+    }
+
     ul {
       @apply list-disc list-inside;
       @apply mb-8;
@@ -234,4 +254,14 @@ pre[class*="language-"] > code[class*="language-"] {
   pointer-events: none;
   line-height: inherit;
   white-space: pre;
+}
+
+/* Mermaid Diagrams */
+.main-content [id^="mermaid-"] {
+  @apply block my-8 mx-auto;
+  max-width: 100%;
+}
+
+.main-content pre:has([id^="mermaid-"]) {
+  @apply bg-transparent border-0 p-0;
 }
