@@ -267,4 +267,4 @@ it "broadcasts the result" do
 end
 ```
 
-Debugging asynchronous systems is about knowing where to look. Your toolkit should include your exception tracker, your job backend's UI, your browser's DevTools, and structured server-side logging. By methodically checking each component—the job, the broadcast, and the client-side subscription—you can quickly diagnose and fix even the most "silent" failures.
+Debugging asynchronous systems is about knowing where to look. Your toolkit should include your exception tracker, your job backend's UI, your browser's DevTools, and structured server-side logging. By methodically checking each component—the job, the broadcast, and the client-side subscription, you can quickly diagnose and fix even the most "silent" failures.
