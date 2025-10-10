@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
-import rehypeMermaid from 'rehype-mermaid';
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,10 +9,7 @@ export default defineConfig({
   base: '/',
   integrations: [tailwind(), sitemap()],
   markdown: {
-    syntaxHighlight: 'prism',
-    rehypePlugins: [
-      [rehypeMermaid, { strategy: 'inline-svg' }]
-    ]
+    syntaxHighlight: 'prism'
   },
   compressHTML: true,
   vite: {
