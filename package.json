@@ -14,7 +14,7 @@
     "@astrojs/markdown-remark": "^6.3.6",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.13.3",
+    "astro": "^5.14.4",
     "jsdom": "^26.1.0",
     "mermaid": "^11.12.0",
     "rehype-pretty-code": "^0.14.1",
