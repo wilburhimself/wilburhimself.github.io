@@ -1,12 +1,7 @@
 ---
 title: 'Scaling AI Prompts: A Guide to Building a Prompt Management Engine in Rails'
-pubDate: 2025-10-07
-description: 'Move beyond hardcoded strings and build a scalable, version-controlled, and testable prompt management system in Rails to manage your AI prompts like professional software.'
-author: 'Wilbur Suero'
-image:
-    url: 'https://wilbur.io/images/posts/prompt-management-engine-in-rails.png'
-    alt: 'A factory machine constructing a prompt from smaller pieces.'
-tags: ["ruby", "rails", "ai", "prompts", "architecture", "devops"]
+date: 'October 19, 2025'
+excerpt: 'Move beyond hardcoded strings and build a scalable, version-controlled, and testable prompt management system in Rails to manage your AI prompts like professional software.'
 ---
 
 As AI features grow, hardcoded prompts become a significant source of technical debt. They are difficult to track, impossible to version, and a nightmare to A/B test. This guide presents a solution: treating your prompts as software by building a dynamic, database-backed management system in Rails.
@@ -57,7 +52,7 @@ class PromptManager
   # Fetches the active prompt by name, or a specific version if provided.
   def self.render(name:, version: nil, variables: {})
     prompt = find_prompt(name, version)
-    
+
     # Using ERB for templating. For more complex logic, consider Liquid.
     template = ERB.new(prompt.template)
     template.result_with_hash(variables)
@@ -136,6 +131,6 @@ prompt = PromptManager.render(name: "summarizer", version: version_to_render, ..
 # ... then log the results of this interaction against the version used.
 ```
 
-### Conclusion: Prompts as Code
+### Prompts as Code
 
 By moving your prompts from hardcoded strings into a version-controlled, database-backed system, you treat them with the same discipline as the rest of your codebase. This engine provides a foundation for collaboration, testing, and continuous improvement, allowing you to scale your AI features responsibly. It adds a layer of complexity, but for any project serious about prompt engineering, the benefits in stability and manageability are well worth the investment.

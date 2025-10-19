@@ -1,17 +1,12 @@
 ---
 title: 'The Prompt Engineering Manifesto: From $2,400 Mistakes to Production-Grade AI'
-date: 2025-10-18
-excerpt: 'A hardcoded prompt typo cost us thousands. Here’s the engineering discipline, testing strategies, and open-source tool (Promptly) we used to fix it for good.'
-author: 'Wilbur Suero'
-image:
-    url: 'https://wilbur.io/images/posts/prompt-management-engine-in-rails.png'
-    alt: 'A factory machine constructing a prompt from smaller pieces.'
-tags: ["ruby", "rails", "ai", "prompts", "architecture", "devops", "testing", "open-source"]
+date: "18 October 2025"
+excerpt: 'A hardcoded prompt typo cost us $2,400 in 72 hours. Here''s the engineering discipline, testing strategies, and open-source tool (Promptly) we built to fix it for good.'
 ---
 
-Last month, a junior developer shipped a typo in a hardcoded AI prompt. The prompt was supposed to ask for a JSON object with three keys, but the typo made the request ambiguous. For 72 hours, our AI spat out unstructured text, breaking a critical background job. By the time we caught it, we had wasted over $2,400 in API calls and processed zero records.
+Last month, a typo in a hardcoded AI prompt cost us dearly. The prompt was supposed to ask for a JSON object with three keys, but the typo made the request ambiguous. For 72 hours, our AI spat out unstructured text, breaking a critical background job. By the time we caught it, we had wasted over $2,400 in API calls and processed zero records.
 
-The root cause wasn't the developer; it was our collective failure to treat prompts as what they are: **production code**.
+The root cause wasn't a single mistake; it was our collective failure to treat prompts as what they are: **production code**.
 
 This post is a manifesto on the engineering discipline required for prompt management. I'll show you the pain, the patterns, and the open-source Rails gem, [Promptly](https://github.com/wilburhimself/promptly), that I built to enforce this discipline.
 
@@ -28,7 +23,7 @@ def summarize_and_categorize(document)
 end
 # ...
 ```
-The typo? `reponse` instead of `response`.
+The typo was subtle: `reponse` instead of `response`.
 
 A `git blame` showed this prompt had been tweaked three times by two different developers in the last month, with no PR comments, no tests, and no versioning. It was a time bomb.
 
@@ -112,6 +107,8 @@ class DocumentProcessor
   end
 
   def self.send_to_ai(prompt, model)
+    # Currently only supports OpenAI models.
+    # Multi-provider support requires client abstraction.
     client = OpenAI::Client.new
     client.chat(
       parameters: {
@@ -156,25 +153,20 @@ class DocumentProcessor
 
   # Extracted as a separate method to support future multi-provider scenarios
   def self.extract_content(response, model)
-    case model
-    when "gpt-4"
-      response.dig("choices", 0, "message", "content")
-    when "claude-3"
-      response.dig("content", 0, "text")
-    end
+    # This example assumes OpenAI's response structure.
+    # A robust implementation would handle different structures from different providers.
+    response.dig("choices", 0, "message", "content")
   end
 
   def self.validate_response_structure(response, model)
     # Implementation shown in "Monitoring for Prompt Drift" section
   end
 
-  # Assuming these prompt files exist:
-  # - app/prompts/document_processor/summarize_v1.erb (GPT-4 optimized)
-  # - app/prompts/document_processor/summarize_claude_v1.erb (Claude optimized)
   def self.prompt_name_for_model(model)
+    # This example uses different versions of a prompt for different OpenAI models.
     case model
     when "gpt-4" then "document_processor/summarize_v1"
-    when "claude-3" then "document_processor/summarize_claude_v1"
+    when "gpt-4-turbo" then "document_processor/summarize_v2"
     else raise "Unsupported model: #{model}"
     end
   end
@@ -220,35 +212,36 @@ end
 
 ### Advanced Patterns for Production
 
-*   **Prompt Composition:** Build complex prompts from smaller, reusable pieces.
+- **Prompt Composition:** Build complex prompts from smaller, reusable pieces.
 
-    `app/prompts/shared/_json_format_instructions.erb`:
-    ```erb
-    Respond with valid JSON only. Do not include explanatory text, markdown formatting, or code blocks surrounding the JSON.
-    ```
+`app/prompts/shared/_json_format_instructions.erb`:
+```erb
+Respond with valid JSON only. Do not include explanatory text, markdown formatting, or code blocks surrounding the JSON.
+```
 
-    `app/prompts/shared/_professional_tone.erb`:
-    ```erb
-    Use clear, professional language. Avoid colloquialisms and maintain a formal tone throughout.
-    ```
+`app/prompts/shared/_professional_tone.erb`:
+```erb
+Use clear, professional language. Avoid colloquialisms and maintain a formal tone throughout.
+```
 
-    `app/prompts/document_processor/summarize_v2.erb`:
-    ```erb
-    <%== render 'prompts/shared/json_format_instructions' %>
-    <%== render 'prompts/shared/professional_tone' %>
+`app/prompts/document_processor/summarize_v2.erb`:
+```erb
+<%== render 'prompts/shared/json_format_instructions' %>
+<%== render 'prompts/shared/professional_tone' %>
 
-    Text:
-    <%== document_content %>
-    ```
+Text:
+<%== document_content %>
+```
 
 *   **Multi-Model Support:** The service object shown in Step 2 is already wired for multi-model support. You can use it like this:
-    ```ruby
-    # Uses default AI_MODEL (gpt-4)
-    DocumentProcessor.call(document)
 
-    # Explicitly uses Claude
-    DocumentProcessor.call(document, model: "claude-3")
-    ```
+```ruby
+# Uses default AI_MODEL (gpt-4)
+DocumentProcessor.call(document)
+
+# Explicitly uses a different OpenAI model
+DocumentProcessor.call(document, model: "gpt-4-turbo")
+```
 
 ### Monitoring for Prompt Drift
 
