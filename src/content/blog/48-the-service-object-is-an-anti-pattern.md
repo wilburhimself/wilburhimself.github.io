@@ -99,7 +99,7 @@ class RefundPayment
 
   def call
     raise RefundFailedError, "Payment cannot be refunded" unless @payment.refundable?
-    
+
     # Idempotency: if this command is called twice (e.g., retry after timeout),
     # we don't want to attempt a double refund.
     return true if @payment.refunded?
@@ -111,7 +111,7 @@ class RefundPayment
 
     if gateway_response.success?
       @payment.update!(
-        status: 'refunded', 
+        status: 'refunded',
         refunded_by: @user,
         refunded_at: Time.current
       )
@@ -120,8 +120,8 @@ class RefundPayment
       Notifier.payment_refunded(@payment.customer)
       true
     else
-      @logger.error("Refund failed", 
-        payment_id: @payment.id, 
+      @logger.error("Refund failed",
+        payment_id: @payment.id,
         error: gateway_response.error_message
       )
       raise RefundFailedError, gateway_response.error_message
@@ -178,7 +178,7 @@ end
 module Shipping
   class RateCalculator
     class RateCalculationError < StandardError; end
-    
+
     def initialize(order, carrier_api: CarrierAPIClient.new)
       @order = order
       @carrier_api = carrier_api
@@ -186,17 +186,17 @@ module Shipping
 
     def call
       raise RateCalculationError, "Order has no shipping address" unless @order.shipping_address.present?
-      
+
       rates = fetch_rates_from_carriers
-      
+
       rates.sort_by { |rate| rate[:cost] }
     rescue CarrierAPIClient::APIError => e
       Rails.logger.error("Rate calculation failed", order_id: @order.id, error: e.message)
       raise RateCalculationError, "Unable to fetch shipping rates: #{e.message}"
     end
-    
+
     private
-    
+
     def fetch_rates_from_carriers
       SUPPORTED_CARRIERS.flat_map do |carrier|
         @carrier_api.get_rates(
@@ -246,7 +246,7 @@ Don't rewrite everything at once. Apply the Strangler Fig pattern:
 
 ### The Way Forward
 
-The health of your service directory isn't about following rules—it's about whether the code structure helps or hinders the team. When you notice discovery time increasing, when you're naming things `DataProcessor` or `BusinessLogic`, when tests become harder to write than the code itself—these are signals that generic patterns have outlived their usefulness.
+The health of your service directory isn't about following rules—it's about whether the code structure helps or hinders the team. When you notice discovery time increasing, when you're naming things `DataProcessor` or `BusinessLogic`, when tests become harder to write than the code itself, these are signals that generic patterns have outlived their usefulness.
 
 The patterns presented here aren't dogma. They're tools for restoring intent when ambiguity has taken hold. Use them when they clarify. Ignore them when they don't. The goal is a codebase where the structure reveals the domain, not one where every line follows a pattern perfectly.
 
