@@ -4,7 +4,7 @@ date: "November 30, 2025"
 excerpt: "Go beyond basic reliability. This is a complete operational manual for your Rails outbox, covering the four critical metrics, production-grade processor design with Sentry, forensic runbooks, and the anti-patterns that lead to silent failures."
 ---
 
-The Outbox Pattern solves transactional consistency in a distributed system. But in doing so, it creates a new piece of critical infrastructure: the outbox table and its processor. Your outbox is the transactional root of your event system; if it fails, everything downstream goes dark while your primary data continues to change.
+The [Outbox Pattern](/blog/38-the-outbox-pattern-reliable-event-publishing-without-distributed-transactions/) solves transactional consistency in a distributed system. But in doing so, it creates a new piece of critical infrastructure: the outbox table and its processor. Your outbox is the transactional root of your event system; if it fails, everything downstream goes dark while your primary data continues to change.
 
 This is not just another database table. It is the durability boundary of your eventing architecture. Operating it without deep observability is a production incident waiting to happen. This guide provides a complete model for instrumenting, monitoring, and managing a Rails outbox pipeline with Sentry to catch failures before they cascade.
 
