@@ -151,6 +151,6 @@ end
 - **Lock Contention:** At high concurrency, processors can starve each other of work. Monitor the time it takes to acquire the Postgres lock.
 - **Alerts-as-Code:** While Sentry's UI is powerful, you can manage alert rules via its API or a Terraform provider to keep your monitoring configuration in version control.
 
-### Conclusion: Operate with Intent
+### Operate with Intent
 
 The Outbox Pattern is a powerful design choice, but it demands operational excellence. Moving from basic monitoring to a full observability framework is the difference between reacting to incidents and preventing them entirely. Start with `queue_age`. Add `latency` and `error_rate`. Build forensic runbooks. Treat your outbox like the critical system component it is, and you will trade frantic, multi-hour outages for calm, five-minute fixes.
