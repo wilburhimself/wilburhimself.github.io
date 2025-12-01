@@ -154,3 +154,5 @@ end
 ### Operate with Intent
 
 The Outbox Pattern is a powerful design choice, but it demands operational excellence. Moving from basic monitoring to a full observability framework is the difference between reacting to incidents and preventing them entirely. Start with `queue_age`. Add `latency` and `error_rate`. Build forensic runbooks. Treat your outbox like the critical system component it is, and you will trade frantic, multi-hour outages for calm, five-minute fixes.
+
+If you want to see an example of this in production, check out the companion repository with the full Rails implementation and Sentry integration: [https://github.com/wilburhimself/outbox_rails](https://github.com/wilburhimself/outbox_rails)
