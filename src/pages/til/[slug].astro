@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import TILLayout from '../../layouts/TILLayout.astro';
+
+export async function getStaticPaths() {
+  const tils = await getCollection('til');
+  return tils.map((til) => ({
+    params: { slug: til.slug },
+    props: { til },
+  }));
+}
+
+const { til } = Astro.props;
+const { Content } = await til.render();
+---
+
+<TILLayout title={til.data.title}>
+  <article>
+    <header class="post-header mb-8">
+      <h1 class="post-title-single text-4xl font-bold">{til.data.title}</h1>
+      <p class="post-date text-sm text-gray-medium mt-2">{til.data.date}</p>
+      {til.data.tags && (
+        <div class="tags mt-4 flex ">
+          {til.data.tags.map(tag => (
+            <span class="inline-block bg-gray-200 text-gray-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    <div class="prose max-w-none">
+      <Content />
+    </div>
+  </article>
+  <div class="mt-12">
+    <a href="/til" class="text-gray-dark hover:text-near-black">← Back to All TILs</a>
+  </div>
+</TILLayout>

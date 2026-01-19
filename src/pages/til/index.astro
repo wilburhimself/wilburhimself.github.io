@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import TILLayout from '../../layouts/TILLayout.astro';
+
+const allTils = (await getCollection('til')).sort((a, b) => {
+  const dateA = new Date(a.data.date);
+  const dateB = new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<TILLayout title="Today I Learned">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold">Today I Learned (TIL)</h1>
+    <p class="text-gray-medium">A collection of small, useful things I've learned.</p>
+  </div>
+  <div class="tils">
+    {
+      allTils.map((til) => (
+        <div class="til post-link block border-b border-gray-light pb-4 mb-8">
+          <h2 class="post-title mb-0 text-2xl">
+            <a href={`/til/${til.slug}/`} class="hover:text-near-black hover:no-underline">{til.data.title}</a>
+          </h2>
+          <p class="post-meta text-sm">{til.data.date}</p>
+          {til.data.tags && (
+            <div class="tags mt-2">
+              {til.data.tags.map(tag => (
+                <span class="bg-gray-200 text-gray-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</TILLayout>
