@@ -15,14 +15,16 @@ const { Content } = await post.render();
 ---
 
 <BlogLayout title={post.data.title}>
-  <article>
-    <header class="post-header">
-      <h1 class="post-title-single">{post.data.title}</h1>
-      <p class="post-date">{post.data.date}</p>
+  <article class="max-w-3xl">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">{post.data.title}</h1>
+      <p class="text-sm text-gray-medium">{post.data.date}</p>
     </header>
-    <Content />
+    <div class="prose max-w-none">
+      <Content />
+    </div>
   </article>
-  <div class="mt-8">
-    <a href="/" class="text-gray-dark hover:text-near-black">← Back to Blog</a>
-  </div>
+  <footer class="mt-12 pt-6 border-t border-gray-200">
+    <a href="/" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">← Back to Articles</a>
+  </footer>
 </BlogLayout>

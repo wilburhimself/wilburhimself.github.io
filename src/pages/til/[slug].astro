@@ -15,23 +15,34 @@ const { Content } = await til.render();
 ---
 
 <TILLayout title={til.data.title}>
-  <article>
-    <header class="post-header mb-8">
-      <h1 class="post-title-single text-4xl font-bold">{til.data.title}</h1>
-      <p class="post-date text-sm text-gray-medium mt-2">{til.data.date}</p>
-      {til.data.tags && (
-        <div class="tags mt-4 flex ">
-          {til.data.tags.map(tag => (
-            <span class="inline-block bg-gray-200 text-gray-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{tag}</span>
-          ))}
-        </div>
-      )}
+  <article class="max-w-2xl">
+    <header class="mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <time class="text-sm text-gray-medium font-mono">{til.data.date}</time>
+        {til.data.tags && (
+          <div class="tags flex gap-2">
+            {til.data.tags.map(tag => (
+              <span class="text-sm text-gray-500">#{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
     </header>
-    <div class="prose max-w-none">
+    
+    <div class="til-content prose max-w-none">
       <Content />
     </div>
+    
+    <footer class="mt-8 pt-4 border-t border-gray-200 flex items-center justify-between">
+      <a href="/til" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        ← Back to Microblog
+      </a>
+      <button 
+        onclick="navigator.clipboard.writeText(window.location.href); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy link', 2000)"
+        class="text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+      >
+        Copy link
+      </button>
+    </footer>
   </article>
-  <div class="mt-12">
-    <a href="/til" class="text-gray-dark hover:text-near-black">← Back to All TILs</a>
-  </div>
 </TILLayout>

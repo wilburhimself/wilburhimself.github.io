@@ -7,29 +7,45 @@ const allTils = (await getCollection('til')).sort((a, b) => {
   const dateB = new Date(b.data.date);
   return dateB.getTime() - dateA.getTime();
 });
+
+const tilsWithContent = await Promise.all(
+  allTils.map(async (til) => {
+    const { Content } = await til.render();
+    return { til, Content };
+  })
+);
 ---
 
 <TILLayout title="Today I Learned">
-  <div class="mb-8">
-    <h1 class="text-4xl font-bold">Today I Learned (TIL)</h1>
-    <p class="text-gray-medium">A collection of small, useful things I've learned.</p>
+  <div class="mb-10">
+    <h1 class="text-3xl font-bold">Microblog</h1>
+    <p class="text-gray-medium text-sm">Quick thoughts, learnings, and discoveries.</p>
   </div>
-  <div class="tils">
+  
+  <div class="til-feed space-y-0">
     {
-      allTils.map((til) => (
-        <div class="til post-link block border-b border-gray-light pb-4 mb-8">
-          <h2 class="post-title mb-0 text-2xl">
-            <a href={`/til/${til.slug}/`} class="hover:text-near-black hover:no-underline">{til.data.title}</a>
-          </h2>
-          <p class="post-meta text-sm">{til.data.date}</p>
-          {til.data.tags && (
-            <div class="tags mt-2">
-              {til.data.tags.map(tag => (
-                <span class="bg-gray-200 text-gray-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{tag}</span>
-              ))}
+      tilsWithContent.map(({ til, Content }) => (
+        <article class="til-card border-l-4 mb-8 border-gray-300 hover:border-purple-500 pl-6 py-2 transition-colors">
+          <header class="">
+            <div class="flex flex-row justify-start gap-3">
+              <time class="text-xs text-gray-medium font-mono">{til.data.date}</time>
+              {til.data.tags && (
+                <div class="tags flex gap-1">
+                  {til.data.tags.map(tag => (
+                    <span class="text-xs text-gray-500">#{tag}</span>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+            <a href={`/til/${til.slug}/`} class="block hover:no-underline">
+              <h3 class="text-lg font-bold clear-left mt-0">{til.data.title}</h3>
+            </a>
+          </header>
+          
+          <div class="til-content prose prose-sm max-w-none">
+            <Content />
+          </div>
+        </article>
       ))
     }
   </div>

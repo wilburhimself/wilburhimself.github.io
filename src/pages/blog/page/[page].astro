@@ -41,15 +41,27 @@ const posts = allPosts.slice(
 );
 ---
 
-<BlogLayout title={`Page ${page}`}>
-  <div class="posts">
+<BlogLayout title={`Articles - Page ${page}`}>
+  <div class="mb-10">
+    <h1 class="text-3xl font-bold">Articles</h1>
+    <p class="text-gray-medium text-sm">Long-form writing on software engineering, systems design, and building things.</p>
+  </div>
+  
+  <div class="articles space-y-12">
     {
       posts.map((post) => (
-        <a href={`/blog/${post.slug}/`} class="post-link block border-b border-gray-light pb-4 mb-16">
-          <h2 class="post-title mb-0">{post.data.title}</h2>
-          <p class="post-meta text-sm">{post.data.date}</p>
-          <p class="post-excerpt">{post.data.excerpt || 'Read more...'}</p>
-        </a>
+        <article class="article-card group">
+          <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
+            <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mb-2">
+              {post.data.title}
+            </h2>
+            <p class="text-sm text-gray-medium mb-2">{post.data.date}</p>
+            <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
+            <span class="inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+              Read article →
+            </span>
+          </a>
+        </article>
       ))
     }
   </div>
