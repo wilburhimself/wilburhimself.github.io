@@ -25,12 +25,13 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
       posts.map((post) => (
         <article class="article-card group">
           <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
-            <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mb-2">
+            <p class="text-sm text-gray-medium mb-0">{post.data.date}</p>
+            <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mt-0">
               {post.data.title}
             </h2>
-            <p class="text-sm text-gray-medium mb-2">{post.data.date}</p>
+            
             <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
-            <span class="inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+            <span class="hidden inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
               Read article →
             </span>
           </a>
