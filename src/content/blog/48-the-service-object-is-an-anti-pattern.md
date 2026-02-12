@@ -2,6 +2,7 @@
 title: "When the Service Directory Becomes a Liability"
 date: "October 20, 2025"
 excerpt: "The app/services directory starts with good intentions but often decays into a junk drawer. We'll diagnose the symptoms of a service directory in crisis and explore how patterns like Form Objects, Commands, and Query Objects can restore clarity and maintainability to your Rails app."
+tags: ["rails", "ruby", "patterns", "architecture"]
 ---
 
 The `app/services` directory is born from good intentions. We're told to keep our controllers and models thin, so we extract complex business logic into Plain Old Ruby Objects (POROs). The problem isn't the extraction; it's the destination. `app/services` is a name so generic it invites chaos.

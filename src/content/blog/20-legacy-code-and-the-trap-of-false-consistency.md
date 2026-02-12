@@ -2,6 +2,7 @@
 title: "Legacy Code And The Trap Of False Consistency"
 date: "2025-08-11"
 excerpt: "Maintaining consistency in legacy codebases can become a barrier to improvement when it preserves bad design patterns. Effective refactoring requires distinguishing between beneficial consistency and resistance to necessary change."
+tags: ["legacy-code", "refactoring", "software-design", "best-practices"]
 ---
 
 "This new change is not consistent with our codebase."
@@ -14,16 +15,16 @@ Legacy systems often carry a heavy mix of technical debt: duplicated logic, spag
 
 Teams often resist change because:
 
-* They don't fully understand better design choices
-* They fear the cost of learning and refactoring
-* They mistake familiarity for stability
+- They don't fully understand better design choices
+- They fear the cost of learning and refactoring
+- They mistake familiarity for stability
 
 What I've found to work better:
 
-* Introduce change incrementally, limited to new development
-* Let small wins demonstrate real benefits
-* Frame improvements in terms of business impact rather than code quality
-* Encourage ongoing learning of software design fundamentals
+- Introduce change incrementally, limited to new development
+- Let small wins demonstrate real benefits
+- Frame improvements in terms of business impact rather than code quality
+- Encourage ongoing learning of software design fundamentals
 
 Good design isn't a luxury—it's necessary to create software that can be safely maintained, extended, and improved over time.
 

@@ -1,7 +1,8 @@
 ---
-title: 'When Background Jobs Go Wrong: A Debugging Guide for Async Rails Features'
+title: "When Background Jobs Go Wrong: A Debugging Guide for Async Rails Features"
 date: "October 8, 2025"
 excerpt: "Your async AI feature works... until it doesn't. This guide covers how to debug unreported job failures, trace Action Cable WebSocket issues, and handle common pitfalls in production."
+tags: ["background-jobs", "debugging", "rails", "devops", "async"]
 ---
 
 In the [previous post](/blog/44-speeding-up-ai-features-in-rails), we built a responsive AI feature using background jobs and Action Cable. The "happy path" is great, but in production, things go wrong. Jobs fail without warning, WebSockets disconnect, and race conditions emerge. This post is your debugging playbook.
@@ -14,16 +15,16 @@ You enqueued a job, the UI says "processing," but nothing ever happens. There ar
 
 Standard Rails logging doesn't always capture exceptions inside background job threads, especially if the job process itself crashes. An exception tracker is non-negotiable for production apps.
 
-*   **Services:** [Sentry](https://sentry.io/), [Honeybadger](https://www.honeybadger.io/), [Bugsnag](https://www.bugsnag.com/).
-*   **Why it helps:** They are specifically designed to capture and report errors from any part of your application stack, including background jobs. This is almost always where your hidden error is lurking.
+- **Services:** [Sentry](https://sentry.io/), [Honeybadger](https://www.honeybadger.io/), [Bugsnag](https://www.bugsnag.com/).
+- **Why it helps:** They are specifically designed to capture and report errors from any part of your application stack, including background jobs. This is almost always where your hidden error is lurking.
 
 #### 2. Visit the Job Backend's Web UI
 
 Whether you use Sidekiq, GoodJob, or another job backend, its web interface is a goldmine.
 
-*   **Sidekiq:** Visit `/sidekiq`. Check the **"Retries"** and **"Dead"** tabs.
-    *   **Retries:** A job here means it failed but is scheduled to be retried. The UI will show the error message and when the next attempt will be. This tells you the failure is transient.
-    *   **Dead:** A job here has failed all its retry attempts. This is a permanent failure that you need to inspect and likely fix. The error backtrace is available here.
+- **Sidekiq:** Visit `/sidekiq`. Check the **"Retries"** and **"Dead"** tabs.
+  - **Retries:** A job here means it failed but is scheduled to be retried. The UI will show the error message and when the next attempt will be. This tells you the failure is transient.
+  - **Dead:** A job here has failed all its retry attempts. This is a permanent failure that you need to inspect and likely fix. The error backtrace is available here.
 
 #### 3. Check Your Job Backend's Log File
 
@@ -40,6 +41,7 @@ If you're using systemd or Docker, your logs might be in journalctl or your cont
 If the job isn't in your exception tracker or dead set, it might be getting stuck or exiting unexpectedly. Add logging at key points.
 
 `app/jobs/generate_summary_job.rb`
+
 ```ruby
 class GenerateSummaryJob < ApplicationJob
   def perform(document_id)
@@ -59,6 +61,7 @@ class GenerateSummaryJob < ApplicationJob
   end
 end
 ```
+
 This helps you trace exactly how far the job got before it failed.
 
 #### 5. The Job That Never Completes
@@ -66,6 +69,7 @@ This helps you trace exactly how far the job got before it failed.
 Your job status shows "processing" for hours. The job didn't fail, it's stuck.
 
 **Common causes:**
+
 - **No timeout on HTTP requests:** LLM APIs can hang indefinitely.
 - **Deadlocks:** The job is waiting for a database lock that never releases.
 - **Infinite loops:** Logic errors in your code.
@@ -73,6 +77,7 @@ Your job status shows "processing" for hours. The job didn't fail, it's stuck.
 **Solutions:**
 
 Add timeouts to all external API calls:
+
 ```ruby
 # Using Faraday (common HTTP client)
 conn = Faraday.new(url: 'https://api.openai.com') do |f|
@@ -87,6 +92,7 @@ end
 ```
 
 **Set job-level timeouts:**
+
 ```ruby
 # Option 1: Use the sidekiq-timeout gem (recommended)
 class GenerateSummaryJob < ApplicationJob
@@ -126,26 +132,28 @@ Sidekiq::Worker.drain_all  # For Sidekiq
 
 **Development vs Production Debugging:**
 
-| Technique | Development | Production |
-|-----------|-------------|------------|
-| `binding.irb` in jobs | ✅ Works great | ❌ Don't do this |
-| Verbose logging | ✅ Helpful | ⚠️ Use sparingly (log volume) |
-| Reproduce in console | ✅ Fast iteration | ⚠️ Be careful with production data |
-| Exception tracker | ⚠️ Optional | ✅ **Required** |
+| Technique             | Development       | Production                         |
+| --------------------- | ----------------- | ---------------------------------- |
+| `binding.irb` in jobs | ✅ Works great    | ❌ Don't do this                   |
+| Verbose logging       | ✅ Helpful        | ⚠️ Use sparingly (log volume)      |
+| Reproduce in console  | ✅ Fast iteration | ⚠️ Be careful with production data |
+| Exception tracker     | ⚠️ Optional       | ✅ **Required**                    |
 
 #### 7. Job Queue Starvation (Priorities Matter)
 
 Not all jobs are created equal. Critical jobs might be starving in the queue while low-priority jobs hog the workers.
 
 **Configure queue priorities in `sidekiq.yml`:**
+
 ```yaml
 :queues:
-  - [critical, 2]  # Check critical queue 2x as often
+  - [critical, 2] # Check critical queue 2x as often
   - [default, 1]
   - [low, 1]
 ```
 
 **Set job priorities:**
+
 ```ruby
 class GenerateSummaryJob < ApplicationJob
   queue_as :default  # Or :low, :high, :critical
@@ -167,6 +175,7 @@ The job completed successfully, the database is updated, but the UI never change
 #### 1. Use Your Browser's DevTools
 
 **Network Tab → WebSocket Inspector:**
+
 1. Open DevTools → Network tab → Filter by "WS"
 2. Refresh the page
 3. **What you should see:**
@@ -175,6 +184,7 @@ The job completed successfully, the database is updated, but the UI never change
    - Your subscription confirmation: `{"identifier":..., "type":"confirm_subscription"}`
 
 **What different statuses mean:**
+
 - `101 Switching Protocols`: ✅ Connection successful
 - `404 Not Found`: Your Action Cable mount point is wrong (check `config/routes.rb`)
 - `401/403 Unauthorized`: Your authentication is failing in `ApplicationCable::Connection`
@@ -188,12 +198,14 @@ Your channel's `subscribed` method called `reject`. Check your authorization log
 This will flood your logs in production, so use it carefully.
 
 In `config/environments/development.rb`:
+
 ```ruby
 # In development, verbose logging is helpful
 config.action_cable.logger = Logger.new(STDOUT, level: :debug)
 ```
 
 **In production, use this sparingly:**
+
 ```ruby
 # Enable temporarily for debugging, then disable
 # WARNING: This generates a LOT of log volume
@@ -201,6 +213,7 @@ Rails.application.config.action_cable.logger.level = :debug
 ```
 
 Or better yet, use a dynamic log level:
+
 ```ruby
 # Toggle via environment variable
 config.action_cable.logger.level = ENV.fetch('CABLE_LOG_LEVEL', 'info').to_sym
@@ -209,27 +222,33 @@ config.action_cable.logger.level = ENV.fetch('CABLE_LOG_LEVEL', 'info').to_sym
 #### 3. Common Broadcasting Mistakes
 
 With verbose logging enabled, your Rails log will show entries like:
+
 ```log
 DocumentChannel is transmitting {"status":"complete",...} to document:Z2lkOi8v...
 ```
+
 If you don't see a "transmitting" message after your job completes, the `broadcast_to` call is likely incorrect.
 
 **Common issues:**
-*   **Wrong Stream Name:** `broadcast_to(document, ...)` creates a unique stream name based on the object's GlobalID. On the client, `stream_for document` subscribes to that same name. If you accidentally broadcast to `broadcast_to("document_#{document.id}", ...)` it won't work. The objects must match.
-*   **Authorization Rejection:** If your `subscribed` method calls `reject`, the client will be disconnected from that channel. Your server logs will show `Subscription rejected`.
+
+- **Wrong Stream Name:** `broadcast_to(document, ...)` creates a unique stream name based on the object's GlobalID. On the client, `stream_for document` subscribes to that same name. If you accidentally broadcast to `broadcast_to("document_#{document.id}", ...)` it won't work. The objects must match.
+- **Authorization Rejection:** If your `subscribed` method calls `reject`, the client will be disconnected from that channel. Your server logs will show `Subscription rejected`.
 
 #### 4. The "Connection Closed" Race Condition
 
 A common Action Cable pitfall: users navigate away before your job completes, causing unreported broadcast failures.
 
 **Problem:**
+
 ```javascript
 // User starts request, navigates away before completion
 // Job tries to broadcast → connection is gone → hidden error
 ```
 
 **Solutions:**
+
 1. **Store results in database as fallback:**
+
 ```ruby
 # Job saves to database first (user can see on page reload)
 document.update!(summary: summary, summary_status: :complete)
@@ -241,12 +260,17 @@ DocumentChannel.broadcast_to(document, status: 'complete')
 2. **Action Cable handles closed connections gracefully:** Rails automatically detects closed connections and won't attempt to broadcast to them.
 
 3. **Check connection status in JavaScript:**
+
 ```javascript
 // Monitor connection health
 App.cable.connection.monitor = {
-  connected() { console.log('WebSocket connected') },
-  disconnected() { console.log('WebSocket disconnected') }
-}
+  connected() {
+    console.log("WebSocket connected");
+  },
+  disconnected() {
+    console.log("WebSocket disconnected");
+  },
+};
 ```
 
 #### 5. Action Cable Production Configuration
@@ -254,6 +278,7 @@ App.cable.connection.monitor = {
 In production with multiple servers, configure Redis adapter properly:
 
 **`config/cable.yml`:**
+
 ```yaml
 production:
   adapter: redis
@@ -262,7 +287,6 @@ production:
 ```
 
 **Why Redis is required:** Action Cable uses Redis to coordinate messages across multiple server instances. Without it, users connected to different servers won't receive broadcasts. See the [Action Cable Overview](https://guides.rubyonrails.org/action_cable_overview.html#subscription-adapter) for more details.
-
 
 ---
 
@@ -312,6 +336,7 @@ end
 ```
 
 **Alternative approaches:**
+
 - **Database-level locking:** Use `with_lock` or similar mechanisms
 - **Redis-based deduplication:** Store job signatures in Redis with expiration
 
@@ -319,18 +344,19 @@ end
 
 You enqueue a job with `perform_later(document)`. The document is deleted. A few seconds later, the job runs and immediately fails with `ActiveRecord::RecordNotFound`.
 
-**Why does this happen?** 
+**Why does this happen?**
 
 When you pass an ActiveRecord object to a job (`perform_later(document)`), ActiveJob serializes it using [GlobalID](https://github.com/rails/globalid). The job stores a reference like `gid://app/Document/123`, not the actual data. If the document is deleted before the job runs (e.g., user cancels, record is purged), the job fails when it tries to find the record.
 
 **The fix:**
 Pass simple IDs (`perform_later(document.id)`) instead of full AR objects. The job is then responsible for finding the record, and can gracefully handle the case where it no longer exists.
+
 ```ruby
 # Pass the ID, handle the missing record gracefully
 def perform(document_id)
   document = Document.find_by(id: document_id)
   return unless document  # Silently skip if deleted
-  
+
   # ... rest of job
 end
 ```
@@ -338,17 +364,20 @@ end
 #### Redis is Full
 
 **Symptoms:**
+
 - Jobs enqueue but never process
 - Action Cable connections fail without errors
 - Redis logs show: `OOM command not allowed when used memory > 'maxmemory'`
 
 **Debug:**
+
 ```bash
 redis-cli INFO memory
 # Check used_memory_human and maxmemory_human
 ```
 
 **Solutions:**
+
 - Increase Redis memory limit
 - Enable safe eviction policies:
   ```bash
@@ -364,6 +393,7 @@ redis-cli INFO memory
 ### Part 4: Testing Async Features & Production Readiness
 
 **Testing jobs:**
+
 ```ruby
 # RSpec
 it "generates a summary" do
@@ -381,6 +411,7 @@ end
 ```
 
 **Testing job priorities and uniqueness:**
+
 ```ruby
 # Test that critical jobs are processed first
 it "processes critical jobs before default jobs" do
@@ -400,6 +431,7 @@ end
 ```
 
 **Testing race conditions:**
+
 ```ruby
 # Test idempotency
 it "handles duplicate job execution gracefully" do
@@ -412,6 +444,7 @@ end
 ```
 
 **Testing Action Cable connection handling:**
+
 ```ruby
 it "handles connection closed during broadcast" do
   # Simulate connection closing after job starts but before broadcast
@@ -420,7 +453,7 @@ it "handles connection closed during broadcast" do
     # Simulate connection closing
     document_channel = DocumentChannel.new(connection, identifier)
     allow(document_channel).to receive(:broadcast_to).and_raise(ActionCable::Connection::Closed)
-    
+
     job.perform_now
   }.not_to raise_error
 end
@@ -431,12 +464,14 @@ end
 Before deploying async features to production:
 
 **🔍 Monitoring & Error Tracking:**
+
 - [ ] Exception tracker configured (Sentry/Honeybadger/Bugsnag)
 - [ ] Job queue depth monitoring alerts
 - [ ] Redis memory usage monitoring
 - [ ] Action Cable connection count monitoring
 
 **⚡ Performance & Reliability:**
+
 - [ ] Timeouts on all external API calls (30-60 seconds)
 - [ ] Job-level timeouts configured (2-5 minutes)
 - [ ] Queue priorities configured for critical jobs
@@ -444,18 +479,21 @@ Before deploying async features to production:
 - [ ] Separate Redis instances for jobs vs Action Cable
 
 **🛡️ Data Safety:**
+
 - [ ] Jobs pass IDs, not ActiveRecord objects
 - [ ] Idempotency guards in place for all jobs
 - [ ] Database atomic operations for state transitions
 - [ ] Graceful handling of deleted records
 
 **🔧 Configuration:**
+
 - [ ] Sidekiq configuration optimized (`sidekiq.yml`)
 - [ ] Action Cable Redis adapter configured (`cable.yml`)
 - [ ] Redis eviction policies set correctly
 - [ ] Environment-specific Redis URLs configured
 
 **📊 Logging & Debugging:**
+
 - [ ] Structured logging in all jobs
 - [ ] Action Cable verbose logging toggleable
 - [ ] Job backend web UI accessible in production

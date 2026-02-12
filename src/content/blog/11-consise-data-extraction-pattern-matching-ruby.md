@@ -2,6 +2,7 @@
 title: "Concise Data Extraction with Pattern Matching in Ruby"
 date: "April 14, 2023"
 excerpt: "Ruby's pattern matching syntax introduced in version 2.7 streamlines complex data extraction from structured collections, replacing verbose iterative loops with elegant declarative patterns. Implementation examples demonstrate extracting specific fields from arrays of hashes while improving code readability and maintainability."
+tags: ["ruby", "pattern-matching", "syntax"]
 ---
 
 When working with collections of structured data in Ruby, such as arrays of hashes, we often need to extract or manipulate specific fields from each element in the collection. Traditionally, this is done using iterative loops and if statements, which can become verbose and hard to read, especially if the collection is large or complex.

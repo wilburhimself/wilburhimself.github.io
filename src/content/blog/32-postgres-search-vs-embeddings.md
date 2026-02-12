@@ -2,6 +2,7 @@
 title: "Postgres Full-Text Search vs. Embeddings: A Practical Guide"
 date: "2025-09-06"
 excerpt: "Most teams reach for embeddings before they need them, wiring up pgvector when Postgres’s full-text search would have done the job. If your users are just looking for “caching” and expect to find “Rails caching strategies,” full-text search is fast, precise, and already built in. Where embeddings shine is when meaning matters more than exact words, like an e-commerce query for “summer outfit” that should return linen shirts and beach dresses. The key isn’t choosing one tool over the other, but knowing when Postgres alone is enough and when a hybrid approach gives you the semantic nuance users actually need."
+tags: ["postgres", "search", "database", "rails", "ruby"]
 ---
 
 Lately I've been discussing a lot about how teams are adding embeddings to their stacks before really trying Postgres's full text search. Basically it starts with complaints about how "search is not working well enough" and ending with a complex vector setup, higher costs, and not much better results anyway.
@@ -75,7 +76,6 @@ When I evaluate search problems, I use three questions:
 2. **Semantic need**: Do users ask in ways that keywords can’t cover? If yes, add embeddings.
 
 3. **Cost curve**: Can the system handle embedding storage and latency? If not, stick to lexical.
-
 
 It’s rarely about “Postgres _or_ embeddings.” The better question is: _How can each do the job it’s best at?_
 

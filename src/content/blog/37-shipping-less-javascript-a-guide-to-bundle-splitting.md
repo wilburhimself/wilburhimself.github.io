@@ -2,6 +2,7 @@
 title: "Shipping Less JavaScript: A Guide to Bundle Splitting"
 date: "September 15, 2025"
 excerpt: "Your app is only as fast as its JavaScript payload. This guide tackles bundle bloat from heavy SDKs and GraphQL clients, teaching practical patterns like dynamic imports and selective client loading to drastically cut down your JS size without hurting developer experience."
+tags: ["performance", "javascript", "nextjs", "optimization", "frontend"]
 ---
 
 In the last part, we mastered server rendering to deliver HTML to the user in record time. But the job isn't done. Even a perfectly server-rendered page can feel sluggish if it's followed by a massive JavaScript bundle that blocks the main thread and delays interactivity. The final boss of frontend performance is often the payload size itself.
@@ -10,9 +11,9 @@ In the last part, we mastered server rendering to deliver HTML to the user in re
 
 Every `npm install` is a potential performance liability. While the rich JavaScript ecosystem gives us powerful tools, it also makes it easy to accumulate bloat. Common culprits include:
 
--   **Heavy SDKs:** Analytics tools, feature flagging libraries, and payment processors.
--   **Complex UI Libraries:** Charting libraries (like D3), rich text editors, or extensive date formatters (like Moment.js).
--   **The GraphQL Client Itself:** A full-featured client like Apollo Client, with its caching and state management capabilities, adds significant weight.
+- **Heavy SDKs:** Analytics tools, feature flagging libraries, and payment processors.
+- **Complex UI Libraries:** Charting libraries (like D3), rich text editors, or extensive date formatters (like Moment.js).
+- **The GraphQL Client Itself:** A full-featured client like Apollo Client, with its caching and state management capabilities, adds significant weight.
 
 To diagnose this, you can use tools like `@next/bundle-analyzer` to visualize what’s inside your bundles. The first step to solving the problem is seeing it.
 
@@ -32,7 +33,7 @@ Next.js provides the `dynamic()` function, a powerful wrapper around `React.lazy
 
 ```javascript
 // This entire component and its dependencies are in the initial page bundle.
-import RichTextEditor from '../components/RichTextEditor';
+import RichTextEditor from "../components/RichTextEditor";
 
 function MyPage() {
   // ...
@@ -43,10 +44,10 @@ function MyPage() {
 **After: The Smart, Dynamic Load**
 
 ```javascript
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // The editor is now in its own JS chunk, loaded only when MyPage renders.
-const RichTextEditor = dynamic(() => import('../components/RichTextEditor'));
+const RichTextEditor = dynamic(() => import("../components/RichTextEditor"));
 
 function MyPage() {
   // ...
@@ -58,8 +59,8 @@ You can even disable server-side rendering for components that rely on browser-o
 
 ```javascript
 const MyClientOnlyComponent = dynamic(
-  () => import('../components/MyClientOnlyComponent'),
-  { ssr: false }
+  () => import("../components/MyClientOnlyComponent"),
+  { ssr: false },
 );
 ```
 

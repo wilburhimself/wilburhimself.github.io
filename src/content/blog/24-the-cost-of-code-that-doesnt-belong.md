@@ -2,6 +2,7 @@
 title: "The Cost of Code That Doesn't Belong"
 date: "2025-07-31"
 excerpt: "Code integration quality matters more than origin, whether human-written or AI-generated. Successful systems require contextual awareness, dialect alignment, and careful bridging between raw output and cohesive implementation."
+tags: ["code-quality", "ai-assistant", "best-practices", "software-design"]
 ---
 
 # The Cost of Code That Doesn't Belong

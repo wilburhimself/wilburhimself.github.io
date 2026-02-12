@@ -2,6 +2,7 @@
 title: "Getting started with ActionCable in Ruby on Rails - An Introduction"
 date: "February 20, 2023"
 excerpt: "Real-time web applications leverage ActionCable and WebSockets through comprehensive implementation covering Rails API setup, React integration, Redis configuration, and channel creation. Bidirectional communication patterns enable chat applications, live updates, and collaborative features in modern web development."
+tags: ["rails", "react", "websockets", "real-time"]
 ---
 
 ActionCable is a powerful feature in Ruby on Rails that allows developers to build real-time web applications using WebSockets. With ActionCable, you can create channels that handle bidirectional communication between the client and the server in real time. This tutorial will provide an introduction to ActionCable and guide you through creating a simple chat application.
@@ -223,6 +224,6 @@ In this tutorial, we walked through the process of setting up ActionCable in a R
 
 By now, you should have a good understanding of how ActionCable works and how to use it to build real-time applications with Ruby on Rails and React.
 
-To learn more about ActionCable, check out the official Rails documentation at [**https://guides.rubyonrails.org/action\_cable\_overview.html**](https://guides.rubyonrails.org/action_cable_overview.html). For more information about React and `create-react-app`, visit [**https://reactjs.org/**](https://reactjs.org/) and [**https://create-react-app.dev/**](https://create-react-app.dev/).
+To learn more about ActionCable, check out the official Rails documentation at [**https://guides.rubyonrails.org/action_cable_overview.html**](https://guides.rubyonrails.org/action_cable_overview.html). For more information about React and `create-react-app`, visit [**https://reactjs.org/**](https://reactjs.org/) and [**https://create-react-app.dev/**](https://create-react-app.dev/).
 
 Thank you for reading!

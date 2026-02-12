@@ -1,7 +1,8 @@
 ---
 title: "Idempotency: The API Principle You're Probably Neglecting"
 date: "September 22, 2025"
-excerpt: "A user double-clicks \"Pay Now.\" Are they charged twice? In a world of unreliable networks and automatic client retries, idempotency isn't an advanced feature—it's a fundamental requirement for any robust API. This post shows you how to implement it using the Idempotency-Key header pattern in Rails."
+excerpt: 'A user double-clicks "Pay Now." Are they charged twice? In a world of unreliable networks and automatic client retries, idempotency isn''t an advanced feature—it''s a fundamental requirement for any robust API. This post shows you how to implement it using the Idempotency-Key header pattern in Rails.'
+tags: ["api-design", "idempotency", "rails", "distributed-systems", "backend"]
 ---
 
 A user clicks the "Confirm Purchase" button. The spinner appears, but their train goes into a tunnel and the network request times out. Frustrated, they click the button again. A few minutes later, they get two order confirmation emails and their card has been charged twice.
@@ -22,7 +23,7 @@ So how do we make a `POST` request safe to retry?
 
 The most common and robust solution is for the client to generate a unique key for each operation it wants to make idempotent. This key is passed in a request header, typically `Idempotency-Key`.
 
-The client generates a UUID, sends it with the initial request, and if that request fails or times out, it sends the *exact same request* with the *exact same idempotency key*.
+The client generates a UUID, sends it with the initial request, and if that request fails or times out, it sends the _exact same request_ with the _exact same idempotency key_.
 
 The server is now responsible for keeping track of these keys and ensuring that it only processes the request for a given key once.
 

@@ -14,7 +14,7 @@ const { til } = Astro.props;
 const { Content } = await til.render();
 ---
 
-<TILLayout title={til.data.title}>
+<TILLayout title={til.data.title} description={`TIL: ${til.data.title}`}>
   <article class="max-w-2xl">
     <header class="mb-6">
       <div class="flex items-center gap-3 mb-4">

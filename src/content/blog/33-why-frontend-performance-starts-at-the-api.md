@@ -2,6 +2,7 @@
 title: "Why Frontend Performance Starts at the API"
 date: "September 11, 2025"
 excerpt: "Modern frontend performance bottlenecks often originate at the API layer. Instead of just identifying the problem, this post provides a blueprint for a solution, covering data fetching, caching, SSR, and more, kicking off a deep-dive series into building truly high-performance UIs."
+tags: ["frontend", "performance", "graphql", "api", "architecture"]
 ---
 
 When we talk about frontend performance, we're often looking in the wrong place. We obsess over Lighthouse scores, Core Web Vitals, and shaving kilobytes off a bundle, believing speed is won in the browser. But in modern applications, the real performance battle begins long before a single React component renders. **It begins at the API.**

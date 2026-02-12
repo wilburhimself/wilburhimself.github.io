@@ -2,6 +2,7 @@
 title: "Function arguments, how many are too many?"
 date: "February 18, 2023"
 excerpt: "Function parameter complexity becomes manageable through Ruby patterns including hashes, structs, classes, and builder implementations when traditional argument lists exceed maintainability thresholds. Analysis covers trade-offs between parameter count, function complexity, and code clarity for sustainable software architecture."
+tags: ["ruby", "clean-code", "refactoring"]
 ---
 
 Function arguments are the values passed to a function when it is called. In Ruby, functions can take any number of arguments, including none. However, passing too many arguments to a function can make the code difficult to read and maintain. In this blog post, we will explore how many arguments are too many, and show some alternatives to using a large number of arguments.

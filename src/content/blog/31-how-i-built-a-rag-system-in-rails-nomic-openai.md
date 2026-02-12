@@ -2,6 +2,7 @@
 title: "How I Built a RAG System in Rails Using Nomic Embeddings and OpenAI"
 date: "2025-07-18"
 excerpt: "RAG doesn’t have to mean heavyweight infrastructure. In this post, I show how I wired up a lean Retrieval-Augmented Generation pipeline inside a Rails app using Nomic for embeddings, PgVector for search, and OpenAI for generation. The result is a flexible system: open-source at the embedding layer, powerful where it counts, and simple enough to extend without vendor lock-in."
+tags: ["ai", "rails", "rag", "postgres", "ruby"]
 ---
 
 Retrieval-Augmented Generation (RAG) is a practical way to bring your own data into LLM workflows. Instead of fine-tuning, you give the model context that makes its answers specific and trustworthy.
@@ -19,6 +20,7 @@ The result is a system that feels light, flexible, and doesn’t lock you into o
 ## 🧠 What Is RAG, Really?
 
 Think of RAG as a two-step handshake:
+
 1. **Find the right data** → Embed the query, search your knowledge base, and pull back relevant snippets.
 2. **Generate with context** → Hand both the query and those snippets to an LLM so it answers with precision.
 
@@ -80,7 +82,6 @@ Split content into short passages (~100–300 words). Embed each passage and sto
 ```
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
-
 
 ```ruby
 class AddEmbeddingToDocuments < ActiveRecord::Migration[7.1]

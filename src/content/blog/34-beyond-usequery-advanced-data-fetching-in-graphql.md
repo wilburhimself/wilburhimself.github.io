@@ -2,6 +2,7 @@
 title: "Beyond useQuery: Advanced Data Fetching in GraphQL"
 date: "September 12, 2025"
 excerpt: "Stop request waterfalls and N+1 problems at the source. This deep-dive covers advanced GraphQL data fetching patterns like fragments, query batching, cursor-based pagination, and real-time subscriptions to build truly performant clients."
+tags: ["graphql", "react", "performance", "frontend", "patterns"]
 ---
 
 In [Part 1](/blog/33-why-frontend-performance-starts-at-the-api/), we established that frontend performance begins at the API. A performant API, however, is useless if the client queries it inefficiently. Most developers start and end with a simple `useQuery`, but this is like using only first gear in a race car. Let's unlock the rest of the transmission.
@@ -69,16 +70,18 @@ Now, the `UserPage` component executes one query and passes the fragmented data 
 
 ### Solution 2: Slaying N+1s with Query Batching
 
-The N+1 problem isn't just for backends. It happens when a client makes one query to fetch a list, then makes *N* subsequent queries to fetch details for each item in that list.
+The N+1 problem isn't just for backends. It happens when a client makes one query to fetch a list, then makes _N_ subsequent queries to fetch details for each item in that list.
 
 **The Anti-Pattern:**
 
 ```javascript
 const { data: posts } = useQuery(GET_POSTS);
 
-posts.forEach(post => {
+posts.forEach((post) => {
   // This triggers a new query for each post!
-  const { data: author } = useQuery(GET_AUTHOR, { variables: { authorId: post.authorId } });
+  const { data: author } = useQuery(GET_AUTHOR, {
+    variables: { authorId: post.authorId },
+  });
 });
 ```
 
@@ -129,7 +132,9 @@ Sometimes, you need data that updates without a page refresh. You have two prima
       newMessage(chatRoomId: $chatRoomId) {
         id
         text
-        author { name }
+        author {
+          name
+        }
       }
     }
     ```
@@ -138,6 +143,6 @@ Subscriptions are more complex to set up but provide instant updates with minima
 
 ### Conclusion
 
-Moving beyond a basic `useQuery` is the first step toward mastering client-side performance. By using fragments for colocation, batching to reduce requests, and pagination for large datasets, you are no longer just *requesting* data—you are *architecting* its flow.
+Moving beyond a basic `useQuery` is the first step toward mastering client-side performance. By using fragments for colocation, batching to reduce requests, and pagination for large datasets, you are no longer just _requesting_ data—you are _architecting_ its flow.
 
 In Part 3, we'll explore how to make this flow even more efficient by **caching data and managing state intelligently**.

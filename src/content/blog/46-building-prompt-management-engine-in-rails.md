@@ -2,6 +2,7 @@
 title: 'The Prompt Engineering Manifesto: From $2,400 Mistakes to Production-Grade AI'
 date: "18 October 2025"
 excerpt: 'A hardcoded prompt typo cost us $2,400 in 72 hours. Here''s the engineering discipline, testing strategies, and open-source tool (Promptly) we built to fix it for good.'
+tags: ["rails", "ruby", "ai", "patterns"]
 ---
 
 Last month, a typo in a hardcoded AI prompt cost us dearly. The prompt was supposed to ask for a JSON object with three keys, but the typo made the request ambiguous. For 72 hours, our AI spat out unstructured text, breaking a critical background job. By the time we caught it, we had wasted over $2,400 in API calls and processed zero records.

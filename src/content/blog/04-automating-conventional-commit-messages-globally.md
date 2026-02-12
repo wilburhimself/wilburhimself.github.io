@@ -2,6 +2,7 @@
 title: "Automating explicit commit story with Conventional Commits"
 date: "March 17, 2019"
 excerpt: "Automated conventional commit message enforcement across all projects becomes achievable through Commitizen, Commitlint, and Git hooks implementation. The workflow transforms version control documentation by standardizing commit formats, improving team collaboration, and creating consistent project histories through automated tooling."
+tags: ["git", "devops", "workflow", "automation"]
 ---
 
 I am always looking for ways to make me a better developer. This includes improving the coding process and automation of coding tasks. One area I have been improving is my writing of commit messages.
@@ -14,9 +15,9 @@ I became aware of [Conventional Commits](https://www.conventionalcommits.org/en/
 
 I wanted to automate enforcing conventional commit messages in all my projects. I googled and found the tools I needed to set it up globally for all commit messages:
 
-*   [Commitizen](https://github.com/commitizen/cz-cli) helps writing the conventional commit message
-*   [Commitlint](https://github.com/conventional-changelog/commitlint) check each commit for proper format
-*   [Git global hooks](https://til.hashrocket.com/posts/c89a35a66c-global-git-hooks) fail if the commit message does not follow the standard
+- [Commitizen](https://github.com/commitizen/cz-cli) helps writing the conventional commit message
+- [Commitlint](https://github.com/conventional-changelog/commitlint) check each commit for proper format
+- [Git global hooks](https://til.hashrocket.com/posts/c89a35a66c-global-git-hooks) fail if the commit message does not follow the standard
 
 ### Commitizen
 

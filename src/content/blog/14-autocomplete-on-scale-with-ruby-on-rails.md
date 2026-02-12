@@ -2,6 +2,7 @@
 title: "Autocomplete at Scale - How Tries and Partitioning Can Unlock Blazing-Fast Search in Ruby on Rails"
 date: "April 07, 2024"
 excerpt: "Scalable autocomplete functionality achieving sub-millisecond response times with millions of records employs trie data structures and advanced partitioning strategies in Ruby on Rails. Performance optimization techniques include memory management, database partitioning patterns, and efficient prefix-based search algorithms."
+tags: ["ruby", "rails", "performance", "algorithms", "search"]
 ---
 
 As software engineers, we’re constantly striving to build applications that are not only feature-rich, but also lightning-fast, even in the face of ever-growing datasets. And when it comes to implementing search functionality - particularly the coveted autocomplete feature - the challenge of maintaining performance can be a real thorn in our sides.
@@ -60,7 +61,7 @@ To address this, we can implement a lazy loading approach, where we only populat
       end
     end
 
-In this implementation, the trie is initialized when the Word.trie method is first called. The find\_each method is used to fetch the words from the database in batches, rather than loading them all at once. This helps minimize the initial memory footprint and startup time of the application.
+In this implementation, the trie is initialized when the Word.trie method is first called. The find_each method is used to fetch the words from the database in batches, rather than loading them all at once. This helps minimize the initial memory footprint and startup time of the application.
 
 In this implementation, the trie is initialized when the `Word.trie` method is first called. The `find_each` method is used to fetch the words from the database in batches, rather than loading them all at once. This helps minimize the initial memory footprint and startup time of the application.
 

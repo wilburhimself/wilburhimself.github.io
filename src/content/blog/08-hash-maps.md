@@ -2,6 +2,7 @@
 title: "Hash Maps"
 date: "February 11, 2023"
 excerpt: "Hash maps (dictionaries) in Ruby demonstrate efficient key-value pair operations through practical examples including element counting, word frequency analysis, and caching implementations. Performance characteristics and collision handling strategies optimize data retrieval and storage operations in Ruby applications."
+tags: ["computer-science", "ruby", "algorithms", "data-structures"]
 ---
 
 A hash map, also known as a dictionary or associative array, is a data structure that stores key-value pairs and provides fast access to the values based on their keys. In Ruby, the hash map data structure is implemented as a hash, which is represented by curly braces `{}` and each key-value pair is separated by a comma `,`.
@@ -70,18 +71,17 @@ In this example, we’ll create a hash map to group the elements of an array by 
     # Print the grouped elements
     puts grouped # Output: {Fixnum=>[1, 2], String=>["Hello"], Float=>[2.0], Array=>[[1, 2, 3]], Hash=>[{:a=>1, :b=>2}]}
 
-**Practical Usage of Hash Maps in Ruby**
-----------------------------------------
+## **Practical Usage of Hash Maps in Ruby**
 
 Hash maps are widely used in Ruby for various purposes such as:
 
-*   Storing configuration settings
-*   Counting occurrences of elements in an array
-*   Finding the frequency of words in a string
-*   Grouping elements of an array by their type
-*   Implementing memoization
-*   Implementing caches
-*   Implementing symbol tables in compilers
+- Storing configuration settings
+- Counting occurrences of elements in an array
+- Finding the frequency of words in a string
+- Grouping elements of an array by their type
+- Implementing memoization
+- Implementing caches
+- Implementing symbol tables in compilers
 
 In this blog post, we learned about hash map implementation in Ruby and saw several examples of how they can be used in practice. From counting occurrences of elements in an array to grouping elements of an array by their type, hash maps are a versatile data structure that can make our lives as developers much easier.
 

@@ -2,6 +2,7 @@
 title: "Feature Flags: Beyond Simple Toggles"
 date: "September 20, 2025"
 excerpt: "Most teams see feature flags as simple on/off switches. They are so much more. This post explores how to use flags for percentage-based rollouts, targeted betas, and even as operational circuit breakers, transforming them from a developer convenience into a strategic tool for shipping safer, better software."
+tags: ["devops", "feature-flags", "rails", "workflow", "deployment"]
 ---
 
 We had just deployed a major refactoring of our checkout system. Ten minutes later, the alerts started firing. A subtle bug was preventing a small but significant percentage of users from completing their purchases. The problem was, rolling back would take another ten minutes, and every minute of downtime meant lost revenue.

@@ -1,7 +1,8 @@
 ---
-title: 'Building a Production-Ready AI Agent Foundation in Ruby'
+title: "Building a Production-Ready AI Agent Foundation in Ruby"
 date: "October 6, 2025"
-excerpt: 'Most function calling tutorials show toy examples that break in production. This guide provides the 80% foundation you actually need: a security-hardened, multi-turn agent with complete parameter validation, proper error handling, logging, and timeouts. Copy, customize, and build on it'
+excerpt: "Most function calling tutorials show toy examples that break in production. This guide provides the 80% foundation you actually need: a security-hardened, multi-turn agent with complete parameter validation, proper error handling, logging, and timeouts. Copy, customize, and build on it"
+tags: ["ai", "ruby", "agents", "llm", "patterns"]
 ---
 
 Most guides on "function calling" show a fragile proof-of-concept that would crumble in production. This guide provides a security-first, production-focused foundation for building real-world AI agents in Ruby.
@@ -11,6 +12,7 @@ We will build an agent that handles multi-turn conversations, validates all inpu
 ### The Core Challenge: From Toy to Tool
 
 Letting an AI model execute code is inherently dangerous. A simple implementation quickly exposes critical risks:
+
 - **Security Holes:** A cleverly prompted model could call unintended functions or pass malicious arguments.
 - **Brittle Logic:** A single unexpected `nil` or malformed JSON from the LLM can crash the entire process.
 - **Runaway Costs:** A looping agent can quickly incur significant costs without proper controls.
@@ -25,6 +27,7 @@ Our design will tackle these challenges head-on.
 Our architecture starts with a centralized, frozen registry. This is our single source of truth for what the agent is allowed to do, acting as a strict allow-list.
 
 `app/services/agent/tool_registry.rb`:
+
 ```ruby
 # frozen_string_literal: true
 
@@ -73,6 +76,7 @@ end
 Never trust LLM output. This validator is our security gate. It works with string keys, validates types and enums, and returns a sanitized hash with symbolized keys, ensuring only expected arguments are passed to our methods.
 
 `app/services/agent/parameter_validator.rb`:
+
 ```ruby
 # frozen_string_literal: true
 
@@ -88,14 +92,14 @@ module Agent
       schema[:properties].each do |prop_name, prop_schema|
         key = prop_name.to_s
         next unless args.key?(key)
-        
+
         value = args[key]
         validate_type!(value, prop_schema[:type], key)
         validate_enum!(value, prop_schema[:enum], key) if prop_schema[:enum]
-        
+
         validated[prop_name.to_sym] = value
       end
-      
+
       validated
     end
 
@@ -111,7 +115,7 @@ module Agent
       else
         raise ArgumentError, "Unknown type '#{expected_type}' in schema for parameter '#{field_name}'"
       end
-      
+
       raise ArgumentError, "Parameter '#{field_name}' must be of type #{expected_type}" unless valid
     end
 
@@ -124,6 +128,7 @@ end
 ```
 
 > #### **A Note on `symbolize_names`**
+>
 > Early versions of this agent used `JSON.parse(..., symbolize_names: true)` for convenience. However, this creates a security vulnerability: a malicious actor could craft JSON with millions of unique keys, exhausting memory. Always parse untrusted input as strings first, then sanitize through a validator as shown above.
 
 ### Step 3: The Multi-Turn Agent with Cost Control & Logging
@@ -131,6 +136,7 @@ end
 The agent's brain manages the conversation loop. It now correctly formats tool results, integrates logging, and tracks token usage to prevent runaway costs.
 
 `app/services/agent/runner.rb`:
+
 ```ruby
 # frozen_string_literal: true
 
@@ -150,9 +156,9 @@ module Agent
 
       MAX_ITERATIONS.times do |i|
         @logger.info("Agent loop iteration: #{i + 1}")
-        
+
         response_data = @llm_client.call_with_tools(messages: messages, tools: ToolRegistry.tool_definitions)
-        
+
         @total_tokens_used += response_data.dig("usage", "total_tokens") || 0
         raise "Token limit exceeded for this run" if @total_tokens_used > MAX_TOKENS_PER_RUN
 
@@ -176,7 +182,7 @@ module Agent
       tool_calls.map do |call|
         tool_name = call.dig("function", "name")
         tool_config = ToolRegistry.find(tool_name)
-        
+
         @logger.info("Agent wants to call tool: #{tool_name}")
         start_time = Time.now
 
@@ -186,7 +192,7 @@ module Agent
           begin
             arguments = JSON.parse(call.dig("function", "arguments"))
             validated_args = ParameterValidator.validate(arguments, tool_config[:parameters])
-            
+
             result = tool_config[:service].public_send(tool_config[:method], **validated_args)
             result.to_json
           rescue JSON::ParserError
@@ -195,7 +201,7 @@ module Agent
             { error: "Validation failed: #{e.message}" }.to_json
           end
         end
-        
+
         @logger.info("Tool #{tool_name} completed in #{Time.now - start_time}s")
         { tool_call_id: call["id"], role: "tool", content: result_content }
       end
@@ -209,6 +215,7 @@ end
 Your client needs to handle real-world network issues. Using the HTTP client's native timeout is safer than Ruby's generic `Timeout` module.
 
 `app/services/agent/default_llm_client.rb`:
+
 ```ruby
 # frozen_string_literal: true
 
@@ -228,21 +235,23 @@ module Agent
 
     def call_with_tools(messages:, tools:)
       body = { model: "gpt-4-turbo", messages: messages, tools: tools, tool_choice: "auto" }.to_json
-      
+
       response = self.class.post(
         "/chat/completions",
         headers: @headers,
         body: body,
         timeout: 30 # Use the HTTP client's native timeout
       )
-      
+
       raise "API Error: #{response.code} #{response.body}" unless response.success?
       response.parsed_response
     end
   end
 end
 ```
+
 > #### **A Note on Timeouts**
+>
 > While Ruby's `Timeout.timeout` is tempting, it uses thread interruption, which can leave network resources like HTTP connections in a broken, inconsistent state. For production code, always prefer the native timeout option provided by your HTTP client library (`timeout: 30` in HTTParty's case).
 
 ### Step 5: High-Fidelity Testing
@@ -250,6 +259,7 @@ end
 Our test now verifies the agent's internal conversation history, ensuring the tool's raw JSON result is correctly passed back to the LLM for the next turn.
 
 `spec/services/agent/runner_spec.rb`:
+
 ```ruby
 require 'rails_helper'
 
@@ -269,7 +279,7 @@ RSpec.describe Agent::Runner do
         }
       }]
     }}], "usage" => { "total_tokens" => 100 }}
-    
+
     # 2. LLM receives the tool's raw JSON output and generates the final answer
     final_answer_response = { "choices" => [{ "message" => {
       "role" => "assistant", "content" => "The weather in Boston is 72°F."
@@ -303,6 +313,7 @@ end
 This foundation is robust. To make it fully production-hardened, the final step is adding retry logic.
 
 **Example retry with exponential backoff:**
+
 ```ruby
 # In your Gemfile:
 # gem 'retries'

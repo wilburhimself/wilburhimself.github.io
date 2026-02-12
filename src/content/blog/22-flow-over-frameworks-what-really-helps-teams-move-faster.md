@@ -2,6 +2,7 @@
 title: "Flow Over Frameworks: What Really Helps Teams Move Faster"
 date: "2025-08-07"
 excerpt: "Team velocity optimization requires focusing on workflow efficiency rather than rigid methodology adherence. Practical approaches include dropping sprint commitments, limiting work-in-progress, using short planning cycles, and aggressive backlog pruning."
+tags: ["process", "agile", "teamwork", "productivity"]
 ---
 
 # Flow Over Frameworks: What Really Helps Teams Move Faster

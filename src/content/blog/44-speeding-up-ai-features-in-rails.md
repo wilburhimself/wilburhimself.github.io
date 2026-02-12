@@ -1,7 +1,8 @@
 ---
-title: 'From Waiting to Working: Building Responsive AI Features in Rails'
+title: "From Waiting to Working: Building Responsive AI Features in Rails"
 date: "October 7, 2025"
-excerpt: 'A deep dive into architectural patterns using ActiveJob and Redis to solve LLM latency, moving from an 8-second wait to a sub-50ms cached response.'
+excerpt: "A deep dive into architectural patterns using ActiveJob and Redis to solve LLM latency, moving from an 8-second wait to a sub-50ms cached response."
+tags: ["ai", "rails", "performance", "caching", "background-jobs"]
 ---
 
 **TL;DR:** Synchronous LLM calls are slow (5-10s). For a responsive UI, use background jobs with real-time updates (Pattern 1). For read-heavy shared data, use intelligent caching (Pattern 2). For critical features, proactively warm the cache (Pattern 3). This post shows you how to implement these patterns robustly.
@@ -12,11 +13,11 @@ You ship a new AI summary feature. The implementation is simple: a controller ac
 
 ### The Patterns at a Glance
 
-| Pattern                               | Pros                                       | Cons                                                                 | Best For                                                              |
-| ------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **1. Async Job + Real-time Updates**  | Excellent UX, non-blocking.                | High architectural complexity (Action Cable, state management).      | Unique, user-specific content (custom reports, personalized emails).  |
-| **2. Proactive Caching**              | Fastest reads, simple to implement.        | Synchronous wait on cache miss. Stale data risk if keys are wrong.   | Shared, read-heavy content (product descriptions, public summaries).  |
-| **3. Hybrid: Proactive Cache Warming**| Best of both: instant reads, responsive UI.| Combines complexity of both. Wastes resources if content isn't read. | Mission-critical features where speed is paramount (dashboards, onboarding). |
+| Pattern                                | Pros                                        | Cons                                                                 | Best For                                                                     |
+| -------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **1. Async Job + Real-time Updates**   | Excellent UX, non-blocking.                 | High architectural complexity (Action Cable, state management).      | Unique, user-specific content (custom reports, personalized emails).         |
+| **2. Proactive Caching**               | Fastest reads, simple to implement.         | Synchronous wait on cache miss. Stale data risk if keys are wrong.   | Shared, read-heavy content (product descriptions, public summaries).         |
+| **3. Hybrid: Proactive Cache Warming** | Best of both: instant reads, responsive UI. | Combines complexity of both. Wastes resources if content isn't read. | Mission-critical features where speed is paramount (dashboards, onboarding). |
 
 ---
 
@@ -47,6 +48,7 @@ sequenceDiagram
 **The Backend Implementation:**
 
 `app/models/document.rb`
+
 ```ruby
 class Document < ApplicationRecord
   lock_optimistically
@@ -55,6 +57,7 @@ end
 ```
 
 `app/jobs/generate_summary_job.rb`
+
 ```ruby
 class GenerateSummaryJob < ApplicationJob
   # User is waiting, so this is higher priority than batch jobs
@@ -87,6 +90,7 @@ end
 Your Action Cable channel **must** authorize the subscription. Otherwise, any user could listen in on any document's updates.
 
 `app/channels/application_cable/connection.rb`
+
 ```ruby
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
@@ -110,6 +114,7 @@ end
 ```
 
 `app/channels/document_channel.rb`
+
 ```ruby
 class DocumentChannel < ApplicationCable::Channel
   def subscribed
@@ -130,6 +135,7 @@ For data that is expensive to generate but frequently read, caching is essential
 **The UX Caveat:** This pattern is simple, but if a user requests a summary and it's not in the cache (a "cache miss"), they will wait the full 5-10 seconds for the synchronous API call. This is only acceptable for scenarios where an occasional long wait is okay, or when you can nearly guarantee the cache is always warm.
 
 `app/services/summary_service.rb`
+
 ```ruby
 class SummaryService
   PROMPT_VERSION = "v1.3"
@@ -152,6 +158,7 @@ end
 This combines both patterns: enqueue a background job to warm the cache when a document changes.
 
 `app/jobs/warm_summary_cache_job.rb`
+
 ```ruby
 class WarmSummaryCacheJob < ApplicationJob
   # No user is waiting, so this can be a lower priority
@@ -164,7 +171,7 @@ class WarmSummaryCacheJob < ApplicationJob
 end
 ```
 
-**The Cold Start Problem:** Be aware that if a user requests a summary *after* the warming job is enqueued but *before* it completes, they will still experience a cache miss and have to wait.
+**The Cold Start Problem:** Be aware that if a user requests a summary _after_ the warming job is enqueued but _before_ it completes, they will still experience a cache miss and have to wait.
 
 ---
 
@@ -172,23 +179,23 @@ end
 
 - **Queue Prioritization:** User-initiated jobs (Pattern 1) that a user is actively waiting for should run in a high-priority queue (`:default` or `:high`). Background warming jobs (Pattern 3) where no one is waiting should run in a `:low_priority` queue so they don't block password resets or other critical tasks.
 
-- **Cost Analysis:** Caching prevents *redundant* API calls. Without it, 1,000 users viewing the same popular document means 1,000 API calls (e.g., $10). With caching, it's 1 API call + 999 cache hits (total cost: $0.01). Pattern 3 has a different model: you pay to generate a summary for *every* new document, but you save money by preventing multiple generations for popular ones.
+- **Cost Analysis:** Caching prevents _redundant_ API calls. Without it, 1,000 users viewing the same popular document means 1,000 API calls (e.g., $10). With caching, it's 1 API call + 999 cache hits (total cost: $0.01). Pattern 3 has a different model: you pay to generate a summary for _every_ new document, but you save money by preventing multiple generations for popular ones.
 
-- **Monitoring & Observability:** Don't fly blind. *How* do you track cache performance?
-    1.  **Instrument Your Code:** Use `ActiveSupport::Notifications` or a simple wrapper to send data to StatsD or another metrics service.
-        ```ruby
-        # config/initializers/cache_monitoring.rb
-        module CacheMonitoring
-          def fetch(key, **options, &block)
-            hit = exist?(key)
-            ::StatsD.increment("cache.#{key.first}.#{hit ? 'hit' : 'miss'}")
-            super
-          end
+- **Monitoring & Observability:** Don't fly blind. _How_ do you track cache performance?
+  1.  **Instrument Your Code:** Use `ActiveSupport::Notifications` or a simple wrapper to send data to StatsD or another metrics service.
+      ```ruby
+      # config/initializers/cache_monitoring.rb
+      module CacheMonitoring
+        def fetch(key, **options, &block)
+          hit = exist?(key)
+          ::StatsD.increment("cache.#{key.first}.#{hit ? 'hit' : 'miss'}")
+          super
         end
-        Rails.cache.singleton_class.prepend(CacheMonitoring)
-        ```
-    2.  **Use APM Tools:** Services like Scout APM, Skylight, or New Relic often provide cache performance monitoring out of the box.
-    3.  **Check Redis Directly:** The `redis-cli INFO` command provides basic hit/miss stats.
+      end
+      Rails.cache.singleton_class.prepend(CacheMonitoring)
+      ```
+  2.  **Use APM Tools:** Services like Scout APM, Skylight, or New Relic often provide cache performance monitoring out of the box.
+  3.  **Check Redis Directly:** The `redis-cli INFO` command provides basic hit/miss stats.
 
 - **Progressive Enhancement:** What if Action Cable disconnects? Your feature should degrade gracefully. Provide a "Check for updates" button that triggers a poll to the server, or fall back to a simple page reload.
 

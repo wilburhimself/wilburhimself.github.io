@@ -2,6 +2,7 @@
 title: "The Art of Caching: State Management in GraphQL UIs"
 date: "September 13, 2025"
 excerpt: "Efficient data fetching is only half the battle. This post explores the art of client-side caching, from the magic of normalized data in Apollo/Relay to bulletproof invalidation strategies and SSR hydration. Learn why great caching is as much about predictability as it is about performance."
+tags: ["graphql", "caching", "state-management", "frontend", "react"]
 ---
 
 In [Part 2](/blog/34-beyond-usequery-advanced-data-fetching-in-graphql/), we architected an efficient data flow from the server. But what happens once that data arrives on the client? Fetching data efficiently is pointless if you have to fetch it again every time the user navigates. This is where caching transforms a good app into a great one.
@@ -50,7 +51,7 @@ When data changes on the server, the client's cache becomes stale. How do you up
 
     ```javascript
     const [addPost] = useMutation(ADD_POST, {
-      refetchQueries: [GET_POSTS]
+      refetchQueries: [GET_POSTS],
     });
     ```
 
@@ -64,7 +65,7 @@ When data changes on the server, the client's cache becomes stale. How do you up
           query: GET_POSTS,
           data: { posts: [newPost, ...posts] },
         });
-      }
+      },
     });
     ```
 

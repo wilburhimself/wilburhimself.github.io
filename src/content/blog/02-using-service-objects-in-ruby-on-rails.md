@@ -2,13 +2,14 @@
 title: "Using Service Objects in Ruby on Rails"
 date: "March 15, 2019"
 excerpt: "Service objects provide an architectural solution to Rails applications struggling with bloated models and controllers by extracting business logic into focused, testable classes and modules. Implementation examples demonstrate both class-based and module-based approaches following single responsibility principles for scalable application architecture."
+tags: ["rails", "ruby", "patterns", "backend"]
 ---
 
 Once an application reaches certain size, questions about architecture begin to appear. Rails follows a Model View Controller organization and basic rules exist for clean code:
 
-*   No **Fat Models** - don’t allow them to get bloated
-*   Keep **views** dumb - don’t put any logic in there
-*   Keep **controllers** skinny - don’t put too much there
+- No **Fat Models** - don’t allow them to get bloated
+- Keep **views** dumb - don’t put any logic in there
+- Keep **controllers** skinny - don’t put too much there
 
 And it raises the first question: Where do I put all that code?
 
@@ -33,10 +34,10 @@ Service objects can be a class or a module in Ruby that perform an action and ca
 
 Extracting some of this into a service object is easy once you understand the design pattern.
 
-*   create a `services` folder in the Rails’ `app` folder
-*   create the service object file, in this example `create_post.rb`
-*   extract the functionality to the `CreatePost` class/module
-*   reload the Rails app and try it
+- create a `services` folder in the Rails’ `app` folder
+- create the service object file, in this example `create_post.rb`
+- extract the functionality to the `CreatePost` class/module
+- reload the Rails app and try it
 
 ### Service objects as modules
 

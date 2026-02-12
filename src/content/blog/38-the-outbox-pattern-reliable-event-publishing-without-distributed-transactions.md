@@ -2,6 +2,8 @@
 title: "The Outbox Pattern: Reliable Event Publishing Without Distributed Transactions"
 date: "September 18, 2025"
 excerpt: "How do you guarantee that an event is sent if, and only if, a database transaction succeeds? The dual-write problem plagues distributed systems, leading to inconsistency and bugs. This post dives deep into the Outbox Pattern, a simple yet powerful solution in Rails to ensure atomic, at-least-once delivery for your critical events."
+tags:
+  ["patterns", "distributed-systems", "rails", "reliability", "architecture"]
 ---
 
 In a distributed system, one of the hardest problems is ensuring consistency between services. A classic example is a user signing up: you write the new user to your database, and then you publish a `UserSignedUp` event to a message broker like RabbitMQ or Kafka. Other services listen for this event to kick off their own workflows, like sending a welcome email.
@@ -35,7 +37,7 @@ Wrapping them in a transaction doesn't help, because the event is published befo
 
 ### The Solution: The Outbox Pattern
 
-The Outbox Pattern solves this by using your local database as a temporary, durable message queue. Instead of publishing the event directly, you save it to a special `outbox` table within the *same database transaction* as your business logic.
+The Outbox Pattern solves this by using your local database as a temporary, durable message queue. Instead of publishing the event directly, you save it to a special `outbox` table within the _same database transaction_ as your business logic.
 
 Here’s the flow:
 

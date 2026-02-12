@@ -2,15 +2,18 @@
 title: "🚨 Introducing GemGuard: Automated Security for Ruby Gems (Scan, SBOM, Typosquat, Auto-Fix)"
 date: "2025-08-11"
 excerpt: "GemGuard is my attempt to make Ruby security less of a chore and more of a natural part of development. It scans your Gemfile.lock against OSV.dev and the Ruby Advisory Database, flags typosquat risks, and can even generate SBOMs in SPDX or CycloneDX formats. If it finds a vulnerable gem, it’ll suggest or apply safe upgrades, and because it’s designed with CI/CD in mind, you can drop it into your workflow without slowing things down."
+tags: ["ruby", "security", "gems", "tooling", "open-source"]
 ---
 
 **Links:**
+
 - GitHub: [github.com/wilburhimself/gem_guard](https://github.com/wilburhimself/gem_guard)
 - RubyGems: [rubygems.org/gems/gem_guard](https://rubygems.org/gems/gem_guard)
 
 ---
 
 ## TL;DR
+
 - ✅ Scan dependencies for known vulnerabilities (OSV.dev + Ruby Advisory DB)
 - 🕵️ Detect typosquat packages before they bite
 - 📜 Generate SPDX / CycloneDX SBOMs
@@ -21,7 +24,9 @@ excerpt: "GemGuard is my attempt to make Ruby security less of a chore and more 
 ---
 
 ## Why GemGuard?
+
 Because security shouldn’t be an afterthought. It should be:
+
 - **Pragmatic** – only what matters, no noise
 - **Fast** – instant feedback in dev or CI
 - **Integrated** – works with your normal Ruby workflow
@@ -29,6 +34,7 @@ Because security shouldn’t be an afterthought. It should be:
 ---
 
 ## What is GemGuard?
+
 GemGuard is a lightweight Ruby security tool that:
 
 - Scans your `Gemfile.lock` for known vulnerabilities
@@ -39,8 +45,8 @@ GemGuard is a lightweight Ruby security tool that:
 
 ---
 
-
 #### Installation
+
 ```bash
 # Add to your Gemfile (recommended for projects)
 gem "gem_guard", "~> 1.1"
@@ -110,6 +116,7 @@ gem_guard scan
 ```
 
 #### Clean CLI
+
 ```bash
 gem_guard --help
 # config, scan, typosquat, sbom, fix, version
@@ -122,6 +129,7 @@ gem_guard --help
 - 2: errors (e.g., missing files)
 
 ### CI/CD Integration (GitHub Actions)
+
 ```yaml
 name: security-scan
 on: [push, pull_request]
@@ -132,7 +140,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: "3.3"
           bundler-cache: true
       - run: gem install gem_guard
       - run: gem_guard scan --format json > gemguard-report.json
@@ -155,7 +163,7 @@ Create .gemguard.yml:
 ```yaml
 lockfile: Gemfile.lock
 output:
-  format: table   # table | json
+  format: table # table | json
 typosquat:
   similarity_threshold: 0.82
   risk_levels:
@@ -170,6 +178,7 @@ gem_guard config --show
 ```
 
 ### Why GemGuard?
+
 - Minimal setup, zero noise
 - Pragmatic defaults, sensible exit codes
 - Works offline for typosquat via fallback popular gems
@@ -177,6 +186,7 @@ gem_guard config --show
 - Designed for CI from day 1
 
 ### How It Compares
+
 - Bundler Audit: great for advisories; GemGuard adds typosquat + SBOM + auto-fix
 - OSV-Scanner: broad ecosystem; GemGuard is Ruby-first with tighter UX and auto-fix
 - Trivy/Grype: container focus; GemGuard slots into pure-Ruby pipelines easily
@@ -184,17 +194,20 @@ gem_guard config --show
 Use GemGuard standalone or alongside your existing stack.
 
 ### Roadmap
+
 - Enriched advisories (GHSA/CVE links, CVSS)
 - Optional dependency graph visualizations
 - Interactive TUI
 - More fix strategies and guards
 
 ### Contribute / Feedback
+
 - Issues/PRs welcome: add tests, keep it minimal and intention-revealing
 - Prefer failing test → minimal fix → refactor
 - Security disclosures: see SECURITY.md
 
 ### Try It Now
+
 ```bash
 gem install gem_guard
 gem_guard scan
@@ -207,4 +220,3 @@ If this helps you ship safer Ruby apps with less fuss, drop a ❤️ and share!
 — Built for Rubyists who like fast feedback, clean CLIs, and reliable automation.
 
 Issues and PRs welcome → [github.com/wilburhimself/gem_guard](https://github.com/wilburhimself/gem_guard)
-

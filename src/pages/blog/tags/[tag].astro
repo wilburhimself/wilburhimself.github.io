@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog');
+  const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags || []).flat())];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => post.data.tags?.includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<BlogLayout title={`Posts tagged with ${tag}`}>
+  <h1 class="text-3xl font-bold mb-8">Posts tagged with <span class="text-purple-600">#{tag}</span></h1>
+  
+  <div class="articles space-y-12">
+    {sortedPosts.map((post) => (
+      <article class="article-card group">
+        <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
+          <div class="flex items-center gap-3 text-sm text-gray-medium mb-1">
+             <time>{post.data.date}</time>
+             {post.data.tags && (
+                <div class="flex gap-2">
+                  {post.data.tags.map((t) => (
+                    <span class="text-gray-500">#{t}</span>
+                  ))}
+                </div>
+              )}
+          </div>
+          <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mt-0">
+            {post.data.title}
+          </h2>
+          <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
+          <span class="hidden inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+              Read article →
+          </span>
+        </a>
+      </article>
+    ))}
+  </div>
+  
+  <div class="mt-12 pt-8 border-t border-gray-light">
+    <a href="/" class="text-gray-dark hover:text-near-black">← Back to Articles</a>
+  </div>
+</BlogLayout>

@@ -2,6 +2,7 @@
 title: "From Monolith to Modulith: A Pragmatic Guide to Deconstruction"
 date: "September 19, 2025"
 excerpt: "Everyone wants to break the monolith, but jumping straight to microservices is a fast track to a distributed mess. The Modulith is a more pragmatic step: a single application with strong, enforced internal boundaries. This post explores how to use tools like Packwerk in Rails to achieve modularity without the operational overhead of a distributed system."
+tags: ["architecture", "monolith", "rails", "refactoring", "software-design"]
 ---
 
 The dream of breaking the monolith into a fleet of sleek, independent microservices is a powerful one. But I've seen it turn into a nightmare more than once. Teams trade their familiar, if messy, monolith for a distributed big ball of mud—a system where everything is coupled over the network, making development slower and debugging nearly impossible.
@@ -14,10 +15,10 @@ A Modulith is an application that is developed as a single unit but is designed 
 
 Before you write a single line of code, you must agree on your domains. This is a cultural exercise. Get your team in a room (virtual or physical) and map out the core responsibilities of your application. What are the logical components? You might end up with domains like:
 
--   `Identity` (user accounts, authentication)
--   `Billing` (subscriptions, payments)
--   `Inventory` (product stock)
--   `Shipping` (logistics, fulfillment)
+- `Identity` (user accounts, authentication)
+- `Billing` (subscriptions, payments)
+- `Inventory` (product stock)
+- `Shipping` (logistics, fulfillment)
 
 These domains are your future microservices. For now, they will be modules inside your monolith.
 
@@ -53,8 +54,8 @@ enforce_dependencies: true
 enforce_privacy: true
 ```
 
--   `enforce_dependencies: true` means this package must explicitly declare its dependencies.
--   `enforce_privacy: true` means other packages cannot call the private code of this package.
+- `enforce_dependencies: true` means this package must explicitly declare its dependencies.
+- `enforce_privacy: true` means other packages cannot call the private code of this package.
 
 #### Step 3: Define a Public API for Your Component
 
@@ -79,7 +80,7 @@ module Billing
 end
 ```
 
-Now, if the `shipping` component needs to charge a customer, it can *only* do so through `Billing::API.charge_customer`. Any attempt to call `Billing::InternalCharger` directly will be caught by Packwerk.
+Now, if the `shipping` component needs to charge a customer, it can _only_ do so through `Billing::API.charge_customer`. Any attempt to call `Billing::InternalCharger` directly will be caught by Packwerk.
 
 #### Step 4: Validate Your Architecture
 

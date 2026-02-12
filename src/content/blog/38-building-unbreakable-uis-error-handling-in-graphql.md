@@ -2,6 +2,7 @@
 title: "Building Unbreakable UIs: Error Handling in GraphQL"
 date: "September 16, 2025"
 excerpt: "A fast app that crashes is a failed app. This post tackles the unique challenges of GraphQL error handling, from partial data responses to network failures. Learn to build resilient UIs with skeleton loaders, intelligent retry policies, and centralized logging."
+tags: ["graphql", "error-handling", "frontend", "ui", "resilience"]
 ---
 
 So far in this series, we've made our application fast, lean, and efficient. But what happens when things go wrong? A network request fails, a backend service times out, an API returns an unexpected null. A fast app that crashes under pressure is not a good app. The final layer of a world-class user experience is **resilience**.
@@ -46,7 +47,7 @@ function UserProfile({ user }) {
   return (
     <div>
       <h1>{user.name}</h1>
-      
+
       {/* If recommendations fail, this part just won't render. No crash. */}
       {user.recommendations && <Recommendations data={user.recommendations} />}
     </div>
@@ -61,7 +62,7 @@ Spinners are a lazy default. A **skeleton UI**—the gray, pulsing placeholders 
 Why? It sets the user's expectation for the page layout, preventing jarring content shifts and making the load time feel shorter. It also serves as a natural fallback during error states.
 
 ```javascript
-import { SkeletonCard, SkeletonHeader } from '../components/Skeleton';
+import { SkeletonCard, SkeletonHeader } from "../components/Skeleton";
 
 function UserPage() {
   const { data, loading, error } = useQuery(GET_USER_PAGE);
@@ -75,7 +76,9 @@ function UserPage() {
     );
   }
 
-  if (error) { /* ... handle error */ }
+  if (error) {
+    /* ... handle error */
+  }
 
   return <UserProfile user={data.user} />;
 }
@@ -95,12 +98,12 @@ const retryLink = new RetryLink({
   delay: {
     initial: 300,
     max: 2000,
-    jitter: true
+    jitter: true,
   },
   attempts: {
     max: 5,
-    retryIf: (error, _operation) => !!error // Retry on all network errors
-  }
+    retryIf: (error, _operation) => !!error, // Retry on all network errors
+  },
 });
 ```
 
@@ -117,7 +120,9 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
       // Send to logging service
-      console.log(`[GraphQL error]: Op: ${operation.operationName}, Msg: ${message}`);
+      console.log(
+        `[GraphQL error]: Op: ${operation.operationName}, Msg: ${message}`,
+      );
     });
   }
 

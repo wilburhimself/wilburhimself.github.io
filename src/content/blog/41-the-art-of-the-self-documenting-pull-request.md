@@ -2,6 +2,7 @@
 title: "The Art of the Self-Documenting Pull Request"
 date: "September 21, 2025"
 excerpt: "A Pull Request is more than a gate; it's a story. It's the most critical piece of documentation your team will ever write about a change. This post breaks down the anatomy of a great PR, transforming it from a chore into a powerful tool for communication, collaboration, and future debugging."
+tags: ["workflow", "collaboration", "best-practices", "career"]
 ---
 
 We’ve all seen it. A pull request with the title `Fix bug` and a description that is either empty or, if you're lucky, `as per ticket`. You're now faced with deciphering a hundred lines of code changes across five files with zero context. This isn't just annoying; it's a bottleneck that slows down the entire team.
@@ -14,31 +15,31 @@ Investing a few extra minutes in writing a good PR description is one of the hig
 
 A great PR is a narrative. It guides the reviewer through the change, making their job easier, faster, and more effective. Here is a template I've used with my teams that works wonders.
 
-````markdown
+```markdown
 ### Why
 
-*(This is the most important section. Start here. Don't explain the code, explain the reason for the code. What is the business context? What problem are we solving for the user? Link to the ticket: [LINEAR-123](https://linear.app/team/issue/LINEAR-123/fix-the-thing).)*
+_(This is the most important section. Start here. Don't explain the code, explain the reason for the code. What is the business context? What problem are we solving for the user? Link to the ticket: [LINEAR-123](https://linear.app/team/issue/LINEAR-123/fix-the-thing).)_
 
 ### What
 
-*(A high-level summary of the technical approach. How did you solve the problem? Don't repeat the diff, but explain the architecture of your solution.)*
+_(A high-level summary of the technical approach. How did you solve the problem? Don't repeat the diff, but explain the architecture of your solution.)_
 
-*   *Introduced a new `InvoiceGenerator` service object to encapsulate the logic for creating invoices.*
-*   *Added a `state` column to the `invoices` table, managed by AASM.*
-*   *Refactored the `InvoicesController` to be a slimmer, more conventional RESTful controller.*
+- _Introduced a new `InvoiceGenerator` service object to encapsulate the logic for creating invoices._
+- _Added a `state` column to the `invoices` table, managed by AASM._
+- _Refactored the `InvoicesController` to be a slimmer, more conventional RESTful controller._
 
 ### How to Test
 
-*(Provide clear, step-by-step instructions for the reviewer or QA to manually verify the changes. Assume they have no context.)*
+_(Provide clear, step-by-step instructions for the reviewer or QA to manually verify the changes. Assume they have no context.)_
 
-1.  *Log in as a user with the `admin` role.*
-2.  *Navigate to the `/invoices` page.*
-3.  *Click the "Create New Invoice" button.*
-4.  *Verify that the new invoice appears in the list with a "draft" status.*
+1.  _Log in as a user with the `admin` role._
+2.  _Navigate to the `/invoices` page._
+3.  _Click the "Create New Invoice" button._
+4.  _Verify that the new invoice appears in the list with a "draft" status._
 
 ### Screenshots / Recordings
 
-*(For any UI change, this is non-negotiable. Show the before and after. A quick screen recording (using Kap, Cleanshot, or Giphy Capture) is even better for demonstrating a flow.)*
+_(For any UI change, this is non-negotiable. Show the before and after. A quick screen recording (using Kap, Cleanshot, or Giphy Capture) is even better for demonstrating a flow.)_
 
 **Before**
 
@@ -47,7 +48,7 @@ A great PR is a narrative. It guides the reviewer through the change, making the
 **After**
 
 ![New UI Screenshot](https://example.com/after.png)
-````
+```
 
 ### The Power of Atomic Commits
 
@@ -64,10 +65,10 @@ Each commit is a logical, reviewable step. The reviewer can walk through your th
 
 ### Code Comments vs. PR Description
 
-A PR description is for the *reviewer*. Code comments are for the *next developer*. They serve different purposes.
+A PR description is for the _reviewer_. Code comments are for the _next developer_. They serve different purposes.
 
--   **PR Description:** Explains the change in the context of the business and the system at a moment in time.
--   **Code Comments:** Explain the *why* behind a specific, non-obvious piece of code. They live forever with the code.
+- **PR Description:** Explains the change in the context of the business and the system at a moment in time.
+- **Code Comments:** Explain the _why_ behind a specific, non-obvious piece of code. They live forever with the code.
 
 This is a good comment. It explains a business constraint that is not obvious from the code itself.
 

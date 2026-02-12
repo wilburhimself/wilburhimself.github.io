@@ -71,6 +71,10 @@
       }
     }
 
+    .article-card {
+      border-bottom: 1px solid #e0e0e0;
+    }
+
     ul {
       @apply list-disc list-inside;
       @apply mb-8;

@@ -2,6 +2,7 @@
 title: "What is Machine Learning?"
 date: "September 19, 2024"
 excerpt: "Machine learning integration in Ruby applications encompasses supervised, unsupervised, and reinforcement learning techniques applied to recommendation systems, fraud detection, and natural language processing. Practical applications demonstrate how ML capabilities enhance traditional Ruby development workflows and create intelligent software solutions."
+tags: ["machine-learning", "ai", "ruby", "intro"]
 ---
 
 Machine learning is a subset of artificial intelligence that focuses on the development of algorithms and statistical models that enable computers to perform tasks without explicit instructions. Essentially, it involves teaching computers to learn from data and make decisions or predictions based on that learning.

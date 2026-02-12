@@ -2,6 +2,7 @@
 title: 'Scaling AI Prompts: A Guide to Building a Prompt Management Engine in Rails'
 date: 'October 19, 2025'
 excerpt: 'Move beyond hardcoded strings and build a scalable, version-controlled, and testable prompt management system in Rails to manage your AI prompts like professional software.'
+tags: ["rails", "ruby", "ai", "patterns"]
 ---
 
 As AI features grow, hardcoded prompts become a significant source of technical debt. They are difficult to track, impossible to version, and a nightmare to A/B test. This guide presents a solution: treating your prompts as software by building a dynamic, database-backed management system in Rails.

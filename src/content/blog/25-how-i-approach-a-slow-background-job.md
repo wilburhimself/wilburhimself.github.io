@@ -2,14 +2,15 @@
 title: "How I approach a slow background job"
 date: "2025-07-29"
 excerpt: "Background job performance optimization requires systemic analysis beyond simple retries or thread allocation. Effective troubleshooting includes payload size reduction, external call isolation, internal profiling, batching strategies, and queue structure review."
+tags: ["performance", "background-jobs", "ruby", "rails", "debugging"]
 ---
 
 When a background job runs slow, I don't just add retries or throw more threads at it.
 
 I step back and ask:
 
- * 📌 Is this a problem with the job itself?
- * 📌 Or with the system around it?
+- 📌 Is this a problem with the job itself?
+- 📌 Or with the system around it?
 
 That distinction matters, because a lot of performance issues look like code problems but are actually systemic.
 

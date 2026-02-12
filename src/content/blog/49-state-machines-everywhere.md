@@ -2,6 +2,7 @@
 title: "Building Bulletproof State Machines: Migrations, Locking, and Audit Trails in Rails"
 date: "October 21, 2025"
 excerpt: "Implicit state is a breeding ground for bugs. We'll refactor a typical Rails model to use a production-ready state machine, covering migrations, race conditions, testing, and audit trails to make your code safer and easier to reason about."
+tags: ["rails", "ruby", "patterns", "backend"]
 ---
 
 Your application is full of state, whether you model it explicitly or not. A user is `new`, then `active`, then `suspended`. An order is `pending`, then `paid`, then `shipped`. Too often, we manage this with a collection of booleans and timestamps: `paid_at`, `shipped_on`, `is_active`. This seems simple, but it creates a combinatorial explosion of possibilities that breed bugs, security holes, and confusing logic.

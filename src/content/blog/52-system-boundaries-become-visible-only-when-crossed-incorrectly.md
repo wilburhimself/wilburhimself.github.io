@@ -1,7 +1,8 @@
 ---
 title: "System Boundaries Become Visible Only When Crossed Incorrectly"
 date: "January 24, 2026"
-excerpt: "Every system operates on assumptions. Some are explicit—enforced by types, schemas, and validation. But the dangerous ones are implicit: \"events are ordered,\" \"usernames are lowercase,\" \"this array is sorted.\" These invisible boundaries work perfectly until someone crosses them. Then a service that ran flawlessly for months suddenly explodes on \"valid\" data. The bug isn't in your logic—it's in the gap between what your system claims to accept and what it actually handles. Good architecture closes this gap by making boundaries impossible to cross incorrectly, not just expensive to cross incorrectly."
+excerpt: 'Every system operates on assumptions. Some are explicit—enforced by types, schemas, and validation. But the dangerous ones are implicit: "events are ordered," "usernames are lowercase," "this array is sorted." These invisible boundaries work perfectly until someone crosses them. Then a service that ran flawlessly for months suddenly explodes on "valid" data. The bug isn''t in your logic—it''s in the gap between what your system claims to accept and what it actually handles. Good architecture closes this gap by making boundaries impossible to cross incorrectly, not just expensive to cross incorrectly.'
+tags: ["system-design", "architecture"]
 ---
 
 There's a particular kind of bug that makes you question everything you thought you knew about a system. The kind where a service that's been running perfectly for months suddenly explodes when given data that looks completely valid. No deployment changed. No infrastructure shifted. Just a normal request that somehow wasn't normal at all.
@@ -85,5 +86,6 @@ If the answer is "the system breaks in a confusing way," you've found an implici
 
 Don't wait for production to teach you where your boundaries are. Make them visible before they're crossed incorrectly.
 
---- 
+---
+
 The best architectures make their boundaries impossible to cross incorrectly, not just expensive to cross incorrectly.

@@ -2,6 +2,7 @@
 title: "Procs, Lambdas and Blocks in Ruby on Rails"
 date: "August 18, 2023"
 excerpt: "Rails applications achieve enhanced maintainability and performance through strategic implementation of procs, lambdas, and blocks for collection filtering, view rendering, dynamic sorting, and parameterized logic patterns. Code examples demonstrate practical scenarios including reusable filtering logic and complex data manipulation workflows."
+tags: ["ruby", "rails", "concepts"]
 ---
 
 In Ruby on Rails development, harnessing the power of procs, lambdas, and blocks can significantly improve the clarity, reusability, and performance of your code. In this comprehensive guide, we’ll explore real-world examples of using these constructs in Rails applications, complete with code snippets and insightful analysis of their performance impact.
@@ -43,8 +44,8 @@ Both procs and lambdas can accept parameters, allowing you to create dynamic and
 
 ### Performance Implications and Trade-offs:
 
-*   **Blocks**: Blocks are highly performant due to their lightweight nature, making them ideal for simple encapsulation within methods. However, they lack the reusability of procs and lambdas.
-*   **Procs and Lambdas**: Procs and lambdas offer greater flexibility and reusability, but they introduce a slightly higher performance overhead compared to blocks due to their object-oriented nature.
-*   **Lambda vs. Proc**: Lambdas enforce stricter argument handling and return behavior, leading to more predictable outcomes. While this can enhance code quality, it may require more careful consideration of argument types and return values.
+- **Blocks**: Blocks are highly performant due to their lightweight nature, making them ideal for simple encapsulation within methods. However, they lack the reusability of procs and lambdas.
+- **Procs and Lambdas**: Procs and lambdas offer greater flexibility and reusability, but they introduce a slightly higher performance overhead compared to blocks due to their object-oriented nature.
+- **Lambda vs. Proc**: Lambdas enforce stricter argument handling and return behavior, leading to more predictable outcomes. While this can enhance code quality, it may require more careful consideration of argument types and return values.
 
 By utilizing procs, lambdas, and blocks, you can enhance your Ruby on Rails development to new levels. Blocks are the best choice for brief iterations, while procs and lambdas are great for encapsulating reusable logic with parameters. As you develop your Rails applications, maintain a balance between performance and versatility by selecting the appropriate construct for each circumstance.
