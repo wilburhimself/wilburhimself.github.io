@@ -26,25 +26,26 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new D
   <div class="articles space-y-12">
     {sortedPosts.map((post) => (
       <article class="article-card group">
-        <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
-          <div class="flex items-center gap-3 text-sm text-gray-medium mb-1">
+
+          <div class="flex items-center gap-3 text-sm text-gray-medium mb-2">
              <time>{post.data.date}</time>
              {post.data.tags && (
                 <div class="flex gap-2">
                   {post.data.tags.map((t) => (
-                    <span class="text-gray-500">#{t}</span>
+                    <a href={`/blog/tags/${t}`} class="text-gray-500 hover:text-gray-700 no-underline z-10 relative">#{t}</a>
                   ))}
                 </div>
               )}
           </div>
-          <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mt-0">
-            {post.data.title}
-          </h2>
-          <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
-          <span class="hidden inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
-              Read article →
-          </span>
-        </a>
+          <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
+            <h2 class="text-xl font-semibold text-near-black group-hover:text-gray-700 transition-colors mt-0">
+              {post.data.title}
+            </h2>
+            <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
+            <span class="hidden inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                Read article →
+            </span>
+          </a>
       </article>
     ))}
   </div>
