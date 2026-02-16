@@ -16,20 +16,19 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-signika font-bold mb-4;
-    @apply mt-8;
+    @apply font-signika font-bold;
   }
 
   h1 {
-    @apply text-4xl;
+    font-size: 2.5em;
   }
 
   h2 {
-    @apply text-3xl;
+    font-size: 1.45em;
   }
 
   h3 {
-    @apply text-2xl;
+    font-size: 1.2em;
   }
 
   a {
@@ -38,8 +37,18 @@
 
   .main-content {
     a, .post-title-single {
-      color: #0044aa;
+      color: #2a3fac;
+
+      &:hover {
+        color: #000000;
+        text-decoration: underline;
+      }
     }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #157a44;
+    }
+    
     .buttons {
       a {
         color: white;

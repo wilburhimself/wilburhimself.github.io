@@ -17,7 +17,7 @@ const { Content } = await post.render();
 <BlogLayout title={post.data.title} description={post.data.excerpt} image={post.data.image}>
   <article>
     <header class="mb-8">
-      <h1 class="text-3xl font-bold mb-2">{post.data.title}</h1>
+      <h1 class="font-bold mb-2">{post.data.title}</h1>
       <div class="flex items-center gap-4 text-sm text-gray-medium">
         <time>{post.data.date}</time>
         {post.data.tags && (
