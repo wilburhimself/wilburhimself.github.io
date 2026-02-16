@@ -6,9 +6,10 @@
 
 @layer base {
   body {
-    @apply bg-base text-near-black font-roboto;
-    font-size: 1.2em;
-    border-top: 1em solid #f28ff9;
+    @apply text-near-black font-roboto;
+    background: #fff;
+    font-size: 1.4em;
+    border-top: 1em solid #009f40;
   }
   p {
     @apply mb-4 text-gray-dark;

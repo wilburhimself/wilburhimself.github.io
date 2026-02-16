@@ -1,0 +1,61 @@
+---
+const { currentPath } = Astro.props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-base/80 backdrop-blur-md border-b border-gray-light">
+  <div class="container mx-auto px-6 h-16 flex justify-between items-center">
+    <h1 class="text-xl md:text-2xl font-bold font-signika truncate">
+      <a href="/" class="hover:text-gray-dark transition-colors">Wilbur Suero</a>
+    </h1>
+    
+    <!-- Mobile Menu Button -->
+    <button id="menu-btn" class="md:hidden text-near-black focus:outline-none" aria-label="Toggle Menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:block">
+      <ul class="flex space-x-8 text-sm font-medium">
+        <li><a href="/" class={(currentPath === '/' || currentPath && currentPath.includes('/blog')) ? 'text-near-black bg-yellow-100 px-3 py-1.5 rounded-md transition-all' : 'text-gray-dark hover:text-near-black transition-colors'}>Articles</a></li>
+        <li><a href="/projects" class={currentPath && currentPath.includes('/projects') ? 'text-near-black bg-yellow-100 px-3 py-1.5 rounded-md transition-all' : 'text-gray-dark hover:text-near-black transition-colors'}>Projects</a></li>
+        <li><a href="/about" class={currentPath && currentPath.includes('/about') ? 'text-near-black bg-yellow-100 px-3 py-1.5 rounded-md transition-all' : 'text-gray-dark hover:text-near-black transition-colors'}>About</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Mobile Nav Overlay -->
+  <div id="mobile-menu" class="fixed top-0 left-0 w-full h-dvh bg-[#F7F6F4] z-[100] transform translate-x-full transition-transform duration-300 md:hidden flex flex-col pt-20 px-6 overflow-y-auto">
+      <button id="close-menu-btn" class="absolute top-5 right-6 text-near-black focus:outline-none" aria-label="Close Menu">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <nav class="flex flex-col space-y-6 text-2xl font-bold">
+        <a href="/" class="block py-2 border-b border-gray-light hover:text-gray-600">Articles</a>
+        <a href="/til" class="block py-2 border-b border-gray-light hover:text-gray-600">Microblog</a>
+        <a href="/projects" class="block py-2 border-b border-gray-light hover:text-gray-600">Projects</a>
+        <a href="/about" class="block py-2 border-b border-gray-light hover:text-gray-600">About</a>
+      </nav>
+  </div>
+</header>
+
+<!-- Spacer as padding-top on main content to prevent layout shift due to fixed header -->
+<div class="h-16"></div>
+
+<script>
+  const menuBtn = document.getElementById('menu-btn');
+  const closeMenuBtn = document.getElementById('close-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function toggleMenu() {
+    mobileMenu.classList.toggle('translate-x-full');
+    document.body.classList.toggle('overflow-hidden');
+  }
+
+  if (menuBtn && closeMenuBtn) {
+    menuBtn.addEventListener('click', toggleMenu);
+    closeMenuBtn.addEventListener('click', toggleMenu);
+  }
+</script>

@@ -1,6 +1,7 @@
 ---
 const { title, description, image } = Astro.props;
 import '../styles/global.css';
+import Header from '../components/Header.astro';
 ---
 
 <!DOCTYPE html>
@@ -42,19 +43,10 @@ import '../styles/global.css';
   </head>
   <body class="bg-base text-near-black font-signika">
     <div class="container mx-auto px-6">
-      <header class="py-2 border-b-2 border-gray-light">
-        <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-bold font-signika"><a href="/">Wilbur Suero - No Magic, Just Systems</a></h1>
-          <nav>
-            <ul class="flex space-x-8">
-              <li><a href="/" class={(Astro.url.pathname === '/') ? 'text-gray-dark font-bold text-near-black bg-yellow-100 px-2 py-1 rounded' : 'text-gray-dark hover:text-near-black'}>Articles</a></li>
-              <li><a href="/til" class={Astro.url.pathname.includes('/til') ? 'text-gray-dark font-bold text-near-black bg-yellow-100 px-2 py-1 rounded' : 'text-gray-dark hover:text-near-black'}>Microblog</a></li>
-              <li><a href="/projects" class={Astro.url.pathname.includes('/projects') ? 'text-gray-dark font-bold text-near-black bg-yellow-100 px-2 py-1 rounded' : 'text-gray-dark hover:text-near-black'}>Projects</a></li>
-              <li><a href="/about" class={Astro.url.pathname.includes('/about') ? 'text-gray-dark font-bold text-near-black bg-yellow-100 px-2 py-1 rounded' : 'text-gray-dark hover:text-near-black'}>About</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+
+    <div class="container mx-auto px-6">
+      <Header currentPath={Astro.url.pathname} />
+
       <main class="main-content py-8">
         <slot />
       </main>
