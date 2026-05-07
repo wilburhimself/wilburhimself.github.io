@@ -7,9 +7,9 @@
 @layer base {
   body {
     @apply text-near-black font-roboto;
-    background: #fff;
+    background: #f3f2f0;
     font-size: 1.4em;
-    border-top: 1em solid #009f40;
+    /* border-top: 1em solid #009f40; */
   }
   p {
     @apply mb-4 text-gray-dark;
@@ -46,9 +46,9 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
-      color: #157a44;
+      color: #e96303;
     }
-    
+
     .buttons {
       a {
         color: white;
