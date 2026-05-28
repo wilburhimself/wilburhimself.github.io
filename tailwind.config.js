@@ -5,6 +5,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Tailwind mappings to custom CSS variables
+        theme: 'var(--theme)',
+        entry: 'var(--entry)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        tertiary: 'var(--tertiary)',
+        content: 'var(--content)',
+        border: 'var(--border)',
+        
+        // Legacy colors kept for compatibility
         'base': '#F7F6F4',
         'near-black': '#090909',
         'gray-light': '#C3C1BD',

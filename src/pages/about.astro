@@ -2,16 +2,74 @@
 import BlogLayout from '../layouts/BlogLayout.astro';
 ---
 
-<BlogLayout title="About | Wilbur Suero">
-  <section class="py-12 mx-auto">
-    <h1 class="text-4xl font-bold mb-6 text-center">About Me</h1>
-    <p class="text-lg mb-6">I'm Wilbur Suero, a Software Engineer passionate about building systems that solve real problems. My focus is on creating efficient, scalable solutions with a strong emphasis on practical innovation.</p>
-    <p class="text-lg mb-6">With a background in software development, I specialize in crafting tools and workflows that streamline complex processes—whether it's AI prompt engineering, supply chain security, or API development. I believe in 'No Magic, Just Systems,' which means breaking down challenges into manageable, repeatable patterns.</p>
-    <p class="text-lg mb-8">When I'm not coding, I'm exploring new tech, refining my craft, or sharing insights through writing. Let's build something impactful together.</p>
-    <div class="flex flex-col md:flex-row justify-center gap-6 buttons">
-      <a href="/projects" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center">Explore my work → Projects</a>
-      <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-900 transition-colors text-center">See the code → GitHub</a>
-      <a href="mailto:suerowilbur@gmail.com" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-center">Want to work together? → Contact</a>
-    </div>
-  </section>
+<BlogLayout title="About | Wilbur Suero" description="Learn about Wilbur Suero - Senior Full-Stack Engineer specializing in Applied AI, Ruby on Rails, and React.">
+  <div class="main py-8">
+    <article class="post-single">
+      <header class="post-header mb-6">
+        <h1 class="post-title text-4xl font-bold">About Me</h1>
+      </header>
+      <div class="post-content">
+        <p>Hello, I’m Wilbur Suero</p>
+        
+        <p>
+          I’m a <strong>Senior Full-Stack Engineer</strong> specializing in <strong>Applied AI, Ruby on Rails, and React</strong>, based in La Romana, Dominican Republic. I design and scale SaaS products, build data-heavy distributed architectures, and engineer LLM-driven workflows that power conversational AI and analytics at scale.
+        </p>
+        <p>
+          Currently, I work at <strong>Puzzle</strong>, where I own and ship production AI features supporting tens of thousands of daily users. My focus is on turning complex and ambiguous challenges into efficient, repeatable, and highly cost-effective engineering systems.
+        </p>
+        
+        <blockquote>
+          “No Magic, Just Systems.”
+        </blockquote>
+
+        <h2 id="what-i-do">What I do</h2>
+        <p>
+          I care about building software that holds up under pressure. Not just software that works in a local sandbox or a quick demo, but systems that stay <strong>correct under concurrency</strong>, stay <strong>fast under high load</strong>, and remain <strong>predictable and debuggable</strong> when scaling up to millions of events.
+        </p>
+        <p>
+          Most of my daily work centers around the intersection of <strong>applied AI and backend infrastructure</strong>: designing scalable pipelines for LLM-based classification, text extraction, and conversational analytics. I obsess over production constraints—optimizing background processing (Sidekiq, Redis, Elixir services) and reducing LLM API usage through batching strategies, early-exit flows, and atomic finalization workflows to maintain high trust and data consistency.
+        </p>
+        <p>
+          My background includes a deep foundation in graphic design and multimedia, having graduated from the <strong>Altos de Chavón School of Design</strong> and <strong>ITLA</strong>. This unique design-leaning perspective gives me a high standard for usability, responsive interfaces, and developer experience—bridging the gap between robust system engineering and visual product execution.
+        </p>
+
+        <h2 id="tech-i-work-with">Tech I work with</h2>
+        <ul>
+          <li><strong>Programming Languages:</strong> Ruby, JavaScript, TypeScript, Elixir, SQL, HTML/CSS</li>
+          <li><strong>Frameworks:</strong> Ruby on Rails, React, Next.js, Node.js</li>
+          <li><strong>Backend & Data Systems:</strong> PostgreSQL, MySQL, Redis, Apache Kafka, Sidekiq, GraphQL, REST APIs</li>
+          <li><strong>Infrastructure & DevOps:</strong> AWS (S3, ECS), Docker, Heroku, CI/CD Pipelines</li>
+          <li><strong>Quality & Observability:</strong> RSpec, TDD (Test-Driven Development), Datadog, Performance Profiling, Incident Response</li>
+        </ul>
+
+        <h2 id="beyond-the-code">Beyond the code</h2>
+        <p>
+          I'm a strong advocate for technical craftsmanship and engineering discipline. Over my 10+ years in the industry, I have active experience mentoring junior and mid-level developers in test-driven development (TDD) and clean code practices, helping teams increase test coverage (up to 95%) and significantly lower production defect rates.
+        </p>
+        <p>
+          My background in ALT design and visual art keeps me connected to creative work outside of pure backend programming. I enjoy exploring layout aesthetics, human-computer interfaces, and experimenting with graphics tools.
+        </p>
+
+
+
+        <h2 id="few-interesting-pages">Few Interesting Pages</h2>
+        <ul>
+          <li><a href="/projects/">Projects</a>: Things I've built across AI prompt systems, SBOM security tools, and starter kits</li>
+          <li><a href="/blog/">Blog / Posts</a>: Long-form writing on software engineering, background job optimization, and system boundaries</li>
+          <li><a href="/til/">Microblog</a>: Today I Learned — quick thoughts, daily discoveries, and system insights</li>
+        </ul>
+
+        <h2 id="get-in-touch">Get in touch</h2>
+        <p>
+          I'm always up for a conversation about applied AI, database optimization, or building robust full-stack workflows.
+        </p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:suerowilbur@gmail.com">suerowilbur@gmail.com</a></li>
+          <li><strong>LinkedIn:</strong> <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">linkedin.com/in/wilbursuero</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">github.com/wilburhimself</a></li>
+          <li><strong>Calendly:</strong> <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule a 30-min call</a></li>
+        </ul>
+      </div>
+    </article>
+  </div>
 </BlogLayout>

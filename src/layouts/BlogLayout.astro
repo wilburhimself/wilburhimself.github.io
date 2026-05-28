@@ -9,7 +9,7 @@ import Header from '../components/Header.astro';
   <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJ3RHGXYJM"></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -17,50 +17,50 @@ import Header from '../components/Header.astro';
       gtag('config', 'G-EJ3RHGXYJM');
     </script>
 
+    <!-- Flicker-free Theme Initialization -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem("pref-theme") || 
+                      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title ? `${title} - Wilbur Suero` : "Wilbur Suero"}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Signika:wght@300..700&display=swap" rel="stylesheet">
     <meta name="google-site-verification" content="acCq17rKpmEhikjDHZPb3HqFlomtEcqh9ueRvLzOqx8" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={title || "Wilbur Suero"} />
+    <meta property="og:description" content={description || "Software Engineer personal blog"} />
     {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
+    <meta property="twitter:title" content={title || "Wilbur Suero"} />
+    <meta property="twitter:description" content={description || "Software Engineer personal blog"} />
     {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
   </head>
-  <body class="text-near-black font-signika">
-    <div class="container mx-auto px-6">
+  <body>
+    <Header currentPath={Astro.url.pathname} />
 
-    <div class="container mx-auto">
-      <Header currentPath={Astro.url.pathname} />
+    <slot />
 
-      <main class="main-content py-8">
-        <slot />
-      </main>
-      <hr class="border-gray-light">
-      <footer class="py-16 text-center text-gray-medium">
-        <p>Crafted by <strong>Wilbur Suero</strong>, a Software Engineer passionate about building innovative solutions.</p>
-        <p>
-          <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">Schedule a consultation</a> ·
-          <a href="mailto:suerowilbur@gmail.com" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">Email me</a> ·
-          <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">GitHub</a> ·
-          <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer" class="text-gray-dark hover:text-near-black">LinkedIn</a>
-        </p>
-      </footer>
-    </div>
+    <footer class="footer">
+      <span>&copy; {new Date().getFullYear()} <a href="/">Wilbur Suero</a></span>
+      <span>&middot; No magic, just perfect code.</span>
+      <div class="mt-3 flex justify-center gap-3 opacity-75 text-xs">
+        <a href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer">Schedule consultation</a> &middot;
+        <a href="mailto:suerowilbur@gmail.com">Email</a> &middot;
+        <a href="https://github.com/wilburhimself" target="_blank" rel="noopener noreferrer">GitHub</a> &middot;
+        <a href="https://linkedin.com/in/wilbursuero" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </footer>
   </body>
 </html>
 

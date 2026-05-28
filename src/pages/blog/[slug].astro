@@ -12,28 +12,35 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+// Calculate reading time
+const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 ---
 
 <BlogLayout title={post.data.title} description={post.data.excerpt} image={post.data.image}>
-  <article>
-    <header class="mb-8">
-      <h1 class="font-bold mb-2">{post.data.title}</h1>
-      <div class="flex items-center gap-4 text-sm text-gray-medium">
-        <time>{post.data.date}</time>
-        {post.data.tags && (
-          <div class="flex gap-2">
-            {post.data.tags.map((tag) => (
-              <a href={`/blog/tags/${tag}`} class="text-gray-500 hover:text-gray-700 no-underline">#{tag}</a>
-            ))}
-          </div>
-        )}
+  <div class="main py-8">
+    <article class="post-single">
+      <header class="post-header mb-6">
+        <h1 class="post-title text-4xl font-bold">{post.data.title}</h1>
+        <div class="post-meta flex items-center gap-3 text-secondary text-sm mt-2">
+          <span>{post.data.date}</span>&nbsp;&middot;&nbsp;
+          <span>{readingTime} min read</span>
+          {post.data.tags && post.data.tags.length > 0 && (
+            <span>&nbsp;&middot;&nbsp;Tags: {post.data.tags.map(t => `#${t}`).join(' ')}</span>
+          )}
+        </div>
+      </header>
+      
+      <div class="post-content max-w-none">
+        <Content />
       </div>
-    </header>
-    <div class="prose max-w-none">
-      <Content />
-    </div>
-  </article>
-  <footer class="mt-12 pt-6 border-t border-gray-200">
-    <a href="/" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">← Back to Articles</a>
-  </footer>
+      
+      <footer class="mt-12 pt-6 border-t border-border">
+        <a href="/blog/" class="text-sm text-secondary hover:text-primary transition-colors">
+          &larr; Back to Articles
+        </a>
+      </footer>
+    </article>
+  </div>
 </BlogLayout>

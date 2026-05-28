@@ -9,7 +9,6 @@ const projects = [
     impact: "Enabled teams to treat prompts as first-class assets with versioning, templating, and testing, cutting iteration cycles by over 60%.",
     techStack: ["Ruby", "Rails", "Liquid", "ERB", "RSpec"],
     outcome: "Streamlined AI development workflows with reusable, testable prompt templates integrated into CI/CD pipelines.",
-    image: "/images/projects/promptly.jpg",
     blogLink: "/blog/30-writing-maintainable-ai-ai-prompts-with-promptly/",
     githubLink: "https://github.com/wilburhimself/promptly"
   },
@@ -20,7 +19,6 @@ const projects = [
     impact: "Introduced automated Software Bill of Materials (SBOM) generation and dependency validation, securing the gem ecosystem with minimal developer overhead.",
     techStack: ["Ruby", "CLI", "CycloneDX"],
     outcome: "Provided developers with an easy way to audit and protect Ruby apps against compromised gems, improving security posture with actionable insights.",
-    image: "/images/projects/gemguard.jpg",
     blogLink: "/blog/29-introducing-gemguard",
     githubLink: "https://github.com/wilburhimself/gem_guard"
   },
@@ -31,8 +29,7 @@ const projects = [
     impact: "Offered a fully typed and tested GraphQL starter kit using Prisma, Pothos, and GraphQL Yoga—eliminating boilerplate and accelerating initial setup.",
     techStack: ["TypeScript", "Node.js", "Prisma", "Pothos", "GraphQL Yoga", "Jest"],
     outcome: "Enabled rapid prototyping of GraphQL APIs with type-safe CRUD operations, seamless JS↔TS migration, and built-in testing support.",
-    image: "/images/projects/graphql-starter.jpg",
-    blogLink: "/blog/graphql-api-starter",  // adjust if you publish a post
+    blogLink: "/blog/graphql-api-starter",
     githubLink: "https://github.com/wilburhimself/graphql_api_starter"
   },
   {
@@ -42,34 +39,47 @@ const projects = [
     impact: "Delivered a lightweight, intuitive ORM specifically tailored to Go’s language idioms—making data access cleaner without heavy abstraction.",
     techStack: ["Go"],
     outcome: "Streamlined data layer development in Go codebases, reducing boilerplate and encouraging clearer persistence patterns.",
-    image: "/images/projects/theory-go.jpg",
-    blogLink: "",  // add if you publish a write-up
+    blogLink: "",
     githubLink: "https://github.com/wilburhimself/theory"
   }
-]
-
+];
 ---
 
-<BlogLayout title="Projects | Wilbur Suero">
-  <section class="py-12 mx-auto">
-    <h1 class="text-4xl font-bold mb-6 text-center">My Projects</h1>
-    <p class="text-lg mb-8 text-center">Here are some of the projects I've worked on, showcasing a range of technologies and impacts.</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<BlogLayout title="Projects | Wilbur Suero" description="Here are some of the projects I've worked on, showcasing a range of technologies and impacts.">
+  <div class="main py-8">
+    <header class="page-header mb-8">
+      <h1 class="font-bold text-3xl">Projects</h1>
+      <p class="text-secondary text-sm mt-1">Here are some of the projects I've built, showcasing a range of technical solutions and engineering impacts.</p>
+    </header>
+
+    <div class="space-y-6">
       {projects.map(project => (
-        <article class="bg-white rounded-lg shadow-md overflow-hidden" role="article" aria-labelledby={`project-title-${project.title}`}>
-          <div class="p-6">
-            <h2 id={`project-title-${project.title}`} class="text-2xl font-semibold mb-2">{project.title}</h2>
-            <p class="text-gray-600 mb-2"><strong>Role:</strong> {project.role}</p>
-            <p class="text-gray-600 mb-2"><strong>Problem & Impact:</strong> {project.problem} - {project.impact}</p>
-            <p class="text-gray-600 mb-2"><strong>Tech Stack:</strong> {project.techStack.join(', ')}</p>
-            <p class="text-gray-600 mb-4"><strong>Outcome:</strong> {project.outcome}</p>
-            <div class="flex flex-wrap gap-4">
-              {project.blogLink && <a href={project.blogLink} class="text-blue-500 hover:underline" aria-label={`Blog post about ${project.title}`}>Blog Post</a>}
-              {project.githubLink && <a href={project.githubLink} class="text-blue-500 hover:underline" aria-label={`GitHub repository for ${project.title}`}>GitHub Repo</a>}
-            </div>
+        <article class="post-entry" role="article" aria-labelledby={`project-title-${project.title.replace(/\s+/g, '-').toLowerCase()}`}>
+          <header class="entry-header">
+            <h2 id={`project-title-${project.title.replace(/\s+/g, '-').toLowerCase()}`} class="text-xl font-bold flex items-center justify-between">
+              {project.title}
+              <span class="text-xs font-normal text-secondary bg-border px-2 py-0.5 rounded">{project.role}</span>
+            </h2>
+          </header>
+          <div class="entry-content text-sm space-y-2 mt-2">
+            <p><strong>Problem & Impact:</strong> {project.problem} - {project.impact}</p>
+            <p><strong>Outcome:</strong> {project.outcome}</p>
+            <p class="text-xs"><strong>Tech Stack:</strong> {project.techStack.join(', ')}</p>
           </div>
+          <footer class="entry-footer mt-4 flex gap-4 relative z-20">
+            {project.blogLink && (
+              <a href={project.blogLink} class="text-sm font-semibold hover:underline" style="color: #4a90d9;" aria-label={`Blog post about ${project.title}`}>
+                Blog Post
+              </a>
+            )}
+            {project.githubLink && (
+              <a href={project.githubLink} target="_blank" rel="noopener noreferrer" class="text-sm font-semibold hover:underline" style="color: #4a90d9;" aria-label={`GitHub repository for ${project.title}`}>
+                GitHub Repo &rarr;
+              </a>
+            )}
+          </footer>
         </article>
       ))}
     </div>
-  </section>
+  </div>
 </BlogLayout>

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import TILLayout from '../../layouts/TILLayout.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
 
 export async function getStaticPaths() {
   const tils = await getCollection('til');
@@ -14,35 +14,37 @@ const { til } = Astro.props;
 const { Content } = await til.render();
 ---
 
-<TILLayout title={til.data.title} description={`TIL: ${til.data.title}`}>
-  <article class="max-w-2xl">
-    <header class="mb-6">
-      <div class="flex items-center gap-3 mb-4">
-        <time class="text-sm text-gray-medium font-mono">{til.data.date}</time>
-        {til.data.tags && (
-          <div class="tags flex gap-2">
-            {til.data.tags.map(tag => (
-              <span class="text-sm text-gray-500">#{tag}</span>
-            ))}
-          </div>
-        )}
+<BlogLayout title={til.data.title} description={`TIL: ${til.data.title}`}>
+  <div class="main py-8">
+    <article class="post-single">
+      <header class="post-header mb-6">
+        <h1 class="post-title text-3xl font-bold">{til.data.title}</h1>
+        <div class="post-meta flex items-center gap-3 text-secondary text-sm mt-2">
+          <time class="font-mono">{til.data.date}</time>
+          {til.data.tags && til.data.tags.length > 0 && (
+            <span class="tags">
+              {til.data.tags.map(tag => `#${tag}`).join(' ')}
+            </span>
+          )}
+        </div>
+      </header>
+      
+      <div class="post-content max-w-none">
+        <Content />
       </div>
-    </header>
-    
-    <div class="til-content prose max-w-none">
-      <Content />
-    </div>
-    
-    <footer class="mt-8 pt-4 border-t border-gray-200 flex items-center justify-between">
-      <a href="/til" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-        ← Back to Microblog
-      </a>
-      <button 
-        onclick="navigator.clipboard.writeText(window.location.href); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy link', 2000)"
-        class="text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-      >
-        Copy link
-      </button>
-    </footer>
-  </article>
-</TILLayout>
+      
+      <footer class="mt-12 pt-6 border-t border-border flex items-center justify-between text-secondary">
+        <a href="/til/" class="text-sm hover:text-primary transition-colors">
+          &larr; Back to Microblog
+        </a>
+        <button 
+          onclick="navigator.clipboard.writeText(window.location.href); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy link', 2000)"
+          class="text-sm hover:text-primary transition-colors cursor-pointer"
+          style="background: none; border: 0; padding: 0; font: inherit;"
+        >
+          Copy link
+        </button>
+      </footer>
+    </article>
+  </div>
+</BlogLayout>

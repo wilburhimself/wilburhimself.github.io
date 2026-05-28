@@ -32,7 +32,7 @@ const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 // Redirect page 1 to the main blog index
 if (page === 1) {
   Astro.response.status = 301;
-  Astro.response.headers.set('Location', '/');
+  Astro.response.headers.set('Location', '/blog/');
 }
 
 const posts = allPosts.slice(
@@ -42,69 +42,70 @@ const posts = allPosts.slice(
 ---
 
 <BlogLayout title={`Articles - Page ${page}`}>
-  <div class="mb-10">
-    <h1 class="text-3xl font-bold">Articles</h1>
-    <p class="text-gray-medium text-sm">Long-form writing on software engineering, systems design, and building things.</p>
-  </div>
-  
-  <div class="articles space-y-12">
-    {
-      posts.map((post) => (
-        <article class="article-card group">
+  <div class="main">
+    <header class="page-header py-8">
+      <h1 class="font-bold text-3xl">Articles</h1>
+      <p class="text-secondary text-sm mt-1">Long-form writing on software engineering, systems design, and building things. (Page {page})</p>
+    </header>
 
-            <div class="flex items-center gap-3 text-sm text-gray-medium mb-2">
-              <p class="mb-0">{post.data.date}</p>
-              {post.data.tags && (
-                <div class="flex gap-2">
-                  {post.data.tags.map((tag) => (
-                    <a href={`/blog/tags/${tag}`} class="text-gray-500 hover:text-gray-700 no-underline z-10 relative">#{tag}</a>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <a href={`/blog/${post.slug}/`} class="block hover:no-underline">
-              <h2 class="font-semibold text-near-black group-hover:text-gray-700 transition-colors mt-0">
-                {post.data.title}
-              </h2>
-              
-              <p class="text-gray-600 leading-relaxed">{post.data.excerpt || 'Read more...'}</p>
-              <span class="hidden inline-block mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
-                Read article →
-              </span>
-            </a>
-        </article>
-      ))
-    }
-  </div>
-  
-  <!-- Pagination -->
-  <div class="pagination flex justify-between items-center mt-16">
-    {page > 1 && (
-      <a href={page === 2 ? '/' : `/blog/page/${page - 1}/`} class="text-gray-dark hover:text-near-black">
-        ← Previous
-      </a>
-    )}
-    {page === 1 && <span></span>}
-    
-    <div class="pagination-links">
+    <div class="articles">
       {
-        Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <a 
-            href={pageNum === 1 ? '/' : `/blog/page/${pageNum}/`} 
-            class={`px-3 py-1 mx-1 rounded ${pageNum === page ? 'bg-gray-200 font-bold' : 'hover:bg-gray-100'}`}
-          >
-            {pageNum}
-          </a>
-        ))
+        posts.map((post) => {
+          const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+          const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+          return (
+            <article class="post-entry">
+              <header class="entry-header">
+                <h2>{post.data.title}</h2>
+              </header>
+              <div class="entry-content">
+                <p>{post.data.excerpt || 'Read more...'}</p>
+              </div>
+              <footer class="entry-footer">
+                <span>{post.data.date}</span>&nbsp;&middot;&nbsp;
+                <span>{readingTime} min read</span>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <span>&nbsp;&middot;&nbsp;Tags: {post.data.tags.join(', ')}</span>
+                )}
+              </footer>
+              <a class="entry-link" aria-label={`post link to ${post.data.title}`} href={`/blog/${post.slug}/`}></a>
+            </article>
+          );
+        })
       }
     </div>
     
-    {page < totalPages && (
-      <a href={`/blog/page/${page + 1}/`} class="text-gray-dark hover:text-near-black">
-        Next →
-      </a>
-    )}
-    {page === totalPages && <span></span>}
+    <!-- Pagination -->
+    <div class="pagination flex justify-between items-center mt-12 py-4">
+      {page > 1 ? (
+        <a href={page === 2 ? '/blog/' : `/blog/page/${page - 1}/`} class="text-primary hover:underline font-medium">
+          ← Previous
+        </a>
+      ) : (
+        <span></span>
+      )}
+      
+      <div class="pagination-links flex gap-2">
+        {
+          Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+            <a 
+              href={pageNum === 1 ? '/blog/' : `/blog/page/${pageNum}/`} 
+              class={`px-3 py-1 rounded transition-colors ${pageNum === page ? 'bg-tertiary font-semibold' : 'hover:bg-border'}`}
+            >
+              {pageNum}
+            </a>
+          ))
+        }
+      </div>
+      
+      {page < totalPages ? (
+        <a href={`/blog/page/${page + 1}/`} class="text-primary hover:underline font-medium">
+          Next →
+        </a>
+      ) : (
+        <span></span>
+      )}
+    </div>
   </div>
 </BlogLayout>

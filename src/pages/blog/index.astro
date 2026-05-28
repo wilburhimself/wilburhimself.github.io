@@ -1,4 +1,75 @@
 ---
-Astro.response.status = 301;
-Astro.response.headers.set('Location', '/');
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+const allPosts = (await getCollection('blog')).sort((a, b) => {
+  const dateA = new Date(a.data.date);
+  const dateB = new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
+
+const POSTS_PER_PAGE = 10;
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+const page = 1;
+const posts = allPosts.slice(0, POSTS_PER_PAGE);
 ---
+
+<BlogLayout title="Blog" description="Long-form writing on software engineering, systems design, and building things.">
+  <div class="main">
+    <header class="page-header py-8">
+      <h1 class="font-bold text-3xl">Articles</h1>
+      <p class="text-secondary text-sm mt-1">Long-form writing on software engineering, systems design, and building things.</p>
+    </header>
+
+    <div class="articles">
+      {
+        posts.map((post) => {
+          // Calculate reading time (e.g. 200 words per minute)
+          const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+          const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+          
+          return (
+            <article class="post-entry">
+              <header class="entry-header">
+                <h2>{post.data.title}</h2>
+              </header>
+              <div class="entry-content">
+                <p>{post.data.excerpt || 'Read more...'}</p>
+              </div>
+              <footer class="entry-footer">
+                <span>{post.data.date}</span>&nbsp;&middot;&nbsp;
+                <span>{readingTime} min read</span>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <span>&nbsp;&middot;&nbsp;Tags: {post.data.tags.join(', ')}</span>
+                )}
+              </footer>
+              <a class="entry-link" aria-label={`post link to ${post.data.title}`} href={`/blog/${post.slug}/`}></a>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <!-- Pagination -->
+    {totalPages > 1 && (
+      <div class="pagination flex justify-between items-center mt-12 py-4">
+        <span></span> <!-- Empty space for alignment -->
+        <div class="pagination-links flex gap-2">
+          {
+            Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <a
+                href={pageNum === 1 ? '/blog/' : `/blog/page/${pageNum}/`}
+                class={`px-3 py-1 rounded transition-colors ${pageNum === page ? 'bg-tertiary font-semibold' : 'hover:bg-border'}`}
+              >
+                {pageNum}
+              </a>
+            ))
+          }
+        </div>
+        <a href="/blog/page/2/" class="text-primary hover:underline font-medium">
+          Next →
+        </a>
+      </div>
+    )}
+  </div>
+</BlogLayout>
