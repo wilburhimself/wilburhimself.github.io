@@ -5,40 +5,40 @@ const projects = [
   {
     title: "Promptly",
     role: "Creator & Maintainer",
-    problem: "Managing AI prompts in production was fragmented and error-prone, with no clean way to version, test, and reuse prompts across projects.",
-    impact: "Enabled teams to treat prompts as first-class assets with versioning, templating, and testing, cutting iteration cycles by over 60%.",
+    problem: "Every Rails AI project was reinventing prompt management differently, leading to fragmented, unversioned, and untested prompts in production.",
+    solution: "Built a centralized prompt management engine utilizing Rails conventions that adds schema validation, versioning, localization, caching, and reusable prompt templates.",
+    impact: "Streamlined prompt updates from code releases, cutting feature iteration cycles by 60% and enabling product teams to safely modify prompts directly in production.",
     techStack: ["Ruby", "Rails", "Liquid", "ERB", "RSpec"],
-    outcome: "Streamlined AI development workflows with reusable, testable prompt templates integrated into CI/CD pipelines.",
     blogLink: "/blog/30-writing-maintainable-ai-ai-prompts-with-promptly/",
     githubLink: "https://github.com/wilburhimself/promptly"
   },
   {
     title: "GemGuard",
     role: "Creator & Maintainer",
-    problem: "Ruby applications often rely on unverified gem dependencies, exposing projects to security and supply chain vulnerabilities.",
-    impact: "Introduced automated Software Bill of Materials (SBOM) generation and dependency validation, securing the gem ecosystem with minimal developer overhead.",
+    problem: "Modern Ruby applications rely on unverified gem dependencies, exposing production services to supply chain vulnerabilities and malicious packages.",
+    solution: "Designed an automated CLI tool that generates CycloneDX SBOMs (Software Bill of Materials) and audits gems for security vulnerabilities on every CI/CD run.",
+    impact: "Protected production pipelines against compromised gem releases with zero developer overhead, blocking vulnerabilities before deployment.",
     techStack: ["Ruby", "CLI", "CycloneDX"],
-    outcome: "Provided developers with an easy way to audit and protect Ruby apps against compromised gems, improving security posture with actionable insights.",
     blogLink: "/blog/29-introducing-gemguard",
     githubLink: "https://github.com/wilburhimself/gem_guard"
   },
   {
     title: "GraphQL API Starter",
     role: "Creator & Maintainer",
-    problem: "Bootstrapping a GraphQL server with Prisma, CRUD resolvers, tests, and type safety is repetitive and error-prone across projects.",
-    impact: "Offered a fully typed and tested GraphQL starter kit using Prisma, Pothos, and GraphQL Yoga—eliminating boilerplate and accelerating initial setup.",
+    problem: "Bootstrapping a fully typed, scalable GraphQL server with Prisma and type-safe schema resolvers is repetitive and error-prone across different backend codebases.",
+    solution: "Created a production-ready, pre-configured template featuring Pothos GraphQL schema builder, Prisma ORM, Yoga server, and Jest test suite.",
+    impact: "Eliminated API bootstrapping boilerplate, allowing developers to spin up complete, type-safe API servers with CRUD resolvers in minutes instead of days.",
     techStack: ["TypeScript", "Node.js", "Prisma", "Pothos", "GraphQL Yoga", "Jest"],
-    outcome: "Enabled rapid prototyping of GraphQL APIs with type-safe CRUD operations, seamless JS↔TS migration, and built-in testing support.",
     blogLink: "/blog/graphql-api-starter",
     githubLink: "https://github.com/wilburhimself/graphql_api_starter"
   },
   {
     title: "Theory (Go)",
     role: "Creator & Maintainer",
-    problem: "Go developers often lack a simple yet flexible ORM that doesn’t overcomplicate domain modeling across services.",
-    impact: "Delivered a lightweight, intuitive ORM specifically tailored to Go’s language idioms—making data access cleaner without heavy abstraction.",
+    problem: "Go developers often lack a simple yet flexible ORM that doesn't introduce heavy, complex abstractions which obscure database queries.",
+    solution: "Designed a lightweight, highly intuitive data mapper ORM tailored specifically to Go's idiomatic persistence patterns.",
+    impact: "Reduced database query complexity and connection overhead, enabling cleaner persistence codebases with minimal performance penalty.",
     techStack: ["Go"],
-    outcome: "Streamlined data layer development in Go codebases, reducing boilerplate and encouraging clearer persistence patterns.",
     blogLink: "",
     githubLink: "https://github.com/wilburhimself/theory"
   }
@@ -61,11 +61,28 @@ const projects = [
               <span class="text-xs font-normal text-secondary bg-border px-2 py-0.5 rounded">{project.role}</span>
             </h2>
           </header>
-          <div class="entry-content text-sm space-y-2 mt-2">
-            <p><strong>Problem & Impact:</strong> {project.problem} - {project.impact}</p>
-            <p><strong>Outcome:</strong> {project.outcome}</p>
-            <p class="text-xs"><strong>Tech Stack:</strong> {project.techStack.join(', ')}</p>
+          
+          <div class="project-story">
+            <div class="project-story-item">
+              <span class="project-story-label">The Problem</span>
+              <p class="project-story-text">{project.problem}</p>
+            </div>
+            <div class="project-story-item">
+              <span class="project-story-label">The Solution</span>
+              <p class="project-story-text">{project.solution}</p>
+            </div>
+            <div class="project-story-item">
+              <span class="project-story-label">The Impact</span>
+              <p class="project-story-text">{project.impact}</p>
+            </div>
+            
+            <div class="project-tech-badges">
+              {project.techStack.map(tech => (
+                <span class="project-tech-badge">{tech}</span>
+              ))}
+            </div>
           </div>
+
           <footer class="entry-footer mt-4 flex gap-4 relative z-20">
             {project.blogLink && (
               <a href={project.blogLink} class="text-sm font-semibold hover:underline" style="color: #4a90d9;" aria-label={`Blog post about ${project.title}`}>

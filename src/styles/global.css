@@ -564,3 +564,103 @@ pre[class*="language-"] > code[class*="language-"] {
 .main-content pre:has([id^="mermaid-"]) {
   @apply bg-transparent border-0 p-0;
 }
+
+/* Achievements Section */
+.achievements-section {
+  margin-top: 1.5rem;
+  text-align: left;
+  width: 100%;
+}
+.achievements-section h2 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--secondary);
+}
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.achievement-card {
+  background-color: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  transition: transform 0.15s, border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+.achievement-card:hover {
+  border-color: var(--tertiary);
+  transform: translateY(-2px);
+}
+.achievement-stat {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4a90d9;
+  line-height: 1.2;
+}
+[data-theme=dark] .achievement-stat {
+  color: #7eb8f7;
+}
+.achievement-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+.achievement-desc {
+  font-size: 0.75rem;
+  color: var(--secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Project Storytelling Styles */
+.project-story {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.project-story-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.project-story-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--secondary);
+}
+.project-story-text {
+  font-size: 0.85rem;
+  color: var(--content);
+  line-height: 1.5;
+  margin: 0;
+}
+.project-tech-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+.project-tech-badge {
+  font-size: 0.7rem;
+  background-color: var(--border);
+  color: var(--secondary);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+

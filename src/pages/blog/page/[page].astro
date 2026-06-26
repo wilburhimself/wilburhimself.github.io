@@ -3,11 +3,13 @@ import { getCollection } from 'astro:content';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
 
 export async function getStaticPaths() {
-  const allPosts = (await getCollection('blog')).sort((a, b) => {
-    const dateA = new Date(a.data.date);
-    const dateB = new Date(b.data.date);
-    return dateB.getTime() - dateA.getTime();
-  });
+  const allPosts = (await getCollection('blog'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => {
+      const dateA = new Date(a.data.date);
+      const dateB = new Date(b.data.date);
+      return dateB.getTime() - dateA.getTime();
+    });
   
   const POSTS_PER_PAGE = 10;
   const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
@@ -20,11 +22,13 @@ export async function getStaticPaths() {
 const { page: pageParam } = Astro.params;
 const page = parseInt(pageParam);
 
-const allPosts = (await getCollection('blog')).sort((a, b) => {
-  const dateA = new Date(a.data.date);
-  const dateB = new Date(b.data.date);
-  return dateB.getTime() - dateA.getTime();
-});
+const allPosts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => {
+    const dateA = new Date(a.data.date);
+    const dateB = new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
+  });
 
 const POSTS_PER_PAGE = 10;
 const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
