@@ -1,5 +1,19 @@
 ---
+import { getCollection } from 'astro:content';
 import BlogLayout from '../layouts/BlogLayout.astro';
+
+const allPosts = await getCollection('blog');
+const nonDraftPosts = allPosts.filter((post) => !post.data.draft);
+
+// Find the featured post or fallback to the most recent one
+const featuredPost = nonDraftPosts.find((post) => post.data.featured) || 
+  [...nonDraftPosts].sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())[0];
+
+// Fetch the 3 latest articles excluding the featured post
+const latestArticles = nonDraftPosts
+  .filter((post) => post.id !== featuredPost.id)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
 ---
 
 <BlogLayout title="Wilbur Suero - Staff Backend Engineer" description="I help engineering teams build backend systems that scale without becoming harder to operate. Specializing in high-performance Rails, distributed systems, and production AI.">
@@ -96,40 +110,41 @@ import BlogLayout from '../layouts/BlogLayout.astro';
         <div class="featured-writing">
           <h2>Featured Writing</h2>
           
-          <div class="featured-article-card">
-            <h3 class="featured-article-title">
-              <a href="/blog/54-your-codebase-already-taught-you-how-to-start-a-business/" style="color: inherit; text-decoration: none;">
-                Every Business Mistake Maps to a Bug You've Already Fixed
+          {featuredPost && (
+            <div class="featured-article-card">
+              <h3 class="featured-article-title">
+                <a href={`/blog/${featuredPost.slug}/`} style="color: inherit; text-decoration: none;">
+                  {featuredPost.data.title}
+                </a>
+              </h3>
+              <p class="featured-article-excerpt">
+                {featuredPost.data.excerpt}
+              </p>
+              <a class="featured-article-link" href={`/blog/${featuredPost.slug}/`}>
+                Read Article &rarr;
               </a>
-            </h3>
-            <p class="featured-article-excerpt">
-              You don't need new mental models to start a business. You need to recognize the ones your codebase already gave you, and the one place where they'll betray you.
-            </p>
-            <a class="featured-article-link" href="/blog/54-your-codebase-already-taught-you-how-to-start-a-business/">
-              Read Article &rarr;
-            </a>
-          </div>
+            </div>
+          )}
 
-          <ul class="other-writings-list">
-            <li class="other-writing-item">
-              <span class="other-writing-category">Strategy</span>
-              <a class="other-writing-link" href="/blog/57-why-most-technical-migrations-fail/">
-                Why Most Technical Migrations Fail
-              </a>
-            </li>
-            <li class="other-writing-item">
-              <span class="other-writing-category">Architecture</span>
-              <a class="other-writing-link" href="/blog/52-system-boundaries-become-visible-only-when-crossed-incorrectly/">
-                System Boundaries Become Visible Only When Crossed Incorrectly
-              </a>
-            </li>
-            <li class="other-writing-item">
-              <span class="other-writing-category">Performance</span>
-              <a class="other-writing-link" href="/blog/53-set-based-updates-in-rails/">
-                Set-Based Updates in Rails: 4 Hours to 8 Seconds
-              </a>
-            </li>
-          </ul>
+          {latestArticles.length > 0 && (
+            <>
+              <ul class="other-writings-list">
+                {latestArticles.map((post) => {
+                  const category = post.data.tags?.[0]
+                    ? post.data.tags[0].charAt(0).toUpperCase() + post.data.tags[0].slice(1)
+                    : "Writing";
+                  return (
+                    <li class="other-writing-item">
+                      <span class="other-writing-category">{category}</span>
+                      <a class="other-writing-link" href={`/blog/${post.slug}/`}>
+                        {post.data.title}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
         </div>
 
         <!-- Profile Action Buttons -->

@@ -3,6 +3,7 @@ title: Every Business Mistake Maps to a Bug You've Already Fixed
 date: "March 31, 2026"
 tags: [architecture, patterns, career]
 excerpt: "You don't need new mental models to start a business. You need to recognize the ones your codebase already gave you, and the one place where they'll betray you."
+featured: true
 ---
 
 There's a particular genre of business advice that's become unavoidable: the numbered list of "tips for starting a business." Validate early. Start small. Expect mistakes. The advice isn't wrong, it's just so generic it doesn't stick. It slides off your brain like a motivational poster in a dentist's office.
