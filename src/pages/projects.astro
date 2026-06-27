@@ -3,6 +3,28 @@ import BlogLayout from '../layouts/BlogLayout.astro';
 
 const projects = [
   {
+    title: "PrestaCRM",
+    role: "Creator & Architect",
+    problem: "Lenders and microfinance institutions often rely on fragile spreadsheets or generic CRMs that lack loan amortization models, automated collection channels, and double-entry accounting records, leading to balance mismatches and high delinquency rates.",
+    solution: "Architected a specialized credit and debt-collection CRM with an automated French amortization engine, an immutable double-entry ledger, custom risk scoring, and WhatsApp API integration for automated collection alerts.",
+    impact: "Powering the management of over RD$10,000,000 in active credit portfolios in the Dominican Republic, reducing average portfolio delinquency (morosidad) by 18% within the first 90 days.",
+    techStack: ["TypeScript", "React", "Next.js", "Tailwind CSS", "PostgreSQL", "WhatsApp API"],
+    blogLink: "",
+    githubLink: "",
+    liveLink: "https://prestacrm.com"
+  },
+  {
+    title: "La Antorcha",
+    role: "Lead Architect",
+    problem: "Independent digital media platforms require rapid, real-time publishing workflows, SEO optimization, and high availability under sudden traffic spikes from trending news without complex infrastructure overhead.",
+    solution: "Built a high-performance, SEO-optimized digital newspaper platform using Next.js, featuring dynamic section routing, server-side rendering (SSR), and automated image optimization.",
+    impact: "Achieved sub-second page loads and optimized Core Web Vitals, ensuring zero downtime and seamless content delivery during breaking news events.",
+    techStack: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Sentry"],
+    blogLink: "",
+    githubLink: "",
+    liveLink: "https://antorchadigital.es"
+  },
+  {
     title: "Promptly",
     role: "Creator & Maintainer",
     problem: "Every Rails AI project was reinventing prompt management differently, leading to fragmented, unversioned, and untested prompts in production.",
@@ -10,7 +32,8 @@ const projects = [
     impact: "Streamlined prompt updates from code releases, cutting feature iteration cycles by 60% and enabling product teams to safely modify prompts directly in production.",
     techStack: ["Ruby", "Rails", "Liquid", "ERB", "RSpec"],
     blogLink: "/blog/30-writing-maintainable-ai-ai-prompts-with-promptly/",
-    githubLink: "https://github.com/wilburhimself/promptly"
+    githubLink: "https://github.com/wilburhimself/promptly",
+    liveLink: ""
   },
   {
     title: "GemGuard",
@@ -20,7 +43,8 @@ const projects = [
     impact: "Protected production pipelines against compromised gem releases with zero developer overhead, blocking vulnerabilities before deployment.",
     techStack: ["Ruby", "CLI", "CycloneDX"],
     blogLink: "/blog/29-introducing-gemguard",
-    githubLink: "https://github.com/wilburhimself/gem_guard"
+    githubLink: "https://github.com/wilburhimself/gem_guard",
+    liveLink: ""
   },
   {
     title: "GraphQL API Starter",
@@ -30,7 +54,8 @@ const projects = [
     impact: "Eliminated API bootstrapping boilerplate, allowing developers to spin up complete, type-safe API servers with CRUD resolvers in minutes instead of days.",
     techStack: ["TypeScript", "Node.js", "Prisma", "Pothos", "GraphQL Yoga", "Jest"],
     blogLink: "/blog/graphql-api-starter",
-    githubLink: "https://github.com/wilburhimself/graphql_api_starter"
+    githubLink: "https://github.com/wilburhimself/graphql_api_starter",
+    liveLink: ""
   },
   {
     title: "Theory (Go)",
@@ -40,7 +65,8 @@ const projects = [
     impact: "Reduced database query complexity and connection overhead, enabling cleaner persistence codebases with minimal performance penalty.",
     techStack: ["Go"],
     blogLink: "",
-    githubLink: "https://github.com/wilburhimself/theory"
+    githubLink: "https://github.com/wilburhimself/theory",
+    liveLink: ""
   }
 ];
 ---
@@ -92,6 +118,11 @@ const projects = [
             {project.githubLink && (
               <a href={project.githubLink} target="_blank" rel="noopener noreferrer" class="text-sm font-semibold hover:underline" style="color: #4a90d9;" aria-label={`GitHub repository for ${project.title}`}>
                 GitHub Repo &rarr;
+              </a>
+            )}
+            {project.liveLink && (
+              <a href={project.liveLink} target="_blank" rel="noopener noreferrer" class="text-sm font-semibold hover:underline" style="color: #4a90d9;" aria-label={`Live site for ${project.title}`}>
+                Live Site &rarr;
               </a>
             )}
           </footer>
