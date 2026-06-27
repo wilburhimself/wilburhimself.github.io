@@ -16,11 +16,46 @@ const { Content } = await post.render();
 // Calculate reading time
 const wordCount = post.body ? post.body.split(/\s+/).length : 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+// Fetch all posts to determine next/previous and related articles
+const posts = await getCollection('blog');
+const sortedPosts = posts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
+
+const currentIndex = sortedPosts.findIndex((p) => p.id === post.id);
+const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+
+// Calculate related articles by shared tags
+const currentTags = post.data.tags || [];
+const relatedPosts = sortedPosts
+  .filter((p) => p.id !== post.id)
+  .map((p) => {
+    const sharedTags = (p.data.tags || []).filter((tag) => currentTags.includes(tag));
+    return { post: p, score: sharedTags.length };
+  })
+  .filter((item) => item.score > 0)
+  .sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return new Date(b.post.data.date).getTime() - new Date(a.post.data.date).getTime();
+  })
+  .slice(0, 3)
+  .map((item) => item.post);
 ---
 
 <BlogLayout title={post.data.title} description={post.data.excerpt} image={post.data.image}>
   <div class="main py-8">
     <article class="post-single">
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog/">Articles</a></li>
+          <li aria-current="page">{post.data.title}</li>
+        </ol>
+      </nav>
+
       <header class="post-header mb-6">
         <h1 class="post-title text-4xl font-bold">{post.data.title}</h1>
         <div class="post-meta flex items-center gap-3 text-secondary text-sm mt-2">
@@ -36,10 +71,63 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
         <Content />
       </div>
       
-      <footer class="mt-12 pt-6 border-t border-border">
-        <a href="/blog/" class="text-sm text-secondary hover:text-primary transition-colors">
-          &larr; Back to Articles
-        </a>
+      <footer class="mt-12">
+        <!-- Next/Previous Article Navigation -->
+        {(prevPost || nextPost) && (
+          <div class="post-navigation pt-6 border-t border-border">
+            <div class="nav-prev">
+              {prevPost && (
+                <>
+                  <span class="nav-label">Previous Article</span>
+                  <a href={`/blog/${prevPost.slug}/`} class="nav-link">
+                    &larr; {prevPost.data.title}
+                  </a>
+                </>
+              )}
+            </div>
+            <div class="nav-next">
+              {nextPost && (
+                <>
+                  <span class="nav-label">Next Article</span>
+                  <a href={`/blog/${nextPost.slug}/`} class="nav-link">
+                    {nextPost.data.title} &rarr;
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        <!-- Related Articles by Tag -->
+        {relatedPosts.length > 0 && (
+          <div class="related-articles mt-12 pt-8 border-t border-border">
+            <h3 style="font-size: 0.85rem; font-weight: 600; margin-top: 0; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--secondary);">
+              Related Articles
+            </h3>
+            <ul class="other-writings-list">
+              {relatedPosts.map((rPost) => {
+                const category = rPost.data.tags?.[0]
+                  ? rPost.data.tags[0].charAt(0).toUpperCase() + rPost.data.tags[0].slice(1)
+                  : "Writing";
+                return (
+                  <li class="other-writing-item">
+                    <span class="other-writing-category">{category}</span>
+                    <a class="other-writing-link" href={`/blog/${rPost.slug}/`}>
+                      {rPost.data.title}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        <!-- Back to Articles Button -->
+        <div class="back-to-articles">
+          <a href="/blog/" class="back-to-articles-link">
+            &larr; Back to Articles
+          </a>
+        </div>
       </footer>
     </article>
   </div>

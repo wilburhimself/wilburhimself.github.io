@@ -1047,3 +1047,153 @@ pre[class*="language-"]>code[class*="language-"] {
   line-height: 1.6;
   margin: 0;
 }
+
+/* Hero Specialties Tags */
+.hero-specialties {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem auto 1rem auto;
+}
+
+.specialty-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary);
+  background-color: var(--border);
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.specialty-tag:hover {
+  border-color: var(--tertiary);
+  background-color: var(--entry);
+  color: var(--primary);
+}
+
+/* Post Navigation Styling */
+.post-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .post-navigation {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+}
+
+.nav-prev,
+.nav-next {
+  flex: 1;
+}
+
+.nav-prev {
+  text-align: left;
+}
+
+.nav-next {
+  text-align: right;
+}
+
+.nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4a90d9;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+[data-theme=dark] .nav-link {
+  color: #7eb8f7;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.back-to-articles {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.back-to-articles-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondary);
+  transition: color 0.15s;
+}
+
+.back-to-articles-link:hover {
+  color: var(--primary);
+}
+
+/* Breadcrumbs Styling */
+.breadcrumbs {
+  display: none;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--secondary);
+}
+
+.breadcrumbs ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumbs li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  color: var(--tertiary);
+  font-size: 0.75rem;
+}
+
+.breadcrumbs a {
+  color: var(--secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.breadcrumbs a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.breadcrumbs li[aria-current="page"] {
+  color: var(--primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}

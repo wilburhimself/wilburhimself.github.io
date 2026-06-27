@@ -22,6 +22,14 @@ const latestArticles = nonDraftPosts
       <div class="profile_inner">
         <h1>Wilbur Suero</h1>
         
+        <div class="hero-specialties">
+          <span class="specialty-tag">Staff Backend Engineer</span>
+          <span class="specialty-tag">Rails</span>
+          <span class="specialty-tag">Distributed Systems</span>
+          <span class="specialty-tag">Applied AI</span>
+          <span class="specialty-tag">Open Source</span>
+        </div>
+        
         <p class="max-w-xl mx-auto text-lg font-semibold leading-snug" style="color: var(--primary);">
           I build backend systems that scale without becoming harder to operate.
         </p>
@@ -62,34 +70,15 @@ const latestArticles = nonDraftPosts
           </ul>
         </div>
 
-        <!-- Featured Projects -->
+        <!-- Selected Open Source -->
         <div class="featured-projects">
-          <h2>Featured Projects</h2>
+          <h2>Selected Open Source</h2>
           <div class="featured-projects-grid">
-            <div class="featured-project-card">
-              <div>
-                <h3 class="featured-project-title">PrestaCRM</h3>
-                <p class="featured-project-desc">
-                  A vertical B2B SaaS platform for credit and debt collection. Featuring a French amortization engine, an immutable double-entry ledger, automated credit risk scoring, and WhatsApp API alerts.
-                </p>
-                <div class="featured-project-tech">
-                  <span class="featured-project-badge">Next.js</span>
-                  <span class="featured-project-badge">TypeScript</span>
-                  <span class="featured-project-badge">PostgreSQL</span>
-                  <span class="featured-project-badge">WhatsApp API</span>
-                </div>
-              </div>
-              <div class="featured-project-links">
-                <a class="featured-project-link" href="https://prestacrm.com" target="_blank" rel="noopener noreferrer">Live Site &rarr;</a>
-                <a class="featured-project-link" href="/projects/">Case Study &rarr;</a>
-              </div>
-            </div>
-
             <div class="featured-project-card">
               <div>
                 <h3 class="featured-project-title">Promptly</h3>
                 <p class="featured-project-desc">
-                  A centralized prompt management engine for Ruby on Rails. Introduces versioning, schema validation, localization, and ERB/Liquid templates to decoupling prompts from codebase deployments.
+                  Centralized AI prompt management engine for Ruby on Rails. Adds schema validation, versioning, localization, caching, and template testing.
                 </p>
                 <div class="featured-project-tech">
                   <span class="featured-project-badge">Ruby</span>
@@ -101,6 +90,44 @@ const latestArticles = nonDraftPosts
               <div class="featured-project-links">
                 <a class="featured-project-link" href="https://github.com/wilburhimself/promptly" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
                 <a class="featured-project-link" href="/blog/30-writing-maintainable-ai-ai-prompts-with-promptly/">Blog Post &rarr;</a>
+              </div>
+            </div>
+
+            <div class="featured-project-card">
+              <div>
+                <h3 class="featured-project-title">Outbox Rails</h3>
+                <p class="featured-project-desc">
+                  Production-ready transactional outbox pattern implementation for Rails. Ensures event durability and atomicity in event-driven systems.
+                </p>
+                <div class="featured-project-tech">
+                  <span class="featured-project-badge">Ruby</span>
+                  <span class="featured-project-badge">Rails</span>
+                  <span class="featured-project-badge">Sidekiq</span>
+                  <span class="featured-project-badge">PostgreSQL</span>
+                </div>
+              </div>
+              <div class="featured-project-links">
+                <a class="featured-project-link" href="https://github.com/wilburhimself/outbox_rails" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+                <a class="featured-project-link" href="/blog/38-the-outbox-pattern-reliable-event-publishing-without-distributed-transactions/">Blog Post &rarr;</a>
+              </div>
+            </div>
+
+            <div class="featured-project-card">
+              <div>
+                <h3 class="featured-project-title">GemGuard</h3>
+                <p class="featured-project-desc">
+                  Ruby supply-chain security scanner. Generates CycloneDX SBOMs and audits gems for vulnerabilities in CI/CD pipelines.
+                </p>
+                <div class="featured-project-tech">
+                  <span class="featured-project-badge">Ruby</span>
+                  <span class="featured-project-badge">CLI</span>
+                  <span class="featured-project-badge">CycloneDX</span>
+                  <span class="featured-project-badge">Security</span>
+                </div>
+              </div>
+              <div class="featured-project-links">
+                <a class="featured-project-link" href="https://github.com/wilburhimself/gem_guard" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+                <a class="featured-project-link" href="/blog/29-introducing-gemguard/">Blog Post &rarr;</a>
               </div>
             </div>
           </div>
@@ -149,9 +176,9 @@ const latestArticles = nonDraftPosts
 
         <!-- Profile Action Buttons -->
         <div class="buttons">
-          <a class="button" href="/about/" title="About Me">About</a>
-          <a class="button" href="/projects/" title="My Projects">Projects</a>
-          <a class="button" href="/blog/" title="My Blog">Blog</a>
+          <a class="button" href="/blog/" title="Articles">Articles</a>
+          <a class="button" href="/projects/" title="Projects">Projects</a>
+          <a class="button" href="/about/" title="About">About</a>
           <a class="button" href="https://calendly.com/suerowilbur/30min" target="_blank" rel="noopener noreferrer" title="Schedule Consultation">Consultation</a>
         </div>
 
