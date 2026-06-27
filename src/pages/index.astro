@@ -2,45 +2,89 @@
 import BlogLayout from '../layouts/BlogLayout.astro';
 ---
 
-<BlogLayout title="Wilbur Suero - Staff Backend Engineer" description="Staff Backend Engineer specializing in high-performance Rails, distributed architecture, and production AI. No Magic, Just Systems.">
+<BlogLayout title="Wilbur Suero - Staff Backend Engineer" description="I help engineering teams build backend systems that scale without becoming harder to operate. Specializing in high-performance Rails, distributed systems, and production AI.">
   <div class="main py-12">
     <div class="profile">
       <div class="profile_inner">
         <h1>Wilbur Suero</h1>
         
         <p class="max-w-xl mx-auto text-lg font-semibold leading-snug" style="color: var(--primary);">
-          I help engineering teams build backend systems that scale without becoming harder to operate.
+          I build backend systems that scale without becoming harder to operate.
         </p>
         
         <p class="max-w-xl mx-auto text-secondary text-sm">
-          Specializing in high-performance Rails systems, distributed architecture, and production AI infrastructure. Currently designing systems at <strong>Puzzle</strong>.
+          Specializing in high-performance Rails, distributed systems, and production AI infrastructure. <strong>No magic, just systems.</strong> I believe the best engineering decisions are those that eliminate operational complexity and remove layers of magic from software.
         </p>
 
-        <!-- Selected Impact -->
+        <!-- Selected Achievements -->
         <div class="impact-section">
-          <h2>Selected Impact</h2>
+          <h2>Selected Achievements</h2>
           <ul class="impact-list">
             <li class="impact-item">
               <span class="impact-icon">&rarr;</span>
-              <span><strong>Reduced production latency by 60%</strong> via database optimizations, caching architectures, and API design.</span>
+              <span><strong>Reduced LLM API latency by 60%</strong> and minimized token overhead by designing strategic caching and early-exit workflows.</span>
             </li>
             <li class="impact-item">
               <span class="impact-icon">&rarr;</span>
-              <span><strong>Architected <a href="https://prestacrm.com" target="_blank" rel="noopener noreferrer">PrestaCRM</a></strong>, a specialized credit CRM managing over RD$10,000,000 in active portfolios.</span>
+              <span><strong>Architected <a href="https://prestacrm.com" target="_blank" rel="noopener noreferrer">PrestaCRM</a></strong>, a specialized credit CRM managing over RD$10,000,000 in active portfolios and cutting average delinquency by 18%.</span>
             </li>
             <li class="impact-item">
               <span class="impact-icon">&rarr;</span>
-              <span><strong>Built production AI infrastructure</strong> serving tens of thousands of daily interactions at Puzzle.</span>
+              <span><strong>Built production AI infrastructure</strong> serving 50K+ daily interactions under strict reliability and throughput constraints.</span>
             </li>
             <li class="impact-item">
               <span class="impact-icon">&rarr;</span>
-              <span><strong>9+ years building Rails systems</strong>, distributed architectures, and background processing pipelines.</span>
+              <span><strong>Designed distributed event-driven pipelines</strong> processing over 100K daily events with zero data loss.</span>
             </li>
             <li class="impact-item">
               <span class="impact-icon">&rarr;</span>
-              <span><strong>Open-source creator</strong> of <a href="https://github.com/wilburhimself/promptly" target="_blank" rel="noopener noreferrer">Promptly</a>, <a href="https://github.com/wilburhimself/outbox_rails" target="_blank" rel="noopener noreferrer">Outbox Rails</a>, and <a href="https://github.com/wilburhimself/gem_guard" target="_blank" rel="noopener noreferrer">GemGuard</a>.</span>
+              <span><strong>Created open-source libraries</strong> (<a href="https://github.com/wilburhimself/promptly" target="_blank" rel="noopener noreferrer">Promptly</a>, <a href="https://github.com/wilburhimself/outbox_rails" target="_blank" rel="noopener noreferrer">Outbox Rails</a>) adopted by the Ruby on Rails developer community.</span>
             </li>
           </ul>
+        </div>
+
+        <!-- Featured Projects -->
+        <div class="featured-projects">
+          <h2>Featured Projects</h2>
+          <div class="featured-projects-grid">
+            <div class="featured-project-card">
+              <div>
+                <h3 class="featured-project-title">PrestaCRM</h3>
+                <p class="featured-project-desc">
+                  A vertical B2B SaaS platform for credit and debt collection. Featuring a French amortization engine, an immutable double-entry ledger, automated credit risk scoring, and WhatsApp API alerts.
+                </p>
+                <div class="featured-project-tech">
+                  <span class="featured-project-badge">Next.js</span>
+                  <span class="featured-project-badge">TypeScript</span>
+                  <span class="featured-project-badge">PostgreSQL</span>
+                  <span class="featured-project-badge">WhatsApp API</span>
+                </div>
+              </div>
+              <div class="featured-project-links">
+                <a class="featured-project-link" href="https://prestacrm.com" target="_blank" rel="noopener noreferrer">Live Site &rarr;</a>
+                <a class="featured-project-link" href="/projects/">Case Study &rarr;</a>
+              </div>
+            </div>
+
+            <div class="featured-project-card">
+              <div>
+                <h3 class="featured-project-title">Promptly</h3>
+                <p class="featured-project-desc">
+                  A centralized prompt management engine for Ruby on Rails. Introduces versioning, schema validation, localization, and ERB/Liquid templates to decoupling prompts from codebase deployments.
+                </p>
+                <div class="featured-project-tech">
+                  <span class="featured-project-badge">Ruby</span>
+                  <span class="featured-project-badge">Rails</span>
+                  <span class="featured-project-badge">Liquid</span>
+                  <span class="featured-project-badge">RSpec</span>
+                </div>
+              </div>
+              <div class="featured-project-links">
+                <a class="featured-project-link" href="https://github.com/wilburhimself/promptly" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+                <a class="featured-project-link" href="/blog/30-writing-maintainable-ai-ai-prompts-with-promptly/">Blog Post &rarr;</a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Featured Writing -->

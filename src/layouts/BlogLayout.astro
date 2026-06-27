@@ -26,6 +26,17 @@ import Header from '../components/Header.astro';
       })();
     </script>
 
+    <!-- Unregister Residual Gatsby Service Workers -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title ? `${title} - Wilbur Suero` : "Wilbur Suero"}</title>
