@@ -1,0 +1,51 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+
+const principles = [
+  {
+    title: "Complexity compounds.",
+    desc: "Every line of code, external dependency, or architectural layer is an operational liability. Simplify systems aggressively. Prefer modular monoliths (moduliths) over distributed microservices until scaling or organizational constraints make a split absolute. Make code deletion a first-class victory."
+  },
+  {
+    title: "Databases are faster than your loops.",
+    desc: "Leverage SQL, proper indexing, and database-level set operations. Let the database do the filtering, aggregation, and ordering. Network roundtrips, N+1 queries, and in-memory application looping are where backend performance goes to die."
+  },
+  {
+    title: "Reliability beats cleverness.",
+    desc: "Clean, predictable code that handles failures gracefully is infinitely superior to clever metaprogramming or complex design abstractions. Code is read 10x more than it's written; design for the developer who has to debug it at 3 AM."
+  },
+  {
+    title: "Observability is a core feature.",
+    desc: "A feature is not done until it is observable. If you cannot track its latency, query its execution state, or trace its failure modes in production, you are running blind. Telemetry, structured logs, and tracing are as critical as business logic."
+  },
+  {
+    title: "AI systems deserve engineering discipline.",
+    desc: "Applied AI is software engineering, not magic. Prompts, LLM execution pipelines, and data embeddings should be version-controlled, schema-validated, cached, and tested in isolation with the exact same rigor applied to database schemas."
+  },
+  {
+    title: "No magic, just systems.",
+    desc: "Magic (framework defaults, hidden side-effects, implicit global states) hides bugs and compounds technical debt. Build explicit boundaries, establish clear execution flows, and favor predictable systems over clever framework shortcuts."
+  }
+];
+---
+
+<BlogLayout title="Principles | Wilbur Suero" description="My core software engineering principles and architectural philosophy. No magic, just systems.">
+  <div class="main py-8">
+    <header class="page-header mb-8">
+      <h1 class="font-bold text-3xl">Engineering Principles</h1>
+      <p class="text-secondary text-sm mt-1">Not opinions or transient framework trends. These are the core guidelines I use to design, build, and operate resilient systems.</p>
+    </header>
+
+    <div class="principles-list">
+      {principles.map((principle, index) => (
+        <article class="principle-item">
+          <h2 class="principle-title">
+            <span class="principle-number">0{index + 1}.</span>
+            {principle.title}
+          </h2>
+          <p class="principle-desc">{principle.desc}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</BlogLayout>

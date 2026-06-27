@@ -900,5 +900,79 @@ pre[class*="language-"] > code[class*="language-"] {
   text-decoration: underline;
 }
 
+/* Hero Metric Badge Styling */
+.hero-metric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--entry);
+  border-radius: 20px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.15s;
+}
+.hero-metric:hover {
+  border-color: var(--tertiary);
+}
+.hero-metric-value {
+  font-weight: 800;
+  color: #4a90d9;
+}
+[data-theme=dark] .hero-metric-value {
+  color: #7eb8f7;
+}
+.hero-metric-label {
+  color: var(--secondary);
+}
+
+/* Principles Page Styling */
+.principles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+.principle-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.principle-item:last-child {
+  border-bottom: none;
+}
+.principle-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.principle-number {
+  font-family: var(--font-family-fira);
+  font-size: 0.9rem;
+  color: #4a90d9;
+  font-weight: 600;
+}
+[data-theme=dark] .principle-number {
+  color: #7eb8f7;
+}
+.principle-desc {
+  font-size: 0.95rem;
+  color: var(--content);
+  line-height: 1.6;
+  margin: 0;
+}
+
+
 
 
