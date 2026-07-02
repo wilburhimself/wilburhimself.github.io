@@ -1,71 +1,83 @@
 ---
-title: "Stop Sending Embeddings as JSON"
-date: "June 28, 2026"
+title: "Stop Sending Embeddings as JSON: A Faster Binary Serialization Pattern for AI APIs"
+date: "July 2, 2026"
 tags: [performance, serialization, rails, binary, network]
-excerpt: "JSON is the default payload format for modern APIs, but when sending massive high-dimensional embedding vectors, it becomes a silent performance killer. Here is how switching to binary Base64 float buffers can slash payload sizes by 75% and dramatically reduce CPU usage."
-draft: true
+excerpt: "Every embedding API sends vectors as JSON. That's convenient. It's also one of the most expensive ways to move numerical data between services. Here's how switching to binary Base64 float buffers cut our payload size by 75% and reduced serialization latency by 98%."
 ---
 
-If you are building AI-powered features like semantic search, retrieval-augmented generation (RAG), or recommendation engines, you are dealing with embeddings. 
+Every embedding API I've worked with sends vectors as JSON.
 
-An embedding is just a vector—an array of floating-point numbers representing the semantic meaning of a piece of text. For modern models, these vectors are large, typically ranging from 768 to 3,072 dimensions.
+That's convenient.
 
-When you query an inference service to generate these embeddings, the standard, default response format is a JSON array:
+It's also one of the most expensive ways to move numerical data between services. JSON isn't expensive simply because it's text. It's expensive because every floating-point value must be converted from binary to decimal, transmitted as characters, and parsed back into binary on the receiving side. You pay that cost on every dimension of every vector, in both directions.
 
-```json
-{
-  "embedding": [
-    0.01453023,
-    -0.23142091,
-    0.89213045,
-    ...
-  ]
-}
+By replacing JSON arrays with Base64-encoded binary float buffers, we reduced payload size by **75%** and cut serialization latency by over **98%**.
+
+Here's the benchmark, measured against 1,000 embeddings at 1,536 dimensions each:
+
+| Metric                        | JSON Float Array | Base64 Float Buffer | Improvement |
+| :---------------------------- | :--------------: | :-----------------: | ----------: |
+| **Payload Size**              |     120.3 MB     |       30.1 MB       |  **-75.0%** |
+| **Python Serialization Time** |     3,140 ms     |        45 ms        |  **-98.5%** |
+| **Ruby Deserialization Time** |     4,820 ms     |       110 ms        |  **-97.7%** |
+| **Total Roundtrip Latency**   |      9.42 s      |       1.84 s        |  **-80.4%** |
+
+> **Benchmark environment:** Ruby 3.3.4, Python 3.12, NumPy 1.26, FastAPI 0.111, Apple M3 Pro (development) and x86_64 Linux (production). Each format was measured over 1,000 iterations with GC disabled during measurement using Ruby's `Benchmark::IPS` and Python's `timeit`. Payload sizes were measured as raw HTTP body bytes before compression.
+>
+> **Reproduce it yourself:** The [Python serialization and Ruby deserialization benchmark scripts](https://gist.github.com/wilburhimself/9acedeb7bc3c90606450f0db8aa070b3) are available as a Gist. Clone, run, and compare on your own hardware.
+
+Keep reading for the explanation, the implementation, and the cases where JSON is still the right answer.
+
+---
+
+## Why Numerical Data Doesn't Belong in JSON
+
+Computers do not store floating-point numbers as text. In memory, a single-precision float (`float32` in Python, `float` in C) is stored as a 4-byte (32-bit) binary value.
+
+When you serialize a float to JSON, you pay a conversion cost in both directions:
+
+**JSON pipeline (what everyone does):**
+
+```
+float32 in memory (4 bytes)
+    ↓  binary-to-decimal conversion
+"-0.23142091" as ASCII string (11+ bytes)
+    ↓  HTTP (24 KB per 1,536-dim vector)
+JSON parser reads characters
+    ↓  string-to-float conversion (strtof)
+float in Ruby memory
 ```
 
-This format is universally understood, easy to read, and simple to consume. 
+**Binary pipeline (what we switched to):**
 
-It is also an absolute performance disaster.
+```
+float32 in memory (4 bytes)
+    ↓  tobytes() — zero conversion, O(1)
+raw bytes
+    ↓  Base64 encode (fast C implementation)
+ASCII string (8 KB per 1,536-dim vector)
+    ↓  HTTP
+Base64 decode → unpack("e*") in Ruby
+    ↓  single C pass over raw bytes
+float in Ruby memory
+```
 
-Under the hood of a high-throughput system, transferring embeddings as text-based JSON arrays wastes network bandwidth, spikes memory allocation, and consumes a massive amount of CPU cycles just to parse strings back and forth.
+The math is straightforward: in binary, a `float32` occupies exactly **4 bytes**. In JSON, the same number `-0.23142091` occupies **11 bytes as text** plus separators—a 3x–4x size multiplier.
 
-By replacing JSON arrays with Base64-encoded binary float buffers, we reduced our payload size by **75%**, slashed serialization latency, and drastically cut CPU usage on both our Rails application servers and Python inference hosts.
-
-Here is how we did it, why it works, and how you can implement it in your own system.
-
----
-
-## The Hidden Cost of Text-Based Floats
-
-Computers do not store floating-point numbers as text. In memory, a single-precision float (a `float32` in Python or a `float` in C) is stored as a 4-byte (32-bit) binary value. 
-
-When you serialize a float to JSON, you have to convert those binary bits into an ASCII string representation. 
-
-Let's look at the math of that conversion:
-* In binary, a `float32` always occupies exactly **4 bytes** of memory.
-* In JSON, the float `-0.23142091` is represented as a string. It consists of 11 characters. In UTF-8 or ASCII encoding, each character is 1 byte, making the float occupy **11 bytes** of data.
-* If you add a comma and a space to separate it from the next number in the array, you add another **2 bytes**, bringing the total to **13 bytes**.
-
-By converting binary floats to text, we are multiplying the raw data size by **3x to 4x**. 
-
-For a single 1,536-dimension embedding (a standard size for OpenAI's `text-embedding-3-small` or local models), a binary payload is **6,144 bytes** (approx 6 KB). 
-
-In contrast, the text-based JSON array for the same vector regularly exceeds **24 KB**.
-
-Multiply this across a batch of 50 documents, and you are transmitting over a megabyte of text when you only needed 300 KB of binary data.
+For a single 1,536-dimension embedding, a binary payload is **6,144 bytes** (~6 KB). The equivalent JSON array exceeds **24 KB**. Multiply across a batch of 50 documents and you're transmitting over a megabyte of ASCII where 300 KB of binary would have been sufficient.
 
 ```mermaid
 gantt
     title Serialization Lifecycle Comparison
     dateFormat X
     axisFormat %s
-    
+
     section JSON Pipeline
     Float32 in Python Memory      :active, j1, 0, 10
     Convert to ASCII String       :crit, j2, 10, 45
     Transmit over HTTP (24KB)     :crit, j3, 45, 80
     Parse ASCII String to Ruby Float:crit, j4, 80, 120
-    
+
     section Binary/Base64 Pipeline
     Float32 in Python Memory      :active, b1, 0, 10
     Get raw bytes (0ms)           :b2, 10, 12
@@ -74,21 +86,17 @@ gantt
     Base64 Decode & Unpack in Ruby :b5, 35, 45
 ```
 
-The network payload is only part of the problem. The CPU cost of serialization and deserialization is actually worse. 
+The network payload is only part of the problem. The CPU cost is often worse. To produce the JSON, Python must format each float as a string and concatenate them; Ruby must then locate delimiters, allocate memory for each token, and run string-to-float conversion for every dimension. That loop scales linearly with batch size and embedding dimensions, and at high throughput it dominates request latency.
 
-To create the JSON, the Python API framework must iterate through thousands of floats, format each one as a string, and concatenate them. 
-
-Then, on the receiving side (e.g., your Rails application), the JSON parser must read the string, locate the delimiters, allocate new memory for each string, and run string-to-float parsing logic (like the C library function `strtof`).
-
-At scale, this parsing loop becomes a CPU bottleneck that limits the throughput of your web servers.
+> For services generating a few embeddings per minute, JSON is perfectly adequate. The break-even point depends on batch sizes and hardware; profile before optimizing.
 
 ---
 
-## The Naive Solution (and Why it Fails)
+## The Naive Solution (and Why it Fails at Scale)
 
-Here is how our original system looked. 
+Here is how our original system looked.
 
-On the Python inference side (FastAPI), we returned the embeddings using standard PyTorch lists:
+On the Python inference side (FastAPI), we returned embeddings using standard NumPy-to-list conversion:
 
 ```python
 # FastAPI endpoint (Slow & Heavy)
@@ -98,7 +106,7 @@ def create_embeddings(payload: RequestPayload):
     return {
         # This implicitly converts the numpy array to a list of Python floats,
         # which FastAPI's JSON encoder serializes to a string.
-        "embeddings": embeddings.tolist() 
+        "embeddings": embeddings.tolist()
     }
 ```
 
@@ -113,32 +121,26 @@ class InferenceClient
       body: { texts: texts }.to_json,
       headers: { "Content-Type" => "application/json" }
     )
-    
+
     # JSON parsing allocates thousands of strings and converts them back to floats
     JSON.parse(response.body)["embeddings"]
   end
 end
 ```
 
-During profiling, we discovered that Rails spent up to **40% of its execution time** inside `JSON.parse` when processing large batches of embeddings. 
-
-We were spending more CPU power parsing strings than doing actual business logic.
+During profiling, we discovered that Rails spent up to **40% of its execution time** inside `JSON.parse` when processing large batches of embeddings. We were spending more CPU power parsing strings than executing business logic.
 
 ---
 
 ## The Better Approach: Binary Float Buffers via Base64
 
-Rather than trying to parse JSON faster, we decided to avoid JSON serialization entirely for the vector data.
+Rather than trying to parse JSON faster, we eliminated JSON serialization of the embedding vector itself.
 
-We chose to serialize the array of floats as a raw binary buffer, and then encode that binary buffer into a single Base64 string. 
-
-Base64 introduces a slight overhead (it increases binary size by about 33%), but it allows us to embed binary data safely inside standard JSON payloads without violating API contracts or dealing with raw binary HTTP streams.
-
-Here is the implementation.
+We serialize the float array as a raw binary buffer, then encode that buffer into a single Base64 string. Base64 introduces about 33% size overhead compared to raw binary, but it lets us embed binary data safely inside standard JSON payloads—no changes to content-type negotiation, no custom binary HTTP framing, no breaking changes to existing API consumers.
 
 ### 1. Python Inference Server (Encoding)
 
-Instead of calling `.tolist()` on our NumPy array, we extract the raw bytes from the underlying C-contiguous memory block and Base64-encode it:
+Instead of calling `.tolist()`, we extract the raw bytes from the underlying C-contiguous memory block:
 
 ```python
 import base64
@@ -147,10 +149,10 @@ import numpy as np
 def serialize_embeddings(embeddings: np.ndarray) -> str:
     # Ensure the array is single-precision float32
     float_array = embeddings.astype(np.float32)
-    
+
     # Get raw C-compatible memory bytes
     raw_bytes = float_array.tobytes()
-    
+
     # Base64 encode the bytes and decode to an ASCII string
     return base64.b64encode(raw_bytes).decode("ascii")
 ```
@@ -165,7 +167,7 @@ Our API response now returns a single string instead of an array of numbers:
 
 ### 2. Rails Application Server (Decoding)
 
-On the Ruby side, we decode the Base64 string back into raw bytes, and then unpack the bytes into an array of Ruby Floats using `String#unpack`:
+On the Ruby side, we decode the Base64 string back into raw bytes, then unpack them into Ruby Floats using `String#unpack`:
 
 ```ruby
 require "base64"
@@ -175,7 +177,7 @@ class EmbeddingDecoder
   def self.decode(base64_string)
     # 1. Decode Base64 string back to binary string (raw bytes)
     binary_data = Base64.strict_decode64(base64_string)
-    
+
     # 2. Unpack the binary buffer.
     # 'e' = little-endian single-precision (32-bit) float
     # '*' = unpack all remaining data in the string
@@ -184,69 +186,69 @@ class EmbeddingDecoder
 end
 ```
 
-The secret sauce here is `unpack("e*")`. 
-
-Unlike iterating over an array in Ruby, `unpack` runs entirely in optimized C inside the Ruby VM. It reads the raw bytes directly from memory, offsets the pointer by 4 bytes at a time, and creates the corresponding Ruby Float object in a single pass. 
+The key is `unpack("e*")`. Unlike iterating over a Ruby array, `unpack` runs entirely in optimized C inside the Ruby VM. It reads raw bytes directly from memory, offsets the pointer by 4 bytes at a time, and constructs the corresponding Ruby Float objects in a single pass—no string parsing, no delimiter scanning.
 
 ---
 
 ## Under the Hood: Endianness and the `unpack` Directive
 
-When working with binary data across different programming languages and hardware, you must be careful about how numbers are represented in memory. This is governed by two factors: **precision** and **endianness**.
+When moving binary data across languages and hardware, two things matter: **precision** and **endianness**.
 
 ### 1. Precision (Float32 vs. Float64)
-* Python's NumPy defaults to `float64` (double precision, 8 bytes per float) for many math operations. 
-* Most AI embeddings are represented as `float32` (single precision, 4 bytes per float). 
-* In our encoder, we explicitly call `.astype(np.float32)` to ensure we are serializing 4-byte values. If you serialize as `float64` and try to unpack as `float32`, your decoded numbers will be complete gibberish.
+
+NumPy defaults to `float64` (8 bytes per float) for many operations, but AI embeddings are almost universally `float32` (4 bytes per float). We explicitly call `.astype(np.float32)` before serializing. If you serialize as `float64` and unpack as `float32`, the decoded numbers are meaningless.
 
 ### 2. Endianness (Byte Ordering)
-Endianness dictates the order in which bytes are stored in memory.
-* **Little-Endian**: The least significant byte is stored first (standard on x86_64 and ARM processors like Apple Silicon).
-* **Big-Endian**: The most significant byte is stored first (standard in network protocols).
 
-In Ruby's `String#unpack` method, the format directives are highly specific:
-* `f*`: Unpack as single-precision floats using the **native** CPU endianness of the host machine.
-* `g*`: Unpack as single-precision floats in **big-endian** (network) byte order.
-* `e*`: Unpack as single-precision floats in **little-endian** byte order.
+Endianness determines the order bytes are written to memory:
 
-We chose **`e*`** (little-endian) because both our Python inference servers (running on x86 Linux) and our Rails app servers (running on x86 Linux or ARM macOS) use little-endian byte ordering natively. By using `e*`, we guarantee that if we ever move a service to a machine with a different architecture, the binary parsing will remain correct and consistent.
+* **Little-Endian**: Least significant byte first. Used by x86_64 and ARM (Apple Silicon, modern Linux ARM).
+* **Big-Endian**: Most significant byte first. Used by network protocols and older RISC architectures.
 
----
+Ruby's `String#unpack` directives are explicit about this:
 
-## The Results
+* `f*` — native CPU endianness (fragile across architectures)
+* `g*` — big-endian single-precision floats
+* `e*` — little-endian single-precision floats
 
-We ran the same benchmark of 1,000 embeddings (1,536 dimensions each) to compare the performance of the JSON float array format against the Base64 float buffer format.
-
-| Metric | JSON Float Array | Base64 Float Buffer | Improvement |
-| :--- | :---: | :---: | ---: |
-| **Payload Size** | 120.3 MB | 30.1 MB | **-75.0%** |
-| **Python Serialization Time** | 3,140 ms | 45 ms | **-98.5%** |
-| **Ruby Deserialization Time** | 4,820 ms | 110 ms | **-97.7%** |
-| **Total Roundtrip Latency** | 9.42 s | 1.84 s | **-80.4%** |
-
-The results were astonishing:
-* **Network payload** dropped by exactly 75%, resulting in a massive reduction in internal data-transfer costs and network queue times.
-* **Python serialization overhead** was virtually eliminated, dropping from over 3 seconds to just 45 milliseconds.
-* **Ruby parsing time** fell from nearly 5 seconds to a tiny 110 milliseconds.
+We use `e*` because both our Python inference servers (x86 Linux) and Rails app servers (x86 Linux and ARM macOS) are little-endian. More importantly, being explicit about endianness means the decoding is correct by definition, regardless of what machine runs the code in the future.
 
 ---
 
 ## The Tradeoffs
 
-No optimization is free. Before adopting binary Base64 serialization, consider the tradeoffs:
+This optimization is not universal. Here's an honest accounting of the alternatives we evaluated before landing here.
 
-1. **Loss of Human Readability**: You can no longer look at an API response in Chrome DevTools or curl and read the numbers. To debug, you must copy the Base64 string and run it through a decoder tool.
-2. **Strict Schema Contracts**: If you change the precision from `float32` to `float16` or `float64` on the inference server, you *must* update the decoding directive in Rails simultaneously. There is no schema self-documentation.
-3. **Array Allocation Overhead**: While decoding is extremely fast, Ruby still has to allocate a large array containing 1,536 Float objects. If you are doing vector operations in Ruby, consider using native vector libraries or storing them directly in a vector database rather than unpacking them to Rails arrays if possible.
+### Why not gRPC or Protocol Buffers?
+
+Protocol Buffers with gRPC is the canonical answer to this problem in infrastructure-heavy organizations. It solves serialization, adds schema evolution, streaming, and bidirectional communication. We evaluated it. The operational cost—generated stubs for every language, strict schema registration, gRPC infrastructure—was high for an internal service consumed in one place. Base64 binary over HTTP let us ship in an afternoon with no new infrastructure. For systems with multiple consumers or where schema evolution matters, protobuf is the better long-term answer.
+
+### Why not MessagePack?
+
+MessagePack is an excellent binary serialization format and would have worked here. In our case, the embedding vector is the only binary payload in the response—everything else is standard JSON. Introducing a full MessagePack codec for a single field felt like over-engineering. If you're serializing entire response objects in binary, MessagePack or protobuf is more appropriate.
+
+### Why not Apache Arrow?
+
+Arrow's columnar in-memory format is optimized for batch numerical data and enables zero-copy access in many scenarios. For a dedicated ML pipeline where Ruby is doing heavy vector operations, Arrow (via the `red-arrow` gem) is worth evaluating. In our case, embeddings pass directly into pgvector; the overhead of Arrow's columnar framing wasn't justified.
+
+### Why not raw binary HTTP?
+
+A pure binary HTTP response (`Content-Type: application/octet-stream`) would eliminate the ~33% Base64 overhead. We opted against it because it requires custom content-type handling on both sides, breaks standard HTTP debugging tooling, and complicates response envelope composition—status codes, metadata, and errors all live in the same JSON body. Base64-in-JSON is a pragmatic middle ground: it keeps the API contract intact while avoiding the text serialization cost for the high-volume field.
+
+### The real costs
+
+1. **Loss of human readability.** You can no longer inspect embedding values in curl or Chrome DevTools. Debugging requires decoding the Base64 string out-of-band.
+2. **Tight schema coupling.** Changing precision from `float32` to `float16` or `float64` on the Python side requires a simultaneous update to the Ruby unpack directive. There is no self-describing schema to catch mismatches.
+3. **Array allocation overhead.** `unpack` is fast, but Ruby still allocates 1,536 Float objects per vector. If you're passing embeddings directly into pgvector, benchmark whether you need to materialize the Ruby array at all—some clients accept binary blobs directly.
 
 ---
 
 ## Conclusion: Text is for Humans, Binary is for Systems
 
-JSON has won the developer mindshare because it is easy. For 95% of web APIs, JSON is fast enough. 
+JSON has won because it's readable. For most web APIs, that readability is worth the overhead—payloads are small and parsing costs are negligible.
 
-But when you cross the boundary into AI, machine learning, or heavy numerical processing, you are no longer dealing with standard web payloads. You are dealing with dense scientific data.
+Embeddings are different. A single vector from a modern model contains more numerical data than most entire API responses. When you serialize dense numerical arrays as strings, you're not just adding overhead—you're mismatching the data structure to its representation.
 
-Treating dense numerical arrays as strings is an anti-pattern. By teaching our Rails app to speak binary through `unpack`, we stopped fighting the CPU and started utilizing the native speed of the hardware.
+Performance work often starts with algorithms, but the largest wins frequently come from changing representations instead. Once you stop treating dense numerical data like text, the CPU suddenly has much less work to do.
 
-If you are serializing vectors, audio buffers, or image histograms to JSON, stop. Switch to Base64 binary buffers. Your servers, and your latency metrics, will thank you.
+That principle extends well beyond embeddings. Whenever you find yourself serializing audio buffers, image histograms, or numerical feature vectors as JSON, stop and ask whether the text representation is serving the system or just the developer who wrote the first version.
