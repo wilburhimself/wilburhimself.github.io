@@ -14,7 +14,18 @@ export default defineConfig({
   compressHTML: true,
   vite: {
     build: {
-      assetsInlineLimit: 0 // Prevent inlining assets to avoid issues with GitHub Pages
+      assetsInlineLimit: 0, // Prevent inlining assets to avoid issues with GitHub Pages
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (
+            warning.code === 'UNUSED_EXTERNAL_IMPORT' &&
+            warning.exporter === '@astrojs/internal-helpers/remote'
+          ) {
+            return;
+          }
+          warn(warning);
+        }
+      }
     }
   }
 });
