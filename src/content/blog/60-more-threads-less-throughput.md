@@ -2,30 +2,26 @@
 title: "More Threads, Less Throughput: When AI Servers Fight the Scheduler"
 date: "June 27, 2026"
 tags: [concurrency, performance, optimization, system]
-excerpt: "When you need more throughput from your Rails background job workers, adding more threads seems like the obvious answer. But under the wrong conditions, increasing concurrency can actually grind your system to a halt. Here is how to recognize when your AI server is fighting the scheduler instead of scaling with it."
+excerpt: "When you need more throughput, adding threads seems obvious. But under the wrong conditions, concurrency can grind your system to a halt. Here is why your AI server is fighting the scheduler—and how to fix it."
 ---
 
-Our inference server had 24 CPU cores, a mostly idle GPU, and only 10 concurrent requests.
-
-Somehow, average latency exceeded eight seconds.
+Our inference server had 24 CPU cores, a mostly idle GPU, and only 10 concurrent requests. Yet average latency exceeded eight seconds.
 
 That shouldn't have been possible.
 
-We were running a Rails background worker system that dispatched embedding and classification requests to an internal Python inference service. As our background queue grew, we did what any sensible team would do: we increased the concurrency of our background workers and scaled up the inference web server.
+We were running a Rails background worker system that dispatched embedding and classification requests to an internal Python inference service. As our background queue grew, we did what seemed obvious: we increased the concurrency of our background workers and scaled up the inference web server.
 
-Instead of seeing our throughput scale linearly, the system ground to a halt. Latency spiked from milliseconds to over eight seconds, background queues backed up, and our server's CPU utilization pegged at 100%. Yet, looking at the GPU telemetry, it was practically idling, waiting for work.
-
-The CPUs weren't spending their time multiplying matrices. They were spending it deciding which thread should run next. As we dug deeper, we realized we were victims of a hidden performance killer: **thread oversubscription**.
+Instead of scaling, the system ground to a halt. CPU utilization pegged at 100% while the GPU sat idle. The cores weren't busy multiplying matrices. They were busy deciding which thread to run next. We were thrashing the CPU scheduler.
 
 ---
 
-## The Benchmark That Didn't Make Sense
+## A benchmark that didn't make sense
 
-To diagnose the bottleneck, we isolated the inference service and ran a controlled load test. We simulated a modest concurrency of 10 concurrent requests, sending a total of 100 API requests to the Python inference server.
+To diagnose the bottleneck, we isolated the inference service and ran a controlled load test. We simulated 10 concurrent requests, sending a total of 100 API requests to the Python inference server.
 
-While an individual, isolated inference request took around 912 milliseconds, putting a concurrent load of just 10 requests pushed the average response time out to over 8 seconds. Even worse, the CPU cores were completely saturated, but the GPU was only at 15% utilization.
+While an individual, isolated request took around 912 milliseconds, a concurrent load of just 10 requests pushed average response times out to over 8 seconds. The CPU cores were completely saturated, but the GPU was only at 15% utilization.
 
-In a healthy system, if the CPU is at 100%, throughput should be maximized. But here, the CPU was working incredibly hard to produce almost no output.
+In a healthy system, if the CPU is at 100%, throughput should be maximized. Here, the CPU was working incredibly hard to produce almost no output.
 
 Here is what the initial baseline benchmark looked like:
 
@@ -39,23 +35,17 @@ Here is what the initial baseline benchmark looked like:
 
 ---
 
-## Our Initial Hypotheses
+## The obvious culprits
 
-We thought it was:
-* **GPU Saturation**: The model was too heavy for our hardware.
-* **Insufficient Workers**: We needed to increase Rails concurrency to queue more work.
-* **Slow Model**: The embedding algorithm itself was inherently slow.
-* **Network Overhead**: The data transfer between Rails and the inference API was lagging.
-
-It turned out to be none of them.
+We initially assumed the model was too heavy for our hardware, or that we needed more Rails workers, or that the network transfer between our Rails app and the Python API was lagging. It was none of these.
 
 ---
 
-## Following the CPU: The 240-Thread Discovery
+## Hunting the 240-thread leak
 
-We jumped onto the inference server during the load test and ran `htop` to see what the CPU was actually doing. What we saw was a wall of red and green bars representing 24 individual CPU cores (48 logical threads) pegged to their absolute limits.
+We ran `htop` on the server during the load test. All 24 CPU cores (48 logical threads) were pegged to their limits.
 
-Then we checked the active thread count for the Python inference process:
+Then we checked the active thread count for the Python process:
 
 ```bash
 # Count the number of lightweight processes (threads) for our service pid
@@ -64,9 +54,9 @@ ps -o nlwp -p <PID>
 
 The output was **240**.
 
-A single process handling 10 concurrent web requests had spawned 240 active threads. Where did they come from?
+A single process handling 10 concurrent requests had spawned 240 active threads. 
 
-Our Python code was simple. It was a standard FastAPI application using Uvicorn. We weren't manually spawning threads. We were just loading a sentence-transformer model using PyTorch and running inference:
+Our Python code was simple: a standard FastAPI application using Uvicorn. We weren't manually spawning threads. We were just loading a sentence-transformer model and running inference:
 
 ```python
 # The seemingly innocent endpoint
@@ -81,47 +71,43 @@ The culprit wasn't our application. It was the stack of native libraries underne
 
 ---
 
-## Why Native Libraries Lie to You
+## Why native libraries lie to you
 
-To understand why 240 threads were running, we have to look at the architectural layers beneath PyTorch. 
-
-When you call `model.encode()` in Python, your request travels down a vertical stack of abstractions before hitting the CPU:
+When you call `model.encode()`, your request travels down a stack of abstractions before hitting the CPU:
 
 ```
                 Request
                    │
          FastAPI / Uvicorn
                    │
-              PyTorch
+               PyTorch
                    │
-      OpenMP / MKL / BLAS
+       OpenMP / MKL / BLAS
                    │
-            OS Scheduler
+             OS Scheduler
                    │
-              CPU Cores
+               CPU Cores
 ```
 
-At the top, we have FastAPI/Uvicorn, which handles concurrent web connections. Beneath it is PyTorch, which coordinates the neural network graph execution. But PyTorch itself doesn't actually perform the core matrix arithmetic (like matrix multiplication). For that, it delegates to low-level, highly optimized native C and C++ math libraries:
+FastAPI/Uvicorn handles concurrent web connections. PyTorch coordinates the neural network graph. But PyTorch doesn't perform the raw matrix math. It delegates that arithmetic to low-level C and C++ libraries:
 
-* **BLAS (Basic Linear Algebra Subprograms)**: The standardized API specification for low-level vector and matrix operations.
-* **OpenBLAS / MKL (Intel Math Kernel Library)**: Concrete, highly optimized implementations of the BLAS API. They use hand-crafted assembly code, CPU vector extensions (like AVX-512), and internal threading to run matrix math at the absolute limits of the physical silicon.
-* **OpenMP (Open Multi-Processing)**: The concurrency engine used by these math libraries to split loops and parallelize matrix calculations across multiple threads.
+* BLAS, the specification for low-level vector and matrix math.
+* OpenBLAS or Intel MKL, which implement BLAS using optimized assembly.
+* OpenMP, the compiler extension these libraries use to manage threads.
 
-These native libraries were designed for High-Performance Computing (HPC) environments, where a single program runs on a dedicated machine and expects to utilize every core for a single calculation. MKL and OpenMP query the host core count and spawn a worker thread pool matching it. They assume they own the hardware.
+These libraries were designed for high-performance computing, where a single program runs on a dedicated machine and expects to use every core. MKL and OpenMP query the host core count and spawn a thread pool matching it. They assume they own the hardware.
 
-While this behavior is perfect for a Jupyter notebook running on a developer's workstation, it is hostile in a web server or background job runner. Web servers scale by handling independent requests concurrently using separate processes or threads.
+While this is great for a Jupyter notebook, it is hostile to a web server. Web servers scale by handling independent requests concurrently. 
 
-If Uvicorn or Rails runs 10 workers on our 24-core server, each worker process makes its own PyTorch calls. PyTorch delegates to OpenMP, which independently spawns 24 threads per request. None of the workers are aware of each other.
+If Uvicorn runs 10 workers on a 24-core server, each worker process makes its own PyTorch calls. PyTorch delegates to OpenMP, which spawns 24 threads per request, unaware of the other processes.
 
-Repeat this for all 10 concurrent requests, and the math compounding is brutal:
+Across 10 concurrent requests, the math compounds:
 
 ```
 10 Concurrent Requests 
   × 24 Threads per Request 
   = 240 Active Threads competing for 24 Physical Cores
 ```
-
-To visualize the scale of this duplication:
 
 ```mermaid
 flowchart TD
@@ -158,15 +144,15 @@ flowchart TD
     class RT warning
 ```
 
-The native libraries lied to us by assuming they were alone. By defaulting to the total core count, they optimized for single-task speed at the expense of multi-task system throughput. Instead of cooperating, the threads began to fight.
+By defaulting to the core count, the libraries optimized for single-task speed at the expense of system throughput. Instead of cooperating, the threads began to fight.
 
 ---
 
-## The Cost of Concurrency: Scheduler Contention
+## The cost of oversubscription
 
-When you have 240 active threads screaming for time on 24 physical CPU cores, the operating system is forced to step in. The OS scheduler must slice up CPU time and constantly swap threads in and out of the CPU registers.
+When 240 active threads compete for 24 physical CPU cores, the operating system is forced to step in. The CPU scheduler must slice up CPU time and constantly swap threads.
 
-This is known as **thread oversubscription**, and it introduces a massive overhead called **scheduler contention**.
+This is thread oversubscription, and it introduces scheduler contention.
 
 ```mermaid
 flowchart TD
@@ -199,19 +185,17 @@ flowchart TD
     end
 ```
 
-Every context switch is work the application didn't ask for. The scheduler saves registers, restores another thread's state, and the CPU begins executing a completely different workload. Caches become less effective, memory must be fetched again, and the processor spends less time multiplying matrices and more time preparing to multiply matrices.
+Every context switch is overhead. The scheduler saves registers, restores another thread's state, and the CPU begins executing a different task. CPU caches become useless, memory must be re-fetched from RAM, and the processor spends more time managing thread state than doing float arithmetic.
 
-When the cache is constantly invalidated, the CPU cores spend most of their time waiting for data to be fetched from main memory (RAM) instead of performing floating-point math. The CPU is "busy," but it is busy managing its own metadata rather than executing your code.
-
-In our case, the scheduler contention was so severe that the overhead of coordinating the 240 threads completely wiped out the benefits of parallelizing the matrix math. Ten requests, each trying to run on 24 threads, took 912ms. If they had run sequentially on a single thread each, they would have finished in a fraction of the time.
+The CPU registers as 100% busy, but it's busy managing its own metadata. In our case, the overhead of coordinating 240 threads wiped out the benefits of parallel calculations. Ten requests running on 24 threads each took 912ms. If they had run sequentially on a single thread each, they would have finished in a fraction of the time.
 
 ---
 
-## The Fix: Global Concurrency Coordination
+## The fix: Coordinate concurrency
 
-The solution was counterintuitive but incredibly simple: we had to force the native libraries to stop parallelizing internal operations. We wanted each request to run on exactly **one thread**, allowing the web server's concurrency model (10 worker processes) to match the physical hardware limits.
+The fix was counterintuitive: we had to force the native libraries to stop parallelizing internal operations. We wanted each request to run on a single thread, allowing the web server's process-level concurrency to match the physical hardware.
 
-We added the following configuration to the very top of our application entry point, before any deep learning library was imported:
+We added this configuration to our entry point, before any deep learning libraries are imported:
 
 ```python
 import os
@@ -229,11 +213,9 @@ torch.set_num_threads(1)
 torch.set_num_interop_threads(1)
 ```
 
-By setting these variables to `1`, we instructed PyTorch and its underlying math libraries to execute operations sequentially on a single thread per request. 
+Setting these variables to 1 forces PyTorch and its math libraries to run operations sequentially on a single thread.
 
-We then restarted our server and ran the exact same load test of 10 concurrent requests. 
-
-The results were night and day:
+We ran the load test again with 10 concurrent requests. The results were night and day:
 
 | Metric              | Baseline (Default Threads) | Optimized (1 Thread) |         Improvement |
 | :------------------ | :------------------------: | :------------------: | ------------------: |
@@ -243,32 +225,30 @@ The results were night and day:
 | **Active Threads**  |            ~240            |         ~10          |   **95% Reduction** |
 | **CPU Utilization** |            98%             |         45%          | **Slashed in Half** |
 
-By reducing the thread count from 240 to 10, throughput increased by 57%, average latency dropped by nearly 4 seconds, and CPU utilization was cut in half. 
-
-The CPU was no longer thrashing. It spent its cycles executing matrix multiplication instead of shuffling threads in and out of registers.
+By cutting the thread count from 240 to 10, throughput increased by 57%, average latency dropped by nearly 4 seconds, and CPU usage was cut in half. The CPU was no longer thrashing; it spent its cycles on matrix math instead of context switching.
 
 ---
 
-## When Multi-Threaded Math Libraries Are Actually Good
+## When multi-threading is correct
 
-This doesn't mean `OMP_NUM_THREADS=1` is always correct. It is a design decision based entirely on your application's concurrency model.
+This doesn't mean you should always set threads to 1. It depends on your concurrency model.
 
-If you are running an offline batch job, training a model, or running a single-threaded daemon processing one task at a time, you *want* PyTorch to use all available cores. In this scenario (data-level concurrency), letting MKL parallelize the matrix calculations makes your process run as fast as possible.
+For offline batch training or single-threaded background daemons processing one task at a time, you want PyTorch using all available cores. In this scenario (data-level concurrency), letting MKL parallelize calculations is correct.
 
-However, if you are running a web server or background workers processing many independent requests in parallel (request-level concurrency), each process should use exactly `1` thread. The operating system is already parallelizing the work across the cores at the process level. Adding internal library threads only causes them to fight for the scheduler's attention.
+But for web servers or background workers processing many independent requests in parallel (request-level concurrency), each process should use a single thread. The OS is already parallelizing work across cores at the process level. Adding internal library threads only causes them to fight for the scheduler's attention.
 
-If you run both workloads on the same server, you must configure them separately. For example, keep `OMP_NUM_THREADS=1` on your web servers, but allow it to scale to the core count on your batch processing workers.
+If you run both workloads on the same server, configure them separately: keep threads set to 1 on your web servers, but let them scale on batch processing workers.
 
 ---
 
-## The Broader Engineering Lesson
+## Coordinate, don't just optimize
 
-Every layer of the stack was trying to optimize itself independently. None of them were wrong. Together, they were inefficient.
+Every layer of the stack was trying to optimize itself independently. None of them were wrong, but together they were inefficient.
 
-Modern web frameworks and background workers are designed to scale by running multiple isolated processes or threads. Native math libraries are also designed to scale by running multiple threads. If you don't coordinate these two layers, they will fight each other for the scheduler's attention.
+Modern web frameworks scale by running multiple isolated processes. Native math libraries scale by running multiple threads. If you don't coordinate these layers, they will fight for the scheduler's attention.
 
 Systems don't become fast because every component is individually optimized. They become fast when every component cooperates.
 
-Before you scale your servers horizontally or buy larger GPUs, inspect your process thread count. The best performance optimizations don't always come from writing faster code—sometimes they come from simply stopping your libraries from fighting each other.
+Before you scale your servers horizontally or buy larger GPUs, inspect your process thread count. The best performance optimizations don't always come from writing faster code—sometimes they come from just stopping your libraries from fighting each other.
 
 No magic. Just systems.
