@@ -2,15 +2,14 @@
 title: "The Outbox Pattern Isn't Free"
 date: "July 8, 2026"
 tags: ["patterns", "distributed-systems", "rails", "reliability", "architecture"]
-excerpt: "The Outbox Pattern is a popular solution for the dual-write problem, but it comes with a bill. From database write amplification to retention strategies and duplicate execution, here are the real costs of transactional reliability."
-draft: true
+excerpt: "The Outbox Pattern solves the dual-write problem, but it isn't free. From database write amplification to retention strategies and duplicate execution, here are the real costs of transactional reliability."
 ---
 
 *Reliable systems don't eliminate failure. They decide where failure is allowed to happen.*
 
 ---
 
-If you've built distributed systems long enough, you've probably written something like this:
+If you've written code like this in a Rails app, you've set a trap:
 
 ```ruby
 Order.transaction do
@@ -19,238 +18,110 @@ Order.transaction do
 end
 ```
 
-It looks harmless.
+It works fine in staging. In production, Redis will eventually go down, the database transaction will roll back, or the process will crash mid-transaction. When that happens, your database commits but the job is lost—or the transaction rolls back but the job runs anyway.
 
-Until one day it isn't.
+This is the dual-write problem: trying to make two independent databases behave like a single atomic transaction. They won't.
 
-Maybe Redis accepts the job but the database transaction rolls back.
-
-Maybe the database commits but Redis is temporarily unavailable.
-
-Maybe the process crashes in between.
-
-Congratulations—you've discovered the dual-write problem.
-
-The uncomfortable truth is that your application is trying to make two independent systems behave like one atomic transaction.
-
-They never will.
-
-In [The Outbox Pattern: Reliable Event Publishing Without Distributed Transactions](/blog/38-the-outbox-pattern-reliable-event-publishing-without-distributed-transactions/), we looked at how to solve this by using our local database as a temporary, durable message queue. But while it solves transactional consistency, it is not a silver bullet. Every engineering decision has a bill attached, and the outbox pattern is no exception.
+Using a local database table as a temporary, durable message queue solves this consistency issue. But every architectural pattern comes with a bill. The outbox pattern is no exception.
 
 ---
 
-## The Outbox Pattern Changes the Problem
+## Shifting the problem
 
-The Outbox Pattern doesn't magically make distributed systems consistent. Instead, it changes the boundaries of consistency.
+The outbox pattern doesn't make distributed systems magically consistent. It just shifts the boundary.
 
-Instead of writing to both your database and an external system, you only write to one system: your database.
-
-During the same transaction that creates the order, updates the invoice, or changes the customer record, you also insert an event into an `outbox_events` table.
-
-Now the transaction becomes:
+Instead of writing to both your database and an external queue inside the same controller action, you write only to your database. You save the business record (like an order) and insert an event payload into an `outbox_events` table within the same transaction:
 
 ```text
 BEGIN
-
 INSERT orders
 INSERT outbox_events
-
 COMMIT
 ```
 
-Either both records exist. Or neither does.
+Either both records are saved, or neither is. Once the transaction commits, a separate background process reads the `outbox_events` table and publishes the messages to your broker (Kafka, RabbitMQ, or Sidekiq).
 
-Only after the transaction commits does another process publish those events to Redis, Kafka, RabbitMQ, SNS, or whatever messaging infrastructure you're using.
-
-Your database becomes the source of truth. Everything else becomes eventually consistent.
+Your database remains the source of truth. Everything else becomes eventually consistent.
 
 ---
 
-## Sidekiq is Not the Outbox
+## Sidekiq is not an outbox
 
-One misconception I see frequently is treating Sidekiq as if it solved this problem.
+A common mistake is assuming that background job libraries like Sidekiq solve this consistency problem.
 
-It doesn't.
+They don't.
 
-Sidekiq solves something different. It gives you:
+Sidekiq handles retries, concurrency, backoffs, and scheduling. But it cannot make Redis and PostgreSQL transactional. They are two separate databases with different durability guarantees.
 
-* Retries
-* Concurrency
-* Scheduling
-* Backoff
-* Queue management
-
-It does **not** make Redis and PostgreSQL transactional. Those are different durability systems.
-
-The safest architecture is to let each tool do exactly what it's good at. The Outbox guarantees durable persistence. Sidekiq guarantees reliable execution. Those responsibilities complement each other instead of overlapping.
+The safest design lets each tool do what it does best: the outbox guarantees persistence, and Sidekiq guarantees execution.
 
 ---
 
-## A Better Integration
+## A clean integration
 
-The pattern I like most separates the persistence from the transport entirely. By leveraging database transaction lifecycles and asynchronous dispatchers, we achieve low latency when everything works, and durability when it doesn't.
+We can build a reliable outbox integration using standard Active Record callbacks:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant Controller as Rails Controller
-    participant DB as PostgreSQL Database
-    participant Redis as Redis (Sidekiq)
-    participant Broker as Message Broker
+1. **Inside the transaction:** Save your record and insert the event into `outbox_events` as pending.
+2. **On commit:** Trigger an `after_commit` hook to enqueue a background job.
+3. **Outside the transaction:** The background job reads the pending events, publishes them to your broker, and updates the database.
 
-    Client->>Controller: POST /orders
-    activate Controller
-    Note over Controller, DB: Start Transaction
-    Controller->>DB: INSERT INTO orders
-    Controller->>DB: INSERT INTO outbox_events (pending)
-    Note over Controller, DB: Commit Transaction
-    DB-->>Controller: Commit Success
-    
-    Note over Controller: after_commit Callback
-    Controller-)Redis: Enqueue DispatcherJob (async)
-    Controller-->>Client: 201 Created (Success)
-    deactivate Controller
-
-    activate Redis
-    Note over Redis: Sidekiq executes DispatcherJob
-    Redis->>DB: SELECT pending events
-    DB-->>Redis: Return pending events
-    Redis->>Broker: Publish Event
-    Broker-->>Redis: Publish Success
-    Redis->>DB: UPDATE outbox_events SET published = true
-    deactivate Redis
-```
-
-Notice something important here.
-
-The database transaction never blocks on or depends on Redis. If Redis is unavailable, the transaction still succeeds.
-
-The enqueue step can fail, the dispatcher can crash, or Sidekiq can restart. None of those failures lose the event because the database already contains it. A periodic dispatcher can always recover unpublished events later.
+If Redis is down when the transaction commits, the enqueue step fails, or the background job crashes, no events are lost. The event payload is already safe in your database. A scheduled cron job can scan for unpublished events later and retry them.
 
 ---
 
-## The Costs Nobody Mentions
+## The hidden operational costs
 
-The Outbox Pattern has become popular because it solves a painful problem. But this reliability comes with a real operational bill.
+The outbox pattern is popular because it works, but it adds real weight to your database.
 
-### 1. Every write becomes two writes
-
-Without an outbox:
-
-```sql
-INSERT INTO orders ...;
-```
-
-With an outbox:
-
+### 1. Write amplification
+Every event-producing action now requires two writes instead of one:
 ```sql
 INSERT INTO orders ...;
 INSERT INTO outbox_events ...;
 ```
+You are doubling the write volume for your core transactions. This means more Write-Ahead Log (WAL) generation, more index updates, more replication traffic, and more autovacuum pressure. For high-volume systems, this is a significant tax.
 
-You've doubled the number of writes for every event-producing transaction. That means:
+### 2. Table bloat
+Every published event leaves a row behind. If you process millions of events, your outbox table will grow out of control. You must implement a retention strategy: partition the table, archive old events to cold storage, or prune processed rows daily. If you ignore it, query times will degrade.
 
-* More Write-Ahead Log (WAL) generation
-* More index maintenance
-* More storage overhead
-* More autovacuum work
-* More replication traffic
-
-For most systems, that's perfectly acceptable. But it isn't free.
-
-### 2. The Outbox table never stops growing
-
-Every published event leaves behind another row. Weeks later you have 12 million rows. Months later, 300 million rows.
-
-Eventually, the outbox itself becomes infrastructure that needs maintenance. You'll need a retention strategy:
-
-* Will you archive processed events to cold storage?
-* Will you partition the outbox table by date or status?
-* Will you delete processed events after a week?
-
-Ignoring this database bloat works—until suddenly it doesn't.
-
-### 3. Polling creates invisible database load
-
-Most naive implementations repeatedly execute something like:
-
+### 3. Polling overhead
+If you write a naive dispatcher that polls the database every second:
 ```sql
-SELECT *
-FROM outbox_events
-WHERE published = false
-LIMIT 100;
+SELECT * FROM outbox_events WHERE published = false LIMIT 100;
 ```
+you are running a heavy query continuously, even when the system is idle. When you scale to dozens of microservices, this polling creates massive, invisible database load. You'll need adaptive backoffs or database triggers (like PostgreSQL's `LISTEN/NOTIFY`) to keep it quiet.
 
-every second. Even when nothing has happened.
+### 4. Out-of-order events
+Suppose three events are written in order: `UserCreated`, `UserUpdated`, and `UserDeleted`. If multiple dispatchers process the queue in parallel, the consumer might receive the update before the creation. The outbox pattern guarantees delivery, not order. If order matters, you have to partition your consumers or add sequence numbers.
 
-One application doing this isn't a problem. Hundreds of services doing it is. The dispatcher itself becomes part of your database workload. Good implementations use adaptive polling, batching, or PostgreSQL's `LISTEN/NOTIFY` to reduce unnecessary queries.
-
-### 4. Ordering becomes harder
-
-Suppose three events exist:
-
-1. `UserCreated`
-2. `UserUpdated`
-3. `UserDeleted`
-
-Now imagine two dispatchers processing them simultaneously. The consumer may observe:
-
-1. `UserUpdated`
-2. `UserCreated`
-3. `UserDeleted`
-
-The Outbox Pattern guarantees persistence. It does **not** guarantee ordering. If ordering matters, you'll need additional mechanisms such as aggregate-level sequencing or partitioned consumers.
-
-### 5. At-least-once means duplicates
-
-This is probably the biggest mindset shift.
-
-Imagine the dispatcher publishes successfully... and then crashes before marking the event as published in the database. On restart, it will fetch the event and publish it again.
-
-This isn't a bug. That's exactly how reliable delivery works.
-
-Every consumer should therefore be idempotent. If processing the same event twice breaks your system, your consumer isn't production-ready. Sidekiq itself explicitly recommends designing jobs to be idempotent because retries and duplicate execution are expected in distributed systems.
+### 5. Duplicate delivery
+If your dispatcher publishes an event successfully but crashes before updating the database record to `published = true`, it will publish the event again on restart. This is a property of at-least-once delivery. Every consumer downstream must be idempotent. If a duplicate event breaks your system, your consumer is not production-ready.
 
 ---
 
-## Best Practices for Outbox Implementations
+## Operational guidelines
 
-If you're implementing an Outbox Pattern, these practices tend to pay for themselves quickly.
+If you run an outbox in production, a few engineering decisions will save you a lot of pager alerts:
 
-### Keep events small
-Store identifiers, not entire ActiveRecord objects. Large payloads increase storage, replication traffic, serialization costs, and network overhead. Let the consumer fetch the data they need or keep events thin.
-
-### Dispatch in batches
-Publishing one event at a time doesn't scale. Publishing 10,000 at once creates long-running transactions. Most applications perform well somewhere in the 100–500 event range, though the right batch size depends on payload size and downstream latency.
-
-### Index unpublished events
-Your dispatcher almost always searches for unpublished records. Optimize that query. A partial index (e.g., `WHERE published = false`) often performs significantly better than indexing the entire table.
-
-### Separate persistence from transport
-Your Outbox should not know whether events go to Kafka, RabbitMQ, Sidekiq, SNS, or something else. Persist first, dispatch later. That separation makes your application easier to evolve.
-
-### Monitor backlog, not just failures
-Many teams alert when publishing fails. Few alert when the backlog quietly grows. A queue that keeps increasing usually indicates downstream problems long before customers notice them. As discussed in [Production Observability for Rails Outbox Pipelines](/blog/50-after-the-outbox/), metrics like queue age and depth are often better operational indicators than exception counts.
+* We store only database IDs in the outbox table, not entire serialized records. Large payloads bloat the database, clog replication streams, and slow down your backups.
+* We use partial indexes. The dispatcher queries the outbox table constantly looking for unpublished events. A partial index (e.g., `WHERE published = false`) keeps these queries cheap, even when the table grows to millions of rows.
+* We publish in batches of 100 to 500 events. Enqueuing a job per event doesn't scale, and processing 10,000 at once locks up your database.
+* We monitor queue lag instead of just errors. A slow dispatcher is often more dangerous than a failing one. Track the time difference between when an event is created and when it is marked published.
 
 ---
 
-## Should Every Application Use It?
+## When to use it
 
-No.
+Not every application needs this complexity.
 
-A monolith that sends a welcome email probably doesn't need an Outbox. Neither does a CRUD application with no external integrations.
+A monolith sending a welcome email doesn't need an outbox. Neither does a simple CRUD app with no integrations. The outbox pattern is worth the cost when losing an event creates a business disaster: payment processing, billing, inventory, or order fulfillment.
 
-The Outbox Pattern becomes valuable when losing an event is more expensive than operating another piece of infrastructure. Payments. Inventory. Billing. Order fulfillment. Anything where silent data loss creates business problems.
-
-Like many architectural patterns, its value depends less on technical elegance than on the cost of failure.
+Its value is defined by the cost of failure.
 
 ---
 
-## Final Thoughts
+## Stop looking for free reliability
 
-The biggest lesson I've learned isn't that the Outbox Pattern makes systems reliable. It's that reliability always has a cost.
+The biggest lesson of the outbox pattern is that reliability is never free.
 
-You can pay with distributed transactions, operational complexity, extra storage, or you can pay with occasional data loss. There isn't a free option.
-
-The Outbox Pattern simply chooses a cost that most production systems can live with. And in my experience, that's usually the right trade.
+You can pay with distributed transactions, operational complexity, extra storage, or you can pay with occasional data loss. The Outbox Pattern just chooses a cost that most production systems can live with. In my experience, that's usually the right trade.
