@@ -2,146 +2,90 @@
 title: "Why Performance Improvements Compound"
 date: "July 6, 2026"
 tags: [performance, systems, engineering, optimization]
-excerpt: "Mature systems rarely waste time inside algorithms. They waste time moving data between algorithms—and that's why performance improvements compound."
+excerpt: "Mature systems rarely waste time inside algorithms. They waste time moving data between them—and that is why optimizations compound."
 ---
 
-We love performance stories with a dramatic ending.
-
-Someone finds the missing index.  
-A single cache doubles throughput.  
-One configuration change fixes everything.  
-
-Those stories exist.
-
-But most production systems don't become slow because of one catastrophic decision. They become slow because dozens of small inefficiencies accumulate.
-
-Mature systems rarely waste time inside algorithms.  
-They waste time moving data between algorithms.
-
-As systems grow, the boundaries between components become the dominant source of performance loss. That is why performance improvements compound: every optimization removes friction that was limiting the value of the next one.
+*Mature systems rarely waste time inside algorithms. They waste time moving data between them.*
 
 ---
 
-## The Hidden Cost of Boundaries
+We love performance stories with a dramatic ending: a missing index found, a cache doubled, a config line changed. But systems rarely slow down from a single catastrophic choice. They slow down because dozens of small inefficiencies accumulate.
 
-Every time data crosses a boundary—whether between functions, processes, or physical servers—you pay a tax. In modern application architectures, it is often not the computation itself that throttles the system. Instead, every boundary introduces friction:
-
-* **Serialization** — converting data into another representation.
-* **Copying** — moving bytes between runtimes or memory regions.
-* **Synchronization** — waiting for another thread or process.
-* **Scheduling** — context-switching execution contexts.
-* **Protocol Conversion** — wrapping payloads in transport envelopes.
-
-None of these operations is expensive enough to matter on its own. Together, they define the latency profile of modern systems.
-
-In multi-stage systems, removing one bottleneck often increases the value of removing the next. That's why improvements frequently compound instead of adding linearly.
+As systems grow, the boundaries between components become the main source of overhead. That's why performance work compounds: every optimization removes friction that cap the value of the next one.
 
 ---
 
-## The Multiplying Effect of Pipeline Stages
+## The cost of boundaries
 
-To see this compounding effect, look at a request pipeline:
+Every time data crosses a boundary—between functions, processes, or physical servers—you pay a tax. In modern application architectures, it's rarely the raw math that throttles a system. It's the serialization of JSON payloads, context-switching scheduler threads, copying bytes between memory regions, or network wrapping.
 
-```
-Request Pipeline:
-[Queue / Network] ➔ [Parsing / Deserialization] ➔ [Computation] ➔ [Serialization] ➔ [Network Send]
-```
-
-Imagine a request taking 100 units of time, split into **Parsing** (40 units), **Inference** (50 units), and **Network** (10 units). 
-
-If you make the inference engine twice as fast (dropping it to 25 units), total request time drops to 75 units—a modest **25% speedup**. The 40-unit parsing bottleneck dominates the remaining cost.
-
-Conversely, if you only optimize parsing to be 4x faster (dropping it to 10 units), total request time drops to 70 units—a 30% speedup.
-
-But implement **both** optimizations together:
-* **Original**: 40 (parsing) + 50 (inference) + 10 (network) = **100 units**
-* **Optimized**: 10 (parsing) + 25 (inference) + 10 (network) = **45 units**
-
-Individually, they reduced latency by 25% and 30%. Together, they cut latency by 55% (effectively more than doubling the system's throughput under the same hardware constraints).
-
-```mermaid
-gantt
-    title Latency Breakdown (Before vs. After)
-    dateFormat X
-    axisFormat %s
-    
-    section Baseline (10s)
-    Parsing (JSON)                :active, p1, 0, 40
-    Inference (CPU/GPU)           :crit, i1, 40, 90
-    Network Transfer              :n1, 90, 100
-    
-    section Optimized (4.5s)
-    Parsing (Binary)              :active, p2, 0, 10
-    Inference (Optimized)         :crit, i2, 10, 35
-    Network Transfer              :n2, 35, 45
-```
-
-This is exactly what Amdahl's Law predicts. By removing the parsing bottleneck, you unlocked the full potential of the inference optimization. The gains compound because each optimization changes where the system spends its time, increasing the value of the next optimization.
-
-*Every optimization changes the shape of the system. The bottleneck you measure today is rarely the one you'll measure tomorrow.*
+None of these operations are expensive enough to trigger alerts on their own. Together, they define your latency profile. In a multi-stage pipeline, removing one bottleneck immediately makes the next stage's speedup twice as valuable.
 
 ---
 
-## Case Study: Optimizing an Embedding Pipeline
+## The compounding pipeline
 
-We recently optimized an embedding inference pipeline and saw this exact phenomenon play out.
+Imagine a request that takes 100 milliseconds:
+* 40ms parsing JSON
+* 50ms running model inference
+* 10ms network transfer
 
-We initially assumed the model was the bottleneck. However, profiling revealed two unrelated bottlenecks:
-1. **Thread Contention**: PyTorch and OpenMP were spawning 240 conflicting threads, causing the CPU scheduler to thrash.
-2. **Serialization Overhead**: We were transmitting 1,536-dimensional float arrays as text-based JSON, bloating the network payload and locking up Rails CPU cycles during parsing.
+If you optimize inference to be twice as fast (dropping it to 25ms), total request time drops to 75ms—a 25% speedup. The parsing bottleneck dominates.
 
-In fact, the Rails process spent more CPU parsing embeddings than the model spent generating them.
+If you only optimize parsing to be 4x faster (dropping it to 10ms), request time drops to 70ms—a 30% speedup.
 
-Neither optimization was dramatic on its own. Together they shifted the system's limiting factor:
+But if you do both:
+* Original: 40ms + 50ms + 10ms = 100ms
+* Optimized: 10ms + 25ms + 10ms = 45ms
+
+Individually, they saved 25ms and 30ms. Together, they cut latency by 55%, more than doubling throughput.
+
+This is Amdahl’s Law in practice. Speeding up parsing unlocked the value of the inference change. Optimizations compound because each one shifts where the system spends its time, increasing the leverage of the next.
+
+---
+
+## Case study: An embedding pipeline
+
+We recently ran into this while optimizing an embedding inference pipeline.
+
+We assumed the machine learning model was the bottleneck. It wasn't. Profiling revealed two completely different issues:
+
+1. PyTorch and OpenMP were spawning 240 conflicting threads, causing the CPU scheduler to thrash.
+2. We were transmitting 1,536-dimensional float arrays as text-based JSON, which ate up Rails CPU cycles during parsing.
+
+The Rails process spent more CPU parsing the embeddings than the model spent generating them.
+
+Separately, the fixes were minor. Together, they shifted the limits of the system:
 
 ```
-Baseline Throughput: 7.28 req/s
+Baseline: 7.3 req/s
 
-Step 1: Coordinate Concurrency (Set Threads to 1)
-  Throughput: 7.28 req/s ➔ 11.45 req/s (1.57x speedup)
+Step 1 (Fix PyTorch/OpenMP thread thrashing): 11.5 req/s (1.6x)
+Step 2 (Unpack Base64 binary instead of parsing JSON): 13.9 req/s (1.2x)
 
-Step 2: Optimize Serialization (Base64 Binary Unpacking)
-  Throughput: 11.45 req/s ➔ 13.93 req/s (1.21x speedup over Step 1)
-
-Total Compounded Improvement:
-  1.57 (concurrency factor) × 1.21 (serialization factor) = 1.90 (90% overall throughput increase)
+Total improvement: 1.9x throughput.
 ```
 
 Removing the parsing bottleneck didn't just reduce latency. It increased the value of every optimization behind it. Had we only focused on the model, or only on the Rails serialization code, we would have concluded that our servers were at their physical limits and paid for more expensive hardware.
 
 ---
 
-## Systems Thinking and Bottleneck Shifting
+## Bottlenecks shift
 
-This case study illustrates a fundamental rule of systems engineering:
+Every successful optimization invalidates your previous profile.
 
-> Every successful optimization invalidates your previous profile.
+Optimizing components in isolation usually fails because systems don't execute in isolation. If you make Component A twice as fast, but Component B is waiting on a lock, the system just shifts the bottleneck.
 
-Optimizing components independently often fails because systems don't execute independently. If you make Component A twice as fast, but Component B is waiting on a lock, the system simply shifts the bottleneck elsewhere.
-
-The consequence is that performance work becomes an iterative discipline.
-
-Every optimization follows the same loop:
-
-Observe.  
-Isolate.  
-Improve.  
-Measure again.  
-
-The important part isn't the optimization itself. It's that every improvement changes where the next bottleneck lives.
+Performance tuning is an iterative discipline: you observe, isolate, fix, and measure again. The fix itself isn't the point—it's that the next bottleneck has now moved somewhere else.
 
 ---
 
-## The Senior Engineer's Reflection
+## Stop looking for "the" bottleneck
 
-Junior engineers often ask, "What's the bottleneck?"
+Junior engineers search for "the" bottleneck. Senior engineers look for where work is being repeated.
 
-Senior engineers ask, "Where is work being repeated?"
+Systems rarely slow down in spectacular ways. They die by a thousand papercuts: a redundant copy, an extra query, an oversized JSON payload, a scheduler conflict. None of them is expensive enough to justify attention on its own. Together, they dictate your system's limit.
 
-The difference matters because mature systems rarely fail in spectacular ways. They fail through accumulation: one unnecessary copy, one extra query, one oversized payload, one scheduler conflict. None of them is expensive enough to justify attention on its own. Together, they define the system's limits.
+The first bottleneck you find is simply the first one preventing you from seeing the next. Performance engineering is the disciplined removal of friction wherever work crosses boundaries.
 
-The first bottleneck you find is rarely the one limiting your system. It's simply the first one preventing you from seeing the next.
-
-Performance engineering isn't about finding the biggest bottleneck. It's the disciplined removal of friction wherever work crosses boundaries. Every small improvement exposes the next bottleneck.
-
-Mature systems rarely become dramatically faster because of one brilliant optimization. They become dramatically faster because dozens of ordinary improvements finally begin reinforcing one another.
+Mature systems don't become fast because of one brilliant optimization. They become fast because dozens of ordinary improvements finally begin reinforcing one another.
