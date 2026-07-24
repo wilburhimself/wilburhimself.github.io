@@ -2,170 +2,87 @@
 title: "The Two Sources of Noise Every LLM Evaluation System Must Handle"
 date: "July 22, 2026"
 tags: ["llm", "testing", "evaluation", "reliability", "architecture"]
-excerpt: "LLM evaluation is inherently probabilistic. If you treat your LLM judges like unit tests, you're going to chase ghosts. Here is how to structure your AI evaluation pipeline, separate the two kinds of noise, and build an LLM evaluation framework you can actually trust."
+excerpt: "LLM evaluation is probabilistic. If you treat your LLM judges like unit tests, you'll chase ghosts. Here is how to separate the two sources of noise and build an evaluation pipeline you can trust."
 ---
 
 *Traditional tests are binary. LLM evaluations are a forecast.*
 
 ---
 
-Every software engineer has experienced the satisfaction of a green test suite.
+We spent three weeks chasing ghosts in our prompt templates. We'd run our benchmark, get an 84%, tweak a word, and see it drop to 81%. We'd revert the change, run it again, and watch it swing to 87%.
 
-You change the code.
+Nothing in the code had changed.
 
-You run the tests.
-
-Everything passes.
-
-That simple feedback loop has shaped how we've built software for decades.
-
-Then LLMs quietly broke one of software engineering's most trusted feedback loops.
-
-You run the exact same evaluation twice...
-
-...and get two different answers.
-
-Nothing changed.
-
-At least, nothing you can see.
+LLMs aren't unit tests. They're probabilistic, but we treated them like compiled binaries. When your test suite is a forecast, a single scoreboard is a lie.
 
 ---
 
-## The Fallacy of the Scoreboard
+## Why scoreboards lie
 
-> An evaluation score looks like a measurement.
->
-> It isn't.
->
-> It's an estimate.
+A score looks like a measurement. It isn't. It's an estimate.
 
-This isn't entirely new. Performance benchmarks, A/B tests, and distributed systems have always required statistical thinking. LLM evaluation simply makes that reality impossible to ignore.
+If you've run A/B tests or performance benchmarks, you've dealt with statistical noise. LLMs just make it impossible to ignore.
 
-When we built our internal LLM evaluation framework, we expected to run our benchmarks, get a single score (say, 84%), tweak a prompt, and see that score change. If it dropped to 81%, we assumed a regression. If it rose to 87%, we assumed an improvement.
+To build an eval system you can trust, you must separate the noise. It comes from two places:
 
-We spent weeks chasing ghosts, tweaking prompts to fix a drop in score, only to realize the next run would swing back.
+When the inputs are ambiguous, fix the inputs.
+When the judge is inconsistent, fix the judge.
+The hardest part is knowing which problem you have.
 
-The mistake isn't that LLM evaluations are noisy.
-
-The mistake is expecting them not to be.
-
-Once you stop thinking of evaluation as testing—and start thinking of it as measurement—the architecture almost designs itself.
-
-To build an AI evaluation pipeline that actually guides production decisions, you must realize:
-
-**Not all evaluation noise is the same.**
-
-Some fluctuations come from the conversations we are evaluating. Others come from the evaluator itself.
-
-```mermaid
-graph TD
-    Noise["Evaluation Noise"]
-    Task["Problem 1<br/>Task Ambiguity<br/>Aleatoric Uncertainty"]
-    Judge["Problem 2<br/>Judge Uncertainty<br/>Epistemic Uncertainty"]
-    FixF["Fix the Fixtures"]
-    FixE["Fix the Evaluator"]
-
-    Noise --> Task
-    Noise --> Judge
-
-    Task -->|"Multiple good answers"| FixF
-    Judge -->|"Multiple scores"| FixE
-```
-
-Every score fluctuation is a question before it's an answer:
-
-* **Did the model change?**
-* **Did the benchmark change?**
-* **Or did the measurement change?**
-
-Treating all three as "the score changed" is how evaluation systems lose credibility.
+Every score change asks: Did the model change? Did the prompt change? Or did the measurement change? Treating them all as "the score changed" is how evaluation pipelines lose credibility.
 
 ---
 
-## Problem #1: Sometimes There Isn't a Right Answer
+## Problem 1: The input is ambiguous
 
-Imagine a user who replies to your LLM assistant with a single word:
+Imagine a user replies with a single word: "Stop".
 
-> "Stop"
+For an SMS bot, that's an opt-out. For customer support, they might be frustrated or just pausing the session. Without context, both are correct. Even human evaluators will disagree. The ambiguity is baked into the conversation itself.
 
-What should the assistant do?
-* **An SMS opt-out request:** "You have been unsubscribed."
-* **A conversation pause:** "Let's stop here for today. Let me know when you want to continue."
-* **Frustration:** "I'm sorry, let's try another approach."
-* **A change of topic:** "Okay, let's stop talking about this and try something else."
+Statisticians call this aleatoric uncertainty. In plain English: the input lacks the information needed for a single correct answer. Improving the judge won't fix this. You're optimizing the wrong side of the equation.
 
-Without additional context, all of these interpretations are reasonable. Even human reviewers will disagree on the best response. The ambiguity exists in the conversation itself. No prompt engineering or model tuning can eliminate it.
+### Fixing the inputs
 
-Statisticians call this **aleatoric uncertainty**.
+To clean up inputs, we changed how we built benchmarks:
 
-The terminology isn't important. The engineering implication is.
-
-If the uncertainty lives in the conversation, improving the judge won't fix it. You're optimizing the wrong part of the system. You cannot debug or code your way out of it because the input itself lacks the information required to produce a single deterministic answer.
-
-### How to Mitigate Task Ambiguity
-
-In practice, reducing task ambiguity usually comes down to four things:
-1. **Richer conversational context:** Ensure your fixtures contain multi-turn history. Context resolves ambiguity.
-2. **Production-derived fixtures:** Build your benchmark using anonymized, cleaned production logs that represent real-world usage rather than synthetic test cases.
-3. **Explicit ambiguity labels:** Tag fixtures that have multiple valid responses so they aren't judged on a binary scale.
-4. **Measuring fixture quality:** Track fixture fidelity and coverage instead of focusing solely on the model's score.
+* We passed the last three turns of history. Single-turn conversations often lack the context needed for a reliable evaluation.
+* We stopped writing synthetic test cases. Now, we strip personal data from real production sessions and use those as fixtures.
+* We tagged prompts with multiple valid replies, preventing the judge from penalizing correct but unexpected answers.
 
 ---
 
-## Problem #2: Sometimes the Judge Is Wrong
+## Problem 2: The judge is inconsistent
 
-Now imagine a different scenario.
+Now look at the other side: a clean prompt and a correct model output, but the LLM judge gives it a 3 out of 5. Five minutes later, the exact same output gets a 5.
 
-You have a clean, unambiguous fixture. The candidate model produces a response that is clearly correct. You pass it to your LLM judge. The judge gives it a score of 4 out of 5.
+Nothing changed, but the score did. This is epistemic uncertainty: noise in the measurement, not the task.
 
-You run the exact same evaluation five minutes later. The judge gives it a score of 5 out of 5.
+This noise usually comes from three places:
 
-Nothing in the candidate response changed, yet the score did.
+* Hosted model nondeterminism. Even at temperature 0, hosted models can return different outputs over time due to backend updates or load balancing.
+* Vague rubrics. If you ask a judge whether a response is "helpful," it must invent a definition on every run.
+* Model bias. LLMs favor their own writing, prefer longer answers, and lean toward the first option in a list.
 
-Statisticians call this **epistemic uncertainty**.
+### Fixing the judge
 
-Here the opposite is true. The task is stable. The measurement isn't. That means your evaluation infrastructure—not your benchmark—is what needs improvement.
+Here is how we stabilized our evaluations:
 
-Epistemic noise creeps in through:
-* **Stochastic API Behavior:** Even at temperature 0, repeated calls to hosted LLM APIs can produce different outputs in practice because providers may use implementation details that are opaque to users.
-* **Rubric Ambiguity:** If your prompt asks the judge, *"Is this response helpful?"*, the judge is forced to invent its own definition of "helpful" on every run.
-* **Model Biases:** LLMs exhibit self-preference (favoring their own text), position bias (preferring the first option), and length bias (favoring longer responses).
-
-### How to Mitigate Judge Uncertainty
-
-In practice, hardening your evaluation framework against judge uncertainty comes down to:
-1. **Judge ensembling:** If evaluation results influence production decisions, judge ensembling can substantially improve robustness. Run evaluations across multiple models (e.g., Claude, GPT-4, Gemini) to smooth out model-specific blind spots.
-2. **Measuring inter-judge agreement:** Track agreement rates (like Cohen’s Kappa) to identify when judges diverge.
-3. **Tracking judge variance:** Periodically run the exact same input through your judges multiple times to calculate your evaluation system's baseline standard deviation. If your benchmark reports a model score of 84%, the most useful number may not be 84. It may be **84% ± 3%**.
-4. **Multi-axis scoring:** Score along distinct, objective axes (e.g., correctness, safety, conciseness) using binary or highly structured scales instead of subjective 1-to-5 ranges.
-5. **Flagging judge-sensitive fixtures:** Automatically flag fixtures that show unusually high score variance across runs for manual auditing.
+* We ensemble evaluations across multiple models (Claude, GPT-4, Gemini) and flag the run if they disagree.
+* We run the same suite three times in a row to calculate baseline standard deviation. An 84% score is never a static number; it's **84% ± 3%**.
+* We score along binary, objective axes. Instead of asking for a 1-to-5 rating, we ask yes-or-no questions: Did it answer? Did it hallucinate? Was the tone polite?
 
 ---
 
-## Why This Matters
+## Designing a better eval architecture
 
-This distinction shapes the architecture of your evaluation system. If you don't know which type of noise you are dealing with, you will make the wrong engineering trade-offs. Spending weeks tweaking a prompt to evaluate an inherently ambiguous fixture is a waste of time.
+If you don't know where your noise is coming from, you'll waste weeks tuning the wrong thing. You can't prompt-engineer your way out of an ambiguous input, and you can't fix hosted model nondeterminism by rewriting your benchmark.
 
-Once we started thinking about uncertainty this way, several architectural decisions became obvious:
-
-* **Fixture Audits** reduced task ambiguity by improving realism, coverage, and multi-turn representation.
-* **Multi-Axis Scoring** made disagreements explainable by separating quality dimensions rather than collapsing everything into a single score.
-* **Judge Ensembling** reduced judge uncertainty by comparing independent evaluators.
-* **Confidence Reporting** allowed us to distinguish genuine regressions from expected evaluation variance.
-* **Coverage Metrics** communicated the statistical confidence of the evaluation itself.
+Once we separated the noise, our design fell into place. We stopped trying to hit 100% correctness and focused on confidence intervals. We ensembled evaluations to flag judge drift, and we stopped treating variance as a bug and started treating it as a property of the system.
 
 ---
 
-## Moving Beyond the Scoreboard
+## Stop chasing the scoreboard
 
-Traditional testing is about proving correctness.
+Unit tests are binary. LLM evaluations are more like performance benchmarks or A/B tests: they don't prove correctness, they estimate confidence.
 
-LLM evaluation is about estimating confidence.
-
-That distinction changes everything. It changes how we write fixtures, design judges, and interpret regressions. Most importantly, it changes what a successful evaluation system looks like.
-
-Reliable evaluation isn't about removing uncertainty.
-
-It's about understanding it well enough to make better engineering decisions.
-
-As LLM systems become more capable, our evaluation systems will need to become more sophisticated as well. The challenge is no longer simply measuring quality—it's measuring how confident we should be in the measurement itself. Once you embrace that shift, evaluation stops being a scoreboard and starts becoming a decision-making tool.
+Once you stop treating evals like unit tests, you stop chasing minor fluctuations. The goal isn't a perfect green checkmark. It's to build enough statistical confidence to ship.
