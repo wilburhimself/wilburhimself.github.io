@@ -27,6 +27,18 @@ const projects = [
     liveLink: "https://antorchadigital.es"
   },
   {
+    title: "AISpec",
+    role: "Creator & Maintainer",
+    problem: "LLM outputs vary probabilistically across test runs, causing traditional exact-match assertions to break or requiring teams to offload evaluations to slow third-party dashboards disconnected from local RSpec suites.",
+    solution: "Designed an open-source Ruby gem that brings invariant behavioral contracts, statistical confidence intervals, and native RSpec assertions directly to LLM pipelines in Rails.",
+    why: "Enforcing invariant behavioral contracts statistically inside local test suites allows engineering teams to catch LLM regressions in CI without relying on external SaaS evaluations or writing fragile string-matching assertions.",
+    impact: "Provides Rails developers with deterministic behavioral testing for non-deterministic AI features directly in `bundle exec rspec`.",
+    techStack: ["Ruby", "Rails", "RSpec", "LLM", "YAML"],
+    blogLink: "/blog/66-aispec-rspec-for-ai-behavior-not-outputs/",
+    githubLink: "https://github.com/wilburhimself/aispec",
+    liveLink: ""
+  },
+  {
     title: "Promptly",
     role: "Creator & Maintainer",
     problem: "Every Rails AI project was reinventing prompt management differently, leading to fragmented, unversioned, and untested prompts in production.",
