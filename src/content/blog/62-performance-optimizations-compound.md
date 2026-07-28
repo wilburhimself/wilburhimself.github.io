@@ -2,7 +2,6 @@
 title: "Why Performance Improvements Compound"
 date: "July 6, 2026"
 tags: [performance, systems, engineering, optimization]
-excerpt: "Mature systems rarely waste time inside algorithms. They waste time moving data between them—and that is why optimizations compound."
 excerpt: "Mature systems rarely waste time inside algorithms. They waste time moving data between them—and that is why performance fixes compound."
 ---
 
