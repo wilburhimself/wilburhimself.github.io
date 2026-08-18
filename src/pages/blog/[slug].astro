@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
+import DiscussCTA from '../../components/DiscussCTA.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -70,6 +71,8 @@ const relatedPosts = sortedPosts
       <div class="post-content max-w-none">
         <Content />
       </div>
+
+      <DiscussCTA discussion={post.data.discussion} />
 
       <!-- ProxyPattern Funnel CTA -->
       <div class="my-12 p-6 rounded-lg border border-[var(--border)] bg-[var(--code-bg)]">

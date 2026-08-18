@@ -1,0 +1,32 @@
+---
+interface Props {
+  discussion?: {
+    x?: string;
+    linkedin?: string;
+  };
+}
+
+const { discussion } = Astro.props;
+const xDiscussionUrl = discussion?.x;
+const linkedinDiscussionUrl = discussion?.linkedin;
+const hasDiscussion = Boolean(xDiscussionUrl || linkedinDiscussionUrl);
+---
+
+{hasDiscussion && (
+  <section class="discuss-cta" aria-labelledby="discuss-cta-heading">
+    <h3 id="discuss-cta-heading" class="discuss-cta-heading">Discuss this article</h3>
+    <p class="discuss-cta-text">Have a different perspective or something to add?</p>
+    <div class="discuss-cta-links">
+      {xDiscussionUrl && (
+        <a href={xDiscussionUrl} target="_blank" rel="noopener noreferrer" class="discuss-cta-link">
+          Discuss on X
+        </a>
+      )}
+      {linkedinDiscussionUrl && (
+        <a href={linkedinDiscussionUrl} target="_blank" rel="noopener noreferrer" class="discuss-cta-link">
+          Discuss on LinkedIn
+        </a>
+      )}
+    </div>
+  </section>
+)}

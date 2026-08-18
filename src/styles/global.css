@@ -1197,3 +1197,56 @@ pre[class*="language-"]>code[class*="language-"] {
   text-overflow: ellipsis;
   max-width: 300px;
 }
+
+/* Discuss This Article CTA */
+.discuss-cta {
+  margin: 2.5rem 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.discuss-cta-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--secondary);
+}
+
+.discuss-cta-text {
+  font-size: 0.9rem;
+  color: var(--secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.discuss-cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.discuss-cta-link {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--content);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.discuss-cta-link:hover {
+  border-color: #4a90d9;
+  color: #4a90d9;
+}
+
+[data-theme=dark] .discuss-cta-link:hover {
+  border-color: #7eb8f7;
+  color: #7eb8f7;
+}
