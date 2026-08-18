@@ -5,6 +5,7 @@ tags: ["rails", "kamal", "engineering", "infrastructure"]
 excerpt: "The droplet had room for a third app. What it didn't have room for was two settings that quietly meant something different to a second subsystem than the one I was tuning."
 discussion:
   x: "https://x.com/wilburhimself/status/2089723646348566888"
+  linkedin: "https://lnkd.in/p/g8PH_fJg"
 ---
 
 I have a $12/mo DigitalOcean droplet running two Next.js apps behind nginx. It's not idle: `free -h` shows it's already dipping into swap under normal load. So when I wanted to stand up a Rails app on it for testing, "just deploy it" wasn't really an option. Resizing felt like the obvious fix, but the app was only ever going to see two or three testers at a time, so paying double for headroom I'd almost never use didn't sit right either.
